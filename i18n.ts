@@ -17,7 +17,5 @@ export const translations: TranslationDict = {
   restaurants: { en: 'Restaurants', ar: 'مطاعم' },
   noFavorites: { en: 'No favorites yet', ar: 'لا توجد مفضلات بعد' },
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات' },
-  aiAssistant: { en: 'AI Guide', ar: 'مرشد ذكي' },
-  askAi: { en: 'Ask our AI about Touggourt...', ar: 'اسأل الذكاء الاصطناعي عن تقرت...' },
   address: { en: 'Address', ar: 'العنوان' },
 };

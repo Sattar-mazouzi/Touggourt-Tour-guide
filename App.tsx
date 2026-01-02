@@ -7,7 +7,6 @@ import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
 import DetailsView from './components/DetailsView';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import AiGuide from './components/AiGuide';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('en');
@@ -185,9 +184,6 @@ const App: React.FC = () => {
           )}
         </section>
       </main>
-
-      {/* AI Guide */}
-      <AiGuide lang={lang} />
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-slate-100 pb-safe z-40">
