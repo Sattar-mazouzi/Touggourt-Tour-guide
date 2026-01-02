@@ -1,0 +1,7 @@
+{
+  "name": "Touggourt Guide",
+  "description": "Discover the beauty and history of Touggourt, Algeria. Your companion for exploring historical sites, cultural gems, and stunning palm groves.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
