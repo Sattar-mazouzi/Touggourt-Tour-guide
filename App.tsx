@@ -1,16 +1,18 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List } from 'lucide-react';
 import { PLACES } from './constants';
 import { Place, Language, Category } from './types';
 import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
 import DetailsView from './components/DetailsView';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import MapView from './components/MapView';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('en');
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'favorites'>('home');
+  const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -129,6 +131,28 @@ const App: React.FC = () => {
           </>
         )}
 
+        {/* View Switcher for Explore Tab */}
+        {activeTab === 'explore' && (
+          <div className="flex justify-center mb-6">
+            <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[200px]">
+              <button 
+                onClick={() => setExploreMode('list')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
+              >
+                <List size={16} />
+                {translations.list[lang]}
+              </button>
+              <button 
+                onClick={() => setExploreMode('map')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
+              >
+                <MapIcon size={16} />
+                {translations.map[lang]}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Categories Pills (Always on Explore/Favorites or when searching) */}
         {(activeTab !== 'home' || searchQuery !== '') && (
           <div className="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide">
@@ -148,7 +172,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {/* Places List */}
+        {/* Places Content (Map or List) */}
         <section>
           <div className="flex justify-between items-center mb-4">
              <h2 className="text-xl font-bold text-slate-900">
@@ -159,28 +183,38 @@ const App: React.FC = () => {
             </span>
           </div>
 
-          {filteredPlaces.length > 0 ? (
-            <div className="space-y-4">
-              {filteredPlaces.map(place => (
-                <PlaceCard 
-                  key={place.id} 
-                  place={place} 
-                  lang={lang} 
-                  onSelect={setSelectedPlace}
-                  isFavorite={favorites.includes(place.id)}
-                  onToggleFavorite={toggleFavorite}
-                />
-              ))}
-            </div>
+          {activeTab === 'explore' && exploreMode === 'map' ? (
+            <MapView 
+              places={filteredPlaces} 
+              lang={lang} 
+              onSelectPlace={setSelectedPlace} 
+            />
           ) : (
-            <div className="py-20 text-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Compass size={40} className="text-slate-300" />
-              </div>
-              <p className="text-slate-500 font-medium">
-                {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'en' ? 'No places found' : 'لم يتم العثور على أماكن')}
-              </p>
-            </div>
+            <>
+              {filteredPlaces.length > 0 ? (
+                <div className="space-y-4">
+                  {filteredPlaces.map(place => (
+                    <PlaceCard 
+                      key={place.id} 
+                      place={place} 
+                      lang={lang} 
+                      onSelect={setSelectedPlace}
+                      isFavorite={favorites.includes(place.id)}
+                      onToggleFavorite={toggleFavorite}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="py-20 text-center">
+                  <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Compass size={40} className="text-slate-300" />
+                  </div>
+                  <p className="text-slate-500 font-medium">
+                    {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'en' ? 'No places found' : 'لم يتم العثور على أماكن')}
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </section>
       </main>

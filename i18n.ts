@@ -6,6 +6,7 @@ export const translations: TranslationDict = {
   explore: { en: 'Explore', ar: 'استكشف' },
   favorites: { en: 'Favorites', ar: 'المفضلة' },
   map: { en: 'Map', ar: 'الخريطة' },
+  list: { en: 'List', ar: 'قائمة' },
   featured: { en: 'Featured Places', ar: 'أماكن مميزة' },
   categories: { en: 'Categories', ar: 'الفئات' },
   searchPlaceholder: { en: 'Search places in Touggourt...', ar: 'ابحث عن أماكن في تقرت...' },
