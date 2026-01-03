@@ -2,50 +2,60 @@
 import React, { useEffect, useRef } from 'react';
 import { Place, Language } from '../types';
 
-// Add global declaration for Leaflet (L) loaded via external script
 declare const L: any;
 
 interface Props {
   places: Place[];
   lang: Language;
-  onSelectPlace: (place: Place) => void;
+  onSelectPlace?: (place: Place) => void;
+  height?: string;
+  initialZoom?: number;
+  interactive?: boolean;
 }
 
-const MapView: React.FC<Props> = ({ places, lang, onSelectPlace }) => {
+const MapView: React.FC<Props> = ({ 
+  places, 
+  lang, 
+  onSelectPlace, 
+  height = "h-[calc(100vh-280px)]",
+  initialZoom = 13,
+  interactive = true
+}) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
 
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    if (!mapContainerRef.current || typeof L === 'undefined') return;
 
-    // Initialize map centered on Touggourt
+    // Initialize map if not already done
     if (!mapRef.current) {
       mapRef.current = L.map(mapContainerRef.current, {
         zoomControl: false,
-        attributionControl: false
-      }).setView([33.1064, 6.0628], 13);
+        attributionControl: false,
+        dragging: interactive,
+        touchZoom: interactive,
+        scrollWheelZoom: interactive,
+        doubleClickZoom: interactive,
+      }).setView([33.1064, 6.0628], initialZoom);
 
-      // Add tiles (using a clean Voyager style)
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
       }).addTo(mapRef.current);
       
-      // Add zoom control to bottom right
-      L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
+      if (interactive) {
+        L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
+      }
     }
 
-    // Clear existing markers if any
-    mapRef.current.eachLayer((layer: any) => {
-      if (layer instanceof L.Marker) {
-        mapRef.current.removeLayer(layer);
-      }
-    });
+    // Clear old markers
+    markersRef.current.forEach(m => mapRef.current.removeLayer(m));
+    markersRef.current = [];
 
-    // Add markers for each place
+    // Add markers
     places.forEach(place => {
       const { lat, lng } = place.location;
       
-      // Custom icon
       const customIcon = L.divIcon({
         className: 'custom-div-icon',
         html: `<div class="w-8 h-8 bg-orange-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white">
@@ -58,45 +68,47 @@ const MapView: React.FC<Props> = ({ places, lang, onSelectPlace }) => {
 
       const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapRef.current);
       
-      // Popup content
-      const popupContent = `
-        <div class="cursor-pointer overflow-hidden rounded-xl">
-          <img src="${place.imageUrl}" class="w-full h-24 object-cover" />
-          <div class="p-2">
-            <h4 class="font-bold text-sm text-slate-900">${place.name[lang]}</h4>
-            <p class="text-[10px] text-slate-500">${place.location.address[lang]}</p>
+      if (onSelectPlace) {
+        const popupContent = `
+          <div class="cursor-pointer overflow-hidden rounded-xl">
+            <img src="${place.imageUrl}" class="w-full h-24 object-cover" />
+            <div class="p-2">
+              <h4 class="font-bold text-sm text-slate-900">${place.name[lang]}</h4>
+              <p class="text-[10px] text-slate-500">${place.location.address[lang]}</p>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+        marker.bindPopup(popupContent);
+        marker.on('popupopen', () => {
+          const popup = document.querySelector('.leaflet-popup-content');
+          if (popup) {
+            popup.addEventListener('click', () => onSelectPlace(place));
+          }
+        });
+      }
       
-      marker.bindPopup(popupContent);
-      
-      marker.on('popupopen', () => {
-        const popup = document.querySelector('.leaflet-popup-content');
-        if (popup) {
-          popup.addEventListener('click', () => {
-            onSelectPlace(place);
-          });
-        }
-      });
+      markersRef.current.push(marker);
     });
 
-    // Fit bounds if there are multiple places
-    if (places.length > 0) {
-      const group = L.featureGroup(places.map(p => L.marker([p.location.lat, p.location.lng])));
+    // Adjust view
+    if (places.length === 1) {
+      mapRef.current.setView([places[0].location.lat, places[0].location.lng], initialZoom);
+    } else if (places.length > 1) {
+      const group = L.featureGroup(markersRef.current);
       mapRef.current.fitBounds(group.getBounds().pad(0.1));
     }
 
-    return () => {
-      // Cleanup logic if needed
-    };
-  }, [places, lang, onSelectPlace]);
+    // Force redraw for hidden containers
+    setTimeout(() => {
+      if (mapRef.current) mapRef.current.invalidateSize();
+    }, 200);
+
+  }, [places, lang, onSelectPlace, initialZoom, interactive]);
 
   return (
-    <div className="w-full h-[calc(100vh-280px)] rounded-3xl overflow-hidden shadow-inner border border-slate-200 relative">
+    <div className={`w-full ${height} rounded-3xl overflow-hidden shadow-inner border border-slate-200 relative`}>
       <div ref={mapContainerRef} className="w-full h-full z-0" />
-      {/* Map Overlay Indicator */}
-      <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm text-[10px] font-bold text-slate-500 uppercase tracking-widest border border-slate-100">
+      <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm text-[10px] font-bold text-slate-500 uppercase tracking-widest border border-slate-100 pointer-events-none">
         {lang === 'en' ? 'Interactive Map' : 'خريطة تفاعلية'}
       </div>
     </div>
