@@ -34,9 +34,15 @@ const App: React.FC = () => {
   };
 
   const filteredPlaces = useMemo(() => {
+    const query = searchQuery.toLowerCase();
     return PLACES.filter(p => {
-      const matchesSearch = p.name[lang].toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           p.description[lang].toLowerCase().includes(searchQuery.toLowerCase());
+      // Cross-language search: check both Arabic and English content
+      const matchesSearch = 
+        p.name.en.toLowerCase().includes(query) || 
+        p.name.ar.toLowerCase().includes(query) || 
+        p.description.en.toLowerCase().includes(query) || 
+        p.description.ar.toLowerCase().includes(query);
+        
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
