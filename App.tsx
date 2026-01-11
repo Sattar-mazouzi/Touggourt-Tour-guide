@@ -47,9 +47,12 @@ const App: React.FC = () => {
   const categories: Category[] = ['all', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
 
   return (
-    <div className={`min-h-screen pb-24 ${lang === 'ar' ? 'rtl' : 'ltr'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <div 
+      className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl' : 'ltr'}`} 
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4">
+      <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))]">
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
@@ -62,138 +65,139 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="max-w-xl mx-auto p-4">
-        {/* Search Bar */}
-        <div className="relative mb-6 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-          <input 
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={translations.searchPlaceholder[lang]}
-            className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm"
-          />
-        </div>
-
-        {activeTab === 'home' && searchQuery === '' && (
-          <>
-            {/* Featured Section */}
-            <section className="mb-8 overflow-hidden">
-              <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <Compass size={24} className="text-orange-500" />
-                {translations.featured[lang]}
-              </h2>
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                {featuredPlaces.map(place => (
-                  <div 
-                    key={place.id}
-                    onClick={() => setSelectedPlace(place)}
-                    className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md"
-                  >
-                    <img src={place.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
-                      <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
-                        <MapIcon size={12} /> {place.location.address[lang]}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Categories */}
-            <section className="mb-8">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">{translations.categories[lang]}</h2>
-              <div className="grid grid-cols-3 gap-3">
-                {categories.filter(c => c !== 'all').map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat);
-                      setActiveTab('explore');
-                    }}
-                    className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:border-orange-200 hover:bg-orange-50"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                      {cat === 'historical' && <MapIcon size={20} />}
-                      {cat === 'cultural' && <Compass size={20} />}
-                      {cat === 'natural' && <Compass size={20} />}
-                      {cat === 'hotels' && <Home size={20} />}
-                      {cat === 'restaurants' && <Menu size={20} />}
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide">{translations[cat][lang]}</span>
-                  </button>
-                ))}
-              </div>
-            </section>
-          </>
-        )}
-
-        {/* View Switcher for Explore Tab */}
-        {activeTab === 'explore' && (
-          <div className="flex justify-center mb-6">
-            <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[200px]">
-              <button 
-                onClick={() => setExploreMode('list')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
-              >
-                <List size={16} />
-                {translations.list[lang]}
-              </button>
-              <button 
-                onClick={() => setExploreMode('map')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
-              >
-                <MapIcon size={16} />
-                {translations.map[lang]}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Categories Pills (Always on Explore/Favorites or when searching) */}
-        {(activeTab !== 'home' || searchQuery !== '') && (
-          <div className="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-bold transition-all ${
-                  selectedCategory === cat 
-                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                    : 'bg-white text-slate-500 border border-slate-200'
-                }`}
-              >
-                {translations[cat][lang]}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Places Content (Map or List) */}
-        <section>
-          <div className="flex justify-between items-center mb-4">
-             <h2 className="text-xl font-bold text-slate-900">
-              {activeTab === 'favorites' ? translations.favorites[lang] : (searchQuery ? `"${searchQuery}"` : translations.explore[lang])}
-            </h2>
-            <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
-              {filteredPlaces.length}
-            </span>
-          </div>
-
-          {activeTab === 'explore' && exploreMode === 'map' ? (
-            <MapView 
-              places={filteredPlaces} 
-              lang={lang} 
-              onSelectPlace={setSelectedPlace} 
+      {/* Main Content Area (Scrollable) */}
+      <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
+        <div className="max-w-xl mx-auto pb-24">
+          {/* Search Bar */}
+          <div className="relative mb-6 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
+            <input 
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={translations.searchPlaceholder[lang]}
+              className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm"
             />
-          ) : (
+          </div>
+
+          {activeTab === 'home' && searchQuery === '' && (
             <>
-              {filteredPlaces.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredPlaces.map(place => (
+              {/* Featured Section */}
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <Compass size={24} className="text-orange-500" />
+                  {translations.featured[lang]}
+                </h2>
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
+                  {featuredPlaces.map(place => (
+                    <div 
+                      key={place.id}
+                      onClick={() => setSelectedPlace(place)}
+                      className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md"
+                    >
+                      <img src={place.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
+                        <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
+                          <MapIcon size={12} /> {place.location.address[lang]}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Categories */}
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">{translations.categories[lang]}</h2>
+                <div className="grid grid-cols-3 gap-3">
+                  {categories.filter(c => c !== 'all').map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setActiveTab('explore');
+                      }}
+                      className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:border-orange-200 hover:bg-orange-50"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                        {cat === 'historical' && <MapIcon size={20} />}
+                        {cat === 'cultural' && <Compass size={20} />}
+                        {cat === 'natural' && <Compass size={20} />}
+                        {cat === 'hotels' && <Home size={20} />}
+                        {cat === 'restaurants' && <Menu size={20} />}
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide">{translations[cat][lang]}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+
+          {/* View Switcher for Explore Tab */}
+          {activeTab === 'explore' && (
+            <div className="flex justify-center mb-6">
+              <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[200px]">
+                <button 
+                  onClick={() => setExploreMode('list')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
+                >
+                  <List size={16} />
+                  {translations.list[lang]}
+                </button>
+                <button 
+                  onClick={() => setExploreMode('map')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
+                >
+                  <MapIcon size={16} />
+                  {translations.map[lang]}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Categories Pills */}
+          {(activeTab !== 'home' || searchQuery !== '') && (
+            <div className="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-bold transition-all ${
+                    selectedCategory === cat 
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
+                      : 'bg-white text-slate-500 border border-slate-200'
+                  }`}
+                >
+                  {translations[cat][lang]}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Places Section */}
+          <section>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-slate-900">
+                {activeTab === 'favorites' ? translations.favorites[lang] : (searchQuery ? `"${searchQuery}"` : translations.explore[lang])}
+              </h2>
+              <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
+                {filteredPlaces.length}
+              </span>
+            </div>
+
+            {activeTab === 'explore' && exploreMode === 'map' ? (
+              <MapView 
+                places={filteredPlaces} 
+                lang={lang} 
+                onSelectPlace={setSelectedPlace} 
+              />
+            ) : (
+              <div className="space-y-4">
+                {filteredPlaces.length > 0 ? (
+                  filteredPlaces.map(place => (
                     <PlaceCard 
                       key={place.id} 
                       place={place} 
@@ -202,25 +206,25 @@ const App: React.FC = () => {
                       isFavorite={favorites.includes(place.id)}
                       onToggleFavorite={toggleFavorite}
                     />
-                  ))}
-                </div>
-              ) : (
-                <div className="py-20 text-center">
-                  <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Compass size={40} className="text-slate-300" />
+                  ))
+                ) : (
+                  <div className="py-20 text-center">
+                    <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Compass size={40} className="text-slate-300" />
+                    </div>
+                    <p className="text-slate-500 font-medium">
+                      {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'en' ? 'No places found' : 'لم يتم العثور على أماكن')}
+                    </p>
                   </div>
-                  <p className="text-slate-500 font-medium">
-                    {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'en' ? 'No places found' : 'لم يتم العثور على أماكن')}
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </section>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-slate-100 pb-safe z-40">
+      <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[env(safe-area-inset-bottom)] z-40">
         <div className="max-w-xl mx-auto flex justify-around p-3">
           <button 
             onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }}
