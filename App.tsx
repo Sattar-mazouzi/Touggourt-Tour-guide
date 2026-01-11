@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles } from 'lucide-react';
 import { PLACES } from './constants';
 import { Place, Language, Category } from './types';
 import { translations } from './i18n';
@@ -10,7 +10,8 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import MapView from './components/MapView';
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('en');
+  // Default language set to Arabic
+  const [lang, setLang] = useState<Language>('ar');
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'favorites'>('home');
   const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,15 +69,30 @@ const App: React.FC = () => {
       {/* Main Content Area (Scrollable) */}
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
+          
+          {activeTab === 'home' && searchQuery === '' && (
+            <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles size={18} className="text-orange-500" />
+                <h2 className="text-2xl font-black text-slate-900">
+                  {translations.welcome[lang]}
+                </h2>
+              </div>
+              <p className="text-slate-500 text-sm font-medium">
+                {translations.discoverPrompt[lang]}
+              </p>
+            </div>
+          )}
+
           {/* Search Bar */}
           <div className="relative mb-6 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
+            <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors`} size={20} />
             <input 
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={translations.searchPlaceholder[lang]}
-              className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm"
+              className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm`}
             />
           </div>
 
@@ -97,7 +113,7 @@ const App: React.FC = () => {
                     >
                       <img src={place.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                      <div className="absolute bottom-4 left-4 right-4">
+                      <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
                         <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
                         <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
                           <MapIcon size={12} /> {place.location.address[lang]}

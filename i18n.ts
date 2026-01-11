@@ -19,4 +19,6 @@ export const translations: TranslationDict = {
   noFavorites: { en: 'No favorites yet', ar: 'لا توجد مفضلات بعد' },
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات' },
   address: { en: 'Address', ar: 'العنوان' },
+  welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت' },
+  discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء' },
 };
