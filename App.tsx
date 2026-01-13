@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Info } from 'lucide-react';
 import { PLACES } from './constants';
 import { Place, Language, Category } from './types';
 import { translations } from './i18n';
@@ -8,6 +8,7 @@ import PlaceCard from './components/PlaceCard';
 import DetailsView from './components/DetailsView';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import MapView from './components/MapView';
+import CityBio from './components/CityBio';
 
 const App: React.FC = () => {
   // Default language set to Arabic
@@ -18,11 +19,19 @@ const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [isBioOpen, setIsBioOpen] = useState(false);
 
-  // Persistence
+  // Persistence and initial bio
   useEffect(() => {
     const saved = localStorage.getItem('touggourt_favs');
     if (saved) setFavorites(JSON.parse(saved));
+    
+    // Open bio on first load (per session)
+    const bioSeen = sessionStorage.getItem('touggourt_bio_seen');
+    if (!bioSeen) {
+      setIsBioOpen(true);
+      sessionStorage.setItem('touggourt_bio_seen', 'true');
+    }
   }, []);
 
   const toggleFavorite = (id: string) => {
@@ -78,15 +87,26 @@ const App: React.FC = () => {
           
           {activeTab === 'home' && searchQuery === '' && (
             <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles size={18} className="text-orange-500" />
-                <h2 className="text-2xl font-black text-slate-900">
-                  {translations.welcome[lang]}
-                </h2>
-              </div>
-              <p className="text-slate-500 text-sm font-medium">
-                {translations.discoverPrompt[lang]}
-              </p>
+              <button 
+                onClick={() => setIsBioOpen(true)}
+                className="text-left w-full group focus:outline-none"
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles size={18} className="text-orange-500 group-hover:rotate-12 transition-transform" />
+                  <h2 className="text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">
+                    {translations.welcome[lang]}
+                  </h2>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-slate-500 text-sm font-medium">
+                    {translations.discoverPrompt[lang]}
+                  </p>
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-orange-500 uppercase tracking-widest bg-orange-50 px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Info size={10} /> {lang === 'en' ? 'Learn More' : 'اعرف المزيد'}
+                  </div>
+                </div>
+              </button>
             </div>
           )}
 
@@ -280,12 +300,19 @@ const App: React.FC = () => {
         </div>
       </nav>
 
-      {/* Details View */}
+      {/* Overlays */}
       {selectedPlace && (
         <DetailsView 
           place={selectedPlace} 
           lang={lang} 
           onClose={() => setSelectedPlace(null)} 
+        />
+      )}
+
+      {isBioOpen && (
+        <CityBio 
+          lang={lang} 
+          onClose={() => setIsBioOpen(false)} 
         />
       )}
     </div>
