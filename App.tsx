@@ -9,6 +9,7 @@ import DetailsView from './components/DetailsView';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import MapView from './components/MapView';
 import CityBio from './components/CityBio';
+import AiGuide from './components/AiGuide';
 
 const App: React.FC = () => {
   // Default language set to Arabic
@@ -45,12 +46,14 @@ const App: React.FC = () => {
   const filteredPlaces = useMemo(() => {
     const query = searchQuery.toLowerCase();
     return PLACES.filter(p => {
-      // Cross-language search: check both Arabic and English content
+      // Cross-language search: check all supported languages
       const matchesSearch = 
         p.name.en.toLowerCase().includes(query) || 
         p.name.ar.toLowerCase().includes(query) || 
+        p.name.fr.toLowerCase().includes(query) ||
         p.description.en.toLowerCase().includes(query) || 
-        p.description.ar.toLowerCase().includes(query);
+        p.description.ar.toLowerCase().includes(query) ||
+        p.description.fr.toLowerCase().includes(query);
         
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
@@ -64,7 +67,7 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl' : 'ltr'}`} 
+      className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl font-arabic' : 'ltr'}`} 
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
     >
       {/* Header */}
@@ -72,9 +75,13 @@ const App: React.FC = () => {
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
-            <div>
-              <h1 className="text-xl font-black text-slate-900 leading-tight">Touggourt</h1>
-              <p className="text-[10px] uppercase tracking-widest text-orange-600 font-bold">{lang === 'en' ? 'Algeria' : 'الجزائر'}</p>
+            <div className="overflow-hidden">
+              <h1 className="text-xl font-black text-slate-900 leading-tight truncate">
+                {translations.appName[lang]}
+              </h1>
+              <p className="text-[9px] sm:text-[10px] uppercase tracking-wide sm:tracking-widest text-orange-600 font-bold leading-tight">
+                {translations.appSubtitle[lang]}
+              </p>
             </div>
           </div>
           <LanguageSwitcher current={lang} onChange={setLang} />
@@ -103,7 +110,7 @@ const App: React.FC = () => {
                     {translations.discoverPrompt[lang]}
                   </p>
                   <div className="flex items-center gap-1 text-[10px] font-bold text-orange-500 uppercase tracking-widest bg-orange-50 px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Info size={10} /> {lang === 'en' ? 'Learn More' : 'اعرف المزيد'}
+                    <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div> {lang === 'en' ? 'Learn More' : (lang === 'fr' ? 'Savoir Plus' : 'اعرف المزيد')}
                   </div>
                 </div>
               </button>
@@ -255,7 +262,7 @@ const App: React.FC = () => {
                       <Compass size={40} className="text-slate-300" />
                     </div>
                     <p className="text-slate-500 font-medium">
-                      {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'en' ? 'No places found' : 'لم يتم العثور على أماكن')}
+                      {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'ar' ? 'لم يتم العثور على أماكن' : 'No places found')}
                     </p>
                   </div>
                 )}
@@ -315,6 +322,8 @@ const App: React.FC = () => {
           onClose={() => setIsBioOpen(false)} 
         />
       )}
+
+      <AiGuide lang={lang} />
     </div>
   );
 };

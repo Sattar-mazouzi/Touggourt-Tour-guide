@@ -14,10 +14,10 @@ interface Props {
 const CITY_COVER_IMAGE = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
 const GALLERY_IMAGES = [
-  { url: "https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop", title: { en: "Saharan Dunes", ar: "كثبان الصحراء" } },
-  { url: "https://images.unsplash.com/photo-1509316785289-025f54246b21?q=80&w=800&auto=format&fit=crop", title: { en: "Palm Oasis", ar: "واحات النخيل" } },
-  { url: "https://images.unsplash.com/photo-1516562309708-05f3fc21ed31?q=80&w=800&auto=format&fit=crop", title: { en: "Architecture", ar: "العمارة" } },
-  { url: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?q=80&w=800&auto=format&fit=crop", title: { en: "Sunset", ar: "الغروب" } },
+  { url: "https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop", title: { en: "Saharan Dunes", ar: "كثبان الصحراء", fr: "Dunes de Sahara" } },
+  { url: "https://images.unsplash.com/photo-1509316785289-025f54246b21?q=80&w=800&auto=format&fit=crop", title: { en: "Palm Oasis", ar: "واحات النخيل", fr: "Oasis de Palmiers" } },
+  { url: "https://images.unsplash.com/photo-1516562309708-05f3fc21ed31?q=80&w=800&auto=format&fit=crop", title: { en: "Architecture", ar: "العمارة", fr: "Architecture" } },
+  { url: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?q=80&w=800&auto=format&fit=crop", title: { en: "Sunset", ar: "الغروب", fr: "Coucher de soleil" } },
 ];
 
 const CityBio: React.FC<Props> = ({ lang, onClose }) => {
@@ -78,14 +78,14 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
           
           <button 
             onClick={onClose}
-            className="absolute top-6 right-6 p-2.5 bg-black/20 backdrop-blur-xl text-white rounded-full hover:bg-black/40 transition-all border border-white/20 active:scale-90"
+            className={`absolute top-6 ${lang === 'ar' ? 'left-6' : 'right-6'} p-2.5 bg-black/20 backdrop-blur-xl text-white rounded-full hover:bg-black/40 transition-all border border-white/20 active:scale-90`}
           >
             <X size={20} />
           </button>
 
           <div className={`absolute bottom-8 ${lang === 'ar' ? 'right-8' : 'left-8'} right-8`}>
             <span className="inline-block px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg shadow-orange-500/30">
-              {lang === 'en' ? 'Oasis City' : 'مدينة الواحات'}
+              {lang === 'ar' ? 'مدينة الواحات' : (lang === 'fr' ? 'Ville Oasis' : 'Oasis City')}
             </span>
             <h2 className="text-4xl font-black text-slate-900 drop-shadow-sm leading-tight">
               {t.cityBioTitle[lang]}
@@ -98,8 +98,8 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
           
           {/* Main Description with Expansion */}
           <div className="relative pt-4">
-             <div className="absolute -left-2 top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20"></div>
-             <div className="pl-4">
+             <div className={`absolute ${lang === 'ar' ? '-right-2' : '-left-2'} top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20`}></div>
+             <div className={lang === 'ar' ? 'pr-4' : 'pl-4'}>
                <p className="text-slate-600 font-medium leading-relaxed italic text-lg mb-3">
                   "{t.cityBioDescription[lang]}"
                </p>
@@ -143,13 +143,13 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
           <div className="grid grid-cols-2 gap-3">
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <Users size={18} className="text-orange-500 mb-2" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'السكان' : 'Population'}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'السكان' : (lang === 'fr' ? 'Population' : 'Population')}</p>
                 <p className="text-sm font-black text-slate-800">~150,000+</p>
              </div>
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <CloudSun size={18} className="text-amber-500 mb-2" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'المناخ' : 'Climate'}</p>
-                <p className="text-sm font-black text-slate-800">{lang === 'ar' ? 'صحراوي مشمس' : 'Desert Sunny'}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'المناخ' : (lang === 'fr' ? 'Climat' : 'Climate')}</p>
+                <p className="text-sm font-black text-slate-800">{lang === 'ar' ? 'صحراوي مشمس' : (lang === 'fr' ? 'Désertique' : 'Desert Sunny')}</p>
              </div>
           </div>
 
@@ -159,7 +159,7 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
                 <MapPin size={24} className="text-blue-500" />
               </div>
               <div>
-                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'الموقع والجغرافيا' : 'Location & Geography'}</h4>
+                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'الموقع والجغرافيا' : (lang === 'fr' ? 'Géographie' : 'Location & Geography')}</h4>
                 <p className="text-sm text-slate-500 leading-relaxed font-medium">
                   {t.locationDetails[lang]}
                 </p>
@@ -171,7 +171,7 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
                 <History size={24} className="text-amber-500" />
               </div>
               <div>
-                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'لمحة تاريخية' : 'Historical Glimpse'}</h4>
+                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'لمحة تاريخية' : (lang === 'fr' ? 'Histoire' : 'Historical Glimpse')}</h4>
                 <div className="space-y-2">
                   <p className="text-sm text-slate-500 leading-relaxed font-medium">
                     {t.historyDetails[lang]}
@@ -202,15 +202,15 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
                   <h4 className="font-black text-slate-900">{t.algeriaLocation[lang]}</h4>
                 </div>
                 <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-500 tracking-tighter">
-                  {lang === 'ar' ? 'شمال أفريقيا' : 'NORTH AFRICA'}
+                  {lang === 'ar' ? 'شمال أفريقيا' : (lang === 'fr' ? 'AFRIQUE DU NORD' : 'NORTH AFRICA')}
                 </div>
               </div>
               <div className="h-56 rounded-[32px] overflow-hidden border border-slate-200 shadow-inner relative group/map">
                 <div ref={mapContainerRef} className="w-full h-full grayscale-[0.3] group-hover/map:grayscale-0 transition-all duration-700" />
                 <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[32px]"></div>
-                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl text-[12px] font-black text-slate-800 border border-white shadow-xl flex items-center gap-2">
+                <div className={`absolute bottom-4 ${lang === 'ar' ? 'left-4' : 'right-4'} bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl text-[12px] font-black text-slate-800 border border-white shadow-xl flex items-center gap-2`}>
                   <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                  {lang === 'ar' ? 'تقرت، الجزائر' : 'Touggourt, Algeria'}
+                  {lang === 'ar' ? 'تقرت، الجزائر' : (lang === 'fr' ? 'Touggourt, Algérie' : 'Touggourt, Algeria')}
                 </div>
               </div>
             </section>

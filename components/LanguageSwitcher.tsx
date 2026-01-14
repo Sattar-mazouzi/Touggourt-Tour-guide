@@ -8,13 +8,28 @@ interface Props {
 }
 
 const LanguageSwitcher: React.FC<Props> = ({ current, onChange }) => {
+  const languages: { code: Language; label: string }[] = [
+    { code: 'ar', label: 'عربي' },
+    { code: 'fr', label: 'FR' },
+    { code: 'en', label: 'EN' },
+  ];
+
   return (
-    <button
-      onClick={() => onChange(current === 'en' ? 'ar' : 'en')}
-      className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm text-sm font-medium border border-slate-200"
-    >
-      {current === 'en' ? 'العربية' : 'English'}
-    </button>
+    <div className="flex bg-slate-100 p-1 rounded-full shadow-inner border border-slate-200">
+      {languages.map((lang) => (
+        <button
+          key={lang.code}
+          onClick={() => onChange(lang.code)}
+          className={`px-3 py-1 rounded-full text-[11px] font-black transition-all ${
+            current === lang.code
+              ? 'bg-white text-orange-600 shadow-sm scale-105'
+              : 'text-slate-400 hover:text-slate-600'
+          }`}
+        >
+          {lang.label}
+        </button>
+      ))}
+    </div>
   );
 };
 
