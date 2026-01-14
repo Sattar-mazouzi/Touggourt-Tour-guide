@@ -75,12 +75,12 @@ const App: React.FC = () => {
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
-            <div className="overflow-hidden">
-              <h1 className="text-xl font-black text-slate-900 leading-tight truncate">
+            <div>
+              <h1 className="text-xl font-black text-slate-900 leading-tight">
                 {translations.appName[lang]}
               </h1>
-              <p className="text-[9px] sm:text-[10px] uppercase tracking-wide sm:tracking-widest text-orange-600 font-bold leading-tight">
-                {translations.appSubtitle[lang]}
+              <p className="text-[10px] uppercase tracking-widest text-orange-600 font-bold">
+                {lang === 'ar' ? 'الجزائر' : (lang === 'fr' ? 'Algérie' : 'Algeria')}
               </p>
             </div>
           </div>

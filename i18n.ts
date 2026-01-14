@@ -3,11 +3,6 @@ import { TranslationDict } from './types';
 
 export const translations: TranslationDict = {
   appName: { en: 'Memory of Touggourt', ar: 'ذاكرة توقرت', fr: 'Mémoire de Touggourt' },
-  appSubtitle: { 
-    en: 'Touggourt Gateway for Heritage and Tourism', 
-    ar: 'بوابة توقرت للتراث والسياحة', 
-    fr: 'Portail de Touggourt pour le Patrimoine et le Tourisme' 
-  },
   home: { en: 'Home', ar: 'الرئيسية', fr: 'Accueil' },
   explore: { en: 'Explore', ar: 'استكشف', fr: 'Explorer' },
   favorites: { en: 'Favorites', ar: 'المفضلة', fr: 'Favoris' },
