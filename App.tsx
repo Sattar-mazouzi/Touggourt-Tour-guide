@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Info } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Info, Landmark } from 'lucide-react';
 import { PLACES } from './constants';
 import { Place, Language, Category } from './types';
 import { translations } from './i18n';
@@ -63,7 +63,7 @@ const App: React.FC = () => {
 
   const featuredPlaces = useMemo(() => PLACES.filter(p => p.featured), []);
 
-  const categories: Category[] = ['all', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
+  const categories: Category[] = ['all', 'religion', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
 
   return (
     <div 
@@ -100,7 +100,7 @@ const App: React.FC = () => {
                 dir={lang === 'ar' ? 'rtl' : 'ltr'}
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <Sparkles size={18} className="text-orange-500 group-hover:rotate-12 transition-transform" />
+                  <span className="text-orange-500 group-hover:rotate-12 transition-transform"><Sparkles size={18} /></span>
                   <h2 className="text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">
                     {translations.welcome[lang]}
                   </h2>
@@ -171,13 +171,14 @@ const App: React.FC = () => {
                       className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:border-orange-200 hover:bg-orange-50"
                     >
                       <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                        {cat === 'religion' && <Landmark size={20} />}
                         {cat === 'historical' && <MapIcon size={20} />}
                         {cat === 'cultural' && <Compass size={20} />}
                         {cat === 'natural' && <Compass size={20} />}
                         {cat === 'hotels' && <Home size={20} />}
                         {cat === 'restaurants' && <Menu size={20} />}
                       </div>
-                      <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide">{translations[cat][lang]}</span>
+                      <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{translations[cat][lang]}</span>
                     </button>
                   ))}
                 </div>

@@ -1,5 +1,5 @@
 
-export type Category = 'historical' | 'cultural' | 'natural' | 'hotels' | 'restaurants' | 'all';
+export type Category = 'historical' | 'religion' | 'cultural' | 'natural' | 'hotels' | 'restaurants' | 'all';
 
 export interface Place {
   id: string;

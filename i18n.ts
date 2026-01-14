@@ -13,6 +13,7 @@ export const translations: TranslationDict = {
   searchPlaceholder: { en: 'Search places in Touggourt...', ar: 'ابحث عن أماكن في تقرت...', fr: 'Rechercher à Touggourt...' },
   all: { en: 'All', ar: 'الكل', fr: 'Tous' },
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
+  religion: { en: 'Religious', ar: 'ديني', fr: 'Religieux' },
   cultural: { en: 'Cultural', ar: 'ثقافي', fr: 'Culturel' },
   natural: { en: 'Natural', ar: 'طبيعي', fr: 'Naturel' },
   hotels: { en: 'Hotels', ar: 'فنادق', fr: 'Hôtels' },

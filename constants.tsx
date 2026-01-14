@@ -14,7 +14,7 @@ export const PLACES: Place[] = [
       ar: 'مسجد تاريخي يعود إلى القرن الثامن عشر، يمثل الهندسة المعمارية الفريدة لمنطقة وادي ريغ.',
       fr: 'Une mosquée historique datant du XVIIIe siècle, représentant l\'architecture unique de la région de l\'Oued Righ.'
     },
-    category: 'historical',
+    category: 'religion',
     rating: 4.8,
     imageUrl: 'https://picsum.photos/seed/toug_mosque/800/600',
     location: {
@@ -66,7 +66,7 @@ export const PLACES: Place[] = [
       ar: 'مركز روحي وثقافي للطريقة التجانية، يستقطب الزوار من كافة أنحاء أفريقيا.',
       fr: 'Un centre spirituel et culturel pour la confrérie Tidjania, attirant des visiteurs de toute l\'Afrique.'
     },
-    category: 'cultural',
+    category: 'religion',
     rating: 4.9,
     imageUrl: 'https://picsum.photos/seed/toug_tidjania/800/600',
     location: {
