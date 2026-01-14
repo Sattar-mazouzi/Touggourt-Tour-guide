@@ -1,6 +1,6 @@
 
-import React, { useEffect, useRef } from 'react';
-import { X, MapPin, History, Globe, Users, CloudSun } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { X, MapPin, History, Globe, Users, CloudSun, ChevronDown, ChevronUp, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../i18n';
 
@@ -11,19 +11,26 @@ interface Props {
   onClose: () => void;
 }
 
-// USER: Replace this URL with your provided picture URL once ready
 const CITY_COVER_IMAGE = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
+
+const GALLERY_IMAGES = [
+  { url: "https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop", title: { en: "Saharan Dunes", ar: "كثبان الصحراء" } },
+  { url: "https://images.unsplash.com/photo-1509316785289-025f54246b21?q=80&w=800&auto=format&fit=crop", title: { en: "Palm Oasis", ar: "واحات النخيل" } },
+  { url: "https://images.unsplash.com/photo-1516562309708-05f3fc21ed31?q=80&w=800&auto=format&fit=crop", title: { en: "Architecture", ar: "العمارة" } },
+  { url: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?q=80&w=800&auto=format&fit=crop", title: { en: "Sunset", ar: "الغروب" } },
+];
 
 const CityBio: React.FC<Props> = ({ lang, onClose }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const t = translations;
 
   useEffect(() => {
     if (!mapContainerRef.current || typeof L === 'undefined') return;
 
     if (!mapRef.current) {
-      // Map focused on Algeria to show relative location
       mapRef.current = L.map(mapContainerRef.current, {
         zoomControl: false,
         attributionControl: false,
@@ -31,11 +38,10 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
         touchZoom: false,
         scrollWheelZoom: false,
         doubleClickZoom: false,
-      }).setView([28.0339, 1.6596], 4.5); // Center of Algeria
+      }).setView([28.0339, 1.6596], 4.5);
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(mapRef.current);
 
-      // Add a distinct marker for Touggourt
       const touggourtIcon = L.divIcon({
         className: 'touggourt-pulse',
         html: `<div class="relative flex items-center justify-center">
@@ -90,12 +96,48 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
         {/* Content Section */}
         <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide space-y-8">
           
-          <div className="relative">
-             <div className="absolute -left-2 top-0 bottom-0 w-1 bg-orange-500 rounded-full opacity-20"></div>
-             <p className="text-slate-600 font-medium leading-relaxed italic text-lg pl-4">
-                "{t.cityBioDescription[lang]}"
-             </p>
+          {/* Main Description with Expansion */}
+          <div className="relative pt-4">
+             <div className="absolute -left-2 top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20"></div>
+             <div className="pl-4">
+               <p className="text-slate-600 font-medium leading-relaxed italic text-lg mb-3">
+                  "{t.cityBioDescription[lang]}"
+               </p>
+               
+               <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                 <p className="text-slate-500 text-sm leading-relaxed mb-4">
+                   {t.extendedBio[lang]}
+                 </p>
+               </div>
+
+               <button 
+                 onClick={() => setIsExpanded(!isExpanded)}
+                 className="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-widest hover:text-orange-700 transition-colors"
+               >
+                 {isExpanded ? t.readLess[lang] : t.readMore[lang]}
+                 {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+               </button>
+             </div>
           </div>
+
+          {/* Curiosity Gallery Section */}
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles size={20} className="text-orange-500" />
+              <h4 className="font-black text-slate-900 text-lg uppercase tracking-tight">{t.exploreGallery[lang]}</h4>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2 snap-x">
+              {GALLERY_IMAGES.map((img, i) => (
+                <div key={i} className="min-w-[160px] h-32 rounded-2xl overflow-hidden relative group/item snap-center shadow-md">
+                  <img src={img.url} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <span className="absolute bottom-2 left-3 right-3 text-[10px] font-bold text-white truncate">
+                    {img.title[lang]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* Quick Info Grid */}
           <div className="grid grid-cols-2 gap-3">
@@ -130,9 +172,25 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
               </div>
               <div>
                 <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'لمحة تاريخية' : 'Historical Glimpse'}</h4>
-                <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                  {t.historyDetails[lang]}
-                </p>
+                <div className="space-y-2">
+                  <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                    {t.historyDetails[lang]}
+                  </p>
+                  
+                  <div className={`overflow-hidden transition-all duration-500 ${isHistoryExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <p className="text-sm text-slate-500 leading-relaxed font-medium border-t border-slate-100 pt-2 mt-2">
+                      {t.extendedHistory[lang]}
+                    </p>
+                  </div>
+
+                  <button 
+                    onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+                    className="flex items-center gap-1.5 text-amber-600 font-bold text-[10px] uppercase tracking-wider hover:text-amber-700 transition-colors"
+                  >
+                    {isHistoryExpanded ? t.readLess[lang] : t.readMore[lang]}
+                    {isHistoryExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                  </button>
+                </div>
               </div>
             </section>
 
