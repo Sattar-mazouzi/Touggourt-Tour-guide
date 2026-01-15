@@ -15,6 +15,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   const t = translations;
 
   const handleOpenMap = () => {
+    if (!place.location) return;
     window.open(`https://www.google.com/maps/search/?api=1&query=${place.location.lat},${place.location.lng}`, '_blank');
   };
 
@@ -34,9 +35,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
-      {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-32">
-        {/* Hero Image Section */}
         <div className="relative h-[40vh] flex-shrink-0">
           <img 
             src={place.imageUrl} 
@@ -61,18 +60,17 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
           </div>
           <div className="absolute bottom-10 left-6 right-6">
             <span className="inline-block bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2">
-              {t[place.category][lang]}
+              {t[place.category]?.[lang] || place.category}
             </span>
             <h2 className="text-3xl font-black text-white drop-shadow-md">{place.name[lang]}</h2>
           </div>
         </div>
 
-        {/* Content Section */}
         <div className="bg-white -mt-8 rounded-t-[40px] p-8 shadow-2xl relative z-10">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2 text-slate-500">
               <MapPin size={20} className="text-orange-500" />
-              <span className="text-sm font-medium">{place.location.address[lang]}</span>
+              <span className="text-sm font-medium">{place.address?.[lang] || ''}</span>
             </div>
             <div className="flex items-center gap-1 bg-yellow-50 px-3 py-1.5 rounded-2xl border border-yellow-200">
               <Star size={16} className="text-yellow-500 fill-yellow-500" />
@@ -81,10 +79,9 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
           </div>
 
           <div className="space-y-8">
-            {/* About Section */}
             <section>
               <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-                <Info size={20} className="text-blue-500" />
+                <span className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><Info size={16} className="text-blue-500" /></span>
                 {lang === 'en' ? 'Overview' : 'نظرة عامة'}
               </h3>
               <p className="text-slate-600 leading-relaxed text-base">
@@ -92,7 +89,6 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
               </p>
             </section>
 
-            {/* Location Map Section */}
             <section>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-slate-900">
@@ -106,7 +102,6 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
                 </button>
               </div>
               
-              {/* Embedded Interactive Map */}
               <MapView 
                 places={[place]} 
                 lang={lang} 
@@ -118,7 +113,6 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
         </div>
       </div>
 
-      {/* Bottom Sticky Action Button */}
       <div className="absolute bottom-0 left-0 w-full p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] bg-gradient-to-t from-white via-white to-transparent pt-10 z-20">
         <button 
           onClick={handleOpenMap}

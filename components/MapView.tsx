@@ -28,7 +28,6 @@ const MapView: React.FC<Props> = ({
   useEffect(() => {
     if (!mapContainerRef.current || typeof L === 'undefined') return;
 
-    // Initialize map if not already done
     if (!mapRef.current) {
       mapRef.current = L.map(mapContainerRef.current, {
         zoomControl: false,
@@ -48,11 +47,9 @@ const MapView: React.FC<Props> = ({
       }
     }
 
-    // Clear old markers
     markersRef.current.forEach(m => mapRef.current.removeLayer(m));
     markersRef.current = [];
 
-    // Add markers
     places.forEach(place => {
       const { lat, lng } = place.location;
       
@@ -74,7 +71,7 @@ const MapView: React.FC<Props> = ({
             <img src="${place.imageUrl}" class="w-full h-24 object-cover" />
             <div class="p-2">
               <h4 class="font-bold text-sm text-slate-900">${place.name[lang]}</h4>
-              <p class="text-[10px] text-slate-500">${place.location.address[lang]}</p>
+              <p class="text-[10px] text-slate-500">${place.address?.[lang] || ''}</p>
             </div>
           </div>
         `;
@@ -90,7 +87,6 @@ const MapView: React.FC<Props> = ({
       markersRef.current.push(marker);
     });
 
-    // Adjust view
     if (places.length === 1) {
       mapRef.current.setView([places[0].location.lat, places[0].location.lng], initialZoom);
     } else if (places.length > 1) {
@@ -98,7 +94,6 @@ const MapView: React.FC<Props> = ({
       mapRef.current.fitBounds(group.getBounds().pad(0.1));
     }
 
-    // Force redraw for hidden containers
     setTimeout(() => {
       if (mapRef.current) mapRef.current.invalidateSize();
     }, 200);

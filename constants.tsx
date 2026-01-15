@@ -19,12 +19,13 @@ export const PLACES: Place[] = [
     imageUrl: 'https://picsum.photos/seed/toug_mosque/800/600',
     location: {
       lat: 33.1064,
-      lng: 6.0628,
-      address: { 
-        en: 'Center of Touggourt, Algeria', 
-        ar: 'وسط مدينة تقرت، الجزائر', 
-        fr: 'Centre de Touggourt, Algérie' 
-      }
+      lng: 6.0628
+    },
+    // Moved address from inside location to top level
+    address: { 
+      en: 'Center of Touggourt, Algeria', 
+      ar: 'وسط مدينة تقرت، الجزائر', 
+      fr: 'Centre de Touggourt, Algérie' 
     },
     featured: true
   },
@@ -45,12 +46,13 @@ export const PLACES: Place[] = [
     imageUrl: 'https://picsum.photos/seed/toug_palms/800/600',
     location: {
       lat: 33.1150,
-      lng: 6.0750,
-      address: { 
-        en: 'Oasis Region, Touggourt', 
-        ar: 'منطقة الواحات، تقرت', 
-        fr: 'Région des Oasis, Touggourt' 
-      }
+      lng: 6.0750
+    },
+    // Moved address from inside location to top level
+    address: { 
+      en: 'Oasis Region, Touggourt', 
+      ar: 'منطقة الواحات، تقرت', 
+      fr: 'Région des Oasis, Touggourt' 
     },
     featured: true
   },
@@ -71,12 +73,13 @@ export const PLACES: Place[] = [
     imageUrl: 'https://picsum.photos/seed/toug_tidjania/800/600',
     location: {
       lat: 33.1000,
-      lng: 6.0600,
-      address: { 
-        en: 'Tamacine, Near Touggourt', 
-        ar: 'تماسين، بالقرب من تقرت', 
-        fr: 'Tamacine, près de Touggourt' 
-      }
+      lng: 6.0600
+    },
+    // Moved address from inside location to top level
+    address: { 
+      en: 'Tamacine, Near Touggourt', 
+      ar: 'تماسين، بالقرب من تقرت', 
+      fr: 'Tamacine, près de Touggourt' 
     }
   },
   {
@@ -96,12 +99,13 @@ export const PLACES: Place[] = [
     imageUrl: 'https://picsum.photos/seed/toug_hotel/800/600',
     location: {
       lat: 33.1080,
-      lng: 6.0650,
-      address: { 
-        en: 'Main Road, Touggourt', 
-        ar: 'الطريق الرئيسي، تقرت', 
-        fr: 'Route Principale, Touggourt' 
-      }
+      lng: 6.0650
+    },
+    // Moved address from inside location to top level
+    address: { 
+      en: 'Main Road, Touggourt', 
+      ar: 'الطريق الرئيسي، تقرت', 
+      fr: 'Route Principale, Touggourt' 
     }
   },
   {
@@ -121,12 +125,13 @@ export const PLACES: Place[] = [
     imageUrl: 'https://picsum.photos/seed/toug_food/800/600',
     location: {
       lat: 33.1070,
-      lng: 6.0640,
-      address: { 
-        en: 'Commercial District, Touggourt', 
-        ar: 'الحي التجاري، تقرت', 
-        fr: 'Quartier Commercial, Touggourt' 
-      }
+      lng: 6.0640
+    },
+    // Moved address from inside location to top level
+    address: { 
+      en: 'Commercial District, Touggourt', 
+      ar: 'الحي التجاري، تقرت', 
+      fr: 'Quartier Commercial, Touggourt' 
     }
   }
 ];

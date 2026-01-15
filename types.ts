@@ -11,8 +11,8 @@ export interface Place {
   location: {
     lat: number;
     lng: number;
-    address: { en: string; ar: string; fr: string };
   };
+  address: { en: string; ar: string; fr: string };
   featured?: boolean;
 }
 

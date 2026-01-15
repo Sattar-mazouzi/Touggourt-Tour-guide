@@ -47,7 +47,7 @@ const PlaceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onToggl
         </h3>
         <div className="flex items-center gap-1 text-slate-500 text-sm mb-2">
           <MapPin size={14} />
-          <span className="truncate">{place.location.address[lang]}</span>
+          <span className="truncate">{place.address?.[lang] || ''}</span>
         </div>
         <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed">
           {place.description[lang]}
