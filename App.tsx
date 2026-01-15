@@ -69,8 +69,8 @@ const App: React.FC = () => {
       className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl font-arabic' : 'ltr'}`} 
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
     >
-      {/* Header */}
-      <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))]">
+      {/* Header - Fixed higher z-index to stay above search bar stacking context */}
+      <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] relative z-50">
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
@@ -117,7 +117,7 @@ const App: React.FC = () => {
           )}
 
           {/* Search Bar */}
-          <div className="relative mb-6 group">
+          <div className="relative mb-6 group z-10">
             <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors`} size={20} />
             <input 
               type="text"
