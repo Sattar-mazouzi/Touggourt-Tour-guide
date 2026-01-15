@@ -1,15 +1,14 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Info, Landmark } from 'lucide-react';
-import { PLACES } from './constants';
-import { Place, Language, Category } from './types';
-import { translations } from './i18n';
-import PlaceCard from './components/PlaceCard';
-import DetailsView from './components/DetailsView';
-import LanguageSwitcher from './components/LanguageSwitcher';
-import MapView from './components/MapView';
-import CityBio from './components/CityBio';
-import AiGuide from './components/AiGuide';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark } from 'lucide-react';
+import { PLACES } from './constants.tsx';
+import { Place, Language, Category } from './types.ts';
+import { translations } from './i18n.ts';
+import PlaceCard from './components/PlaceCard.tsx';
+import DetailsView from './components/DetailsView.tsx';
+import LanguageSwitcher from './components/LanguageSwitcher.tsx';
+import MapView from './components/MapView.tsx';
+import CityBio from './components/CityBio.tsx';
 
 const App: React.FC = () => {
   // Default language set to Arabic
@@ -323,8 +322,6 @@ const App: React.FC = () => {
           onClose={() => setIsBioOpen(false)} 
         />
       )}
-
-      <AiGuide lang={lang} />
     </div>
   );
 };

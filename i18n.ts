@@ -22,7 +22,7 @@ export const translations: TranslationDict = {
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات', fr: 'Itinéraire' },
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
   welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت', fr: 'Bienvenue à Touggourt' },
-  discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء', fr: 'Découvrez les trésors cachés du désert' },
+  discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء', fr: 'Découvrez les trésors cachés du dését' },
   cityBioTitle: { en: 'About Touggourt', ar: 'عن مدينة تقرت', fr: 'À propos de Touggourt' },
   cityBioDescription: { 
     en: 'Touggourt, known as the "City of a Thousand Domes," is a historic oasis city in southeastern Algeria. It serves as the gateway to the deep Sahara and the heart of the Oued Righ region.',
@@ -55,6 +55,4 @@ export const translations: TranslationDict = {
   algeriaLocation: { en: 'Location in Algeria', ar: 'الموقع في الجزائر', fr: 'Localisation en Algérie' },
   close: { en: 'Close', ar: 'إغلاق', fr: 'Fermer' },
   startExploring: { en: 'Start Exploring', ar: 'ابدأ الاستكشاف', fr: 'Commencer l\'exploration' },
-  aiAssistant: { en: 'AI Guide', ar: 'المرشد الذكي', fr: 'Guide IA' },
-  askAi: { en: 'Ask about Touggourt...', ar: 'اسأل عن تقرت...', fr: 'Posez une question sur Touggourt...' },
 };
