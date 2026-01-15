@@ -59,10 +59,13 @@ const LanguageSwitcher: React.FC<Props> = ({ current, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 right-0 min-w-[160px] bg-white border border-slate-100 rounded-2xl shadow-2xl shadow-slate-900/10 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div 
+          className={`absolute top-full mt-2 min-w-[160px] bg-white border border-slate-100 rounded-2xl shadow-2xl shadow-slate-900/10 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200 
+            ${current === 'ar' ? 'left-0' : 'right-0'}`}
+        >
           <div className="p-1">
-            <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] border-b border-slate-50 mb-1">
-              Select Language
+            <div className={`px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] border-b border-slate-50 mb-1 ${current === 'ar' ? 'text-right' : 'text-left'}`}>
+              {current === 'ar' ? 'اختر اللغة' : (current === 'fr' ? 'Choisir la langue' : 'Select Language')}
             </div>
             {languages.map((lang) => (
               <button
