@@ -15,8 +15,13 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   const t = translations;
 
   const handleOpenMap = () => {
-    if (!place.location) return;
-    window.open(`https://www.google.com/maps/search/?api=1&query=${place.location.lat},${place.location.lng}`, '_blank');
+    if (!place.location || typeof place.location.lat !== 'number' || typeof place.location.lng !== 'number') {
+      console.error("Invalid location data for directions");
+      return;
+    }
+    // Using the Google Maps Directions API URL format for better navigation behavior
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${place.location.lat},${place.location.lng}`;
+    window.open(url, '_blank');
   };
 
   const handleShare = async () => {
