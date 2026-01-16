@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 
-const CITY_COVER_IMAGE = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
 const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -45,7 +45,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
         {/* Header Image Section */}
         <div className="relative h-64 flex-shrink-0 group">
           <img 
-            src={CITY_COVER_IMAGE} 
+            src={data.cover || DEFAULT_COVER} 
             alt="Touggourt City View"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
           />

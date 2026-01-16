@@ -25,6 +25,7 @@ export interface CityBioData {
   climate: { en: string; ar: string; fr: string };
   population: string | number;
   location: string;
+  cover: string;
   gallery: {
     architecture: string;
     camel: string;
