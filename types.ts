@@ -16,6 +16,24 @@ export interface Place {
   featured?: boolean;
 }
 
+export interface CityBioData {
+  bio: { en: string; ar: string; fr: string };
+  extendedBio: { en: string; ar: string; fr: string };
+  histBio: { en: string; ar: string; fr: string };
+  extendedHistBio: { en: string; ar: string; fr: string };
+  geography: { en: string; ar: string; fr: string };
+  climate: { en: string; ar: string; fr: string };
+  population: string | number;
+  location: string;
+  gallery: {
+    architecture: string;
+    camel: string;
+    dunes: string;
+    oasis: string;
+    culture: string;
+  };
+}
+
 export type Language = 'en' | 'ar' | 'fr';
 
 export interface TranslationDict {

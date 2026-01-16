@@ -1,67 +1,42 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { X, MapPin, History, Globe, Users, CloudSun, ChevronDown, ChevronUp, Image as ImageIcon, Sparkles } from 'lucide-react';
-import { Language } from '../types';
+import React, { useState } from 'react';
+import { X, MapPin, History, Globe, Users, CloudSun, ChevronDown, ChevronUp, Sparkles, Loader2 } from 'lucide-react';
+import { Language, CityBioData } from '../types';
 import { translations } from '../i18n';
-
-declare const L: any;
 
 interface Props {
   lang: Language;
+  data: CityBioData | null;
   onClose: () => void;
 }
 
 const CITY_COVER_IMAGE = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
-const GALLERY_IMAGES = [
-  { url: "https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop", title: { en: "Saharan Dunes", ar: "كثبان الصحراء", fr: "Dunes de Sahara" } },
-  { url: "https://images.unsplash.com/photo-1509316785289-025f54246b21?q=80&w=800&auto=format&fit=crop", title: { en: "Palm Oasis", ar: "واحات النخيل", fr: "Oasis de Palmiers" } },
-  { url: "https://images.unsplash.com/photo-1516562309708-05f3fc21ed31?q=80&w=800&auto=format&fit=crop", title: { en: "Architecture", ar: "العمارة", fr: "Architecture" } },
-  { url: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb5ccf?q=80&w=800&auto=format&fit=crop", title: { en: "Sunset", ar: "الغروب", fr: "Coucher de soleil" } },
-];
-
-const CityBio: React.FC<Props> = ({ lang, onClose }) => {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<any>(null);
+const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const t = translations;
 
-  useEffect(() => {
-    if (!mapContainerRef.current || typeof L === 'undefined') return;
+  if (!data) {
+    return (
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
+        <div className="bg-white w-full max-w-lg rounded-[40px] p-12 flex flex-col items-center justify-center gap-4">
+           <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
+           <p className="font-bold text-slate-400 uppercase tracking-widest text-sm text-center">
+             {lang === 'ar' ? 'تحميل معلومات المدينة...' : (lang === 'fr' ? 'Chargement...' : 'Loading City Info...')}
+           </p>
+        </div>
+      </div>
+    );
+  }
 
-    if (!mapRef.current) {
-      mapRef.current = L.map(mapContainerRef.current, {
-        zoomControl: false,
-        attributionControl: false,
-        dragging: false,
-        touchZoom: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
-      }).setView([28.0339, 1.6596], 4.5);
-
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(mapRef.current);
-
-      const touggourtIcon = L.divIcon({
-        className: 'touggourt-pulse',
-        html: `<div class="relative flex items-center justify-center">
-                <div class="absolute w-8 h-8 bg-orange-500 rounded-full animate-ping opacity-25"></div>
-                <div class="w-4 h-4 bg-orange-600 rounded-full border-2 border-white shadow-lg"></div>
-              </div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
-      });
-
-      L.marker([33.1064, 6.0628], { icon: touggourtIcon }).addTo(mapRef.current);
-    }
-
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
-    };
-  }, []);
+  const galleryItems = [
+    { url: data.gallery.architecture, title: { en: "Architecture", ar: "العمارة", fr: "Architecture" } },
+    { url: data.gallery.camel, title: { en: "Camels", ar: "الجمال", fr: "Chameaux" } },
+    { url: data.gallery.dunes, title: { en: "Dunes", ar: "الكثبان", fr: "Dunes" } },
+    { url: data.gallery.oasis, title: { en: "Oasis", ar: "الواحات", fr: "Oasis" } },
+    { url: data.gallery.culture, title: { en: "Culture", ar: "الثقافة", fr: "Culture" } },
+  ];
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
@@ -101,12 +76,12 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
              <div className={`absolute ${lang === 'ar' ? '-right-2' : '-left-2'} top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20`}></div>
              <div className={lang === 'ar' ? 'pr-4' : 'pl-4'}>
                <p className="text-slate-600 font-medium leading-relaxed italic text-lg mb-3">
-                  "{t.cityBioDescription[lang]}"
+                  "{data.bio[lang]}"
                </p>
                
                <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                  <p className="text-slate-500 text-sm leading-relaxed mb-4">
-                   {t.extendedBio[lang]}
+                   {data.extendedBio[lang]}
                  </p>
                </div>
 
@@ -127,9 +102,9 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
               <h4 className="font-black text-slate-900 text-lg uppercase tracking-tight">{t.exploreGallery[lang]}</h4>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2 snap-x">
-              {GALLERY_IMAGES.map((img, i) => (
+              {galleryItems.map((img, i) => (
                 <div key={i} className="min-w-[160px] h-32 rounded-2xl overflow-hidden relative group/item snap-center shadow-md">
-                  <img src={img.url} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                  <img src={img.url} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" alt={img.title[lang]} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <span className="absolute bottom-2 left-3 right-3 text-[10px] font-bold text-white truncate">
                     {img.title[lang]}
@@ -144,12 +119,14 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <Users size={18} className="text-orange-500 mb-2" />
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'السكان' : (lang === 'fr' ? 'Population' : 'Population')}</p>
-                <p className="text-sm font-black text-slate-800">~150,000+</p>
+                <p className="text-sm font-black text-slate-800">
+                  {data.population || (lang === 'ar' ? 'غير متوفر' : 'N/A')}
+                </p>
              </div>
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <CloudSun size={18} className="text-amber-500 mb-2" />
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'المناخ' : (lang === 'fr' ? 'Climat' : 'Climate')}</p>
-                <p className="text-sm font-black text-slate-800">{lang === 'ar' ? 'صحراوي مشمس' : (lang === 'fr' ? 'Désertique' : 'Desert Sunny')}</p>
+                <p className="text-sm font-black text-slate-800">{data.climate[lang]}</p>
              </div>
           </div>
 
@@ -161,7 +138,7 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
               <div>
                 <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'الموقع والجغرافيا' : (lang === 'fr' ? 'Géographie' : 'Location & Geography')}</h4>
                 <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                  {t.locationDetails[lang]}
+                  {data.geography[lang]}
                 </p>
               </div>
             </section>
@@ -174,12 +151,12 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
                 <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'لمحة تاريخية' : (lang === 'fr' ? 'Histoire' : 'Historical Glimpse')}</h4>
                 <div className="space-y-2">
                   <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                    {t.historyDetails[lang]}
+                    {data.histBio[lang]}
                   </p>
                   
                   <div className={`overflow-hidden transition-all duration-500 ${isHistoryExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <p className="text-sm text-slate-500 leading-relaxed font-medium border-t border-slate-100 pt-2 mt-2">
-                      {t.extendedHistory[lang]}
+                      {data.extendedHistBio[lang]}
                     </p>
                   </div>
 
@@ -194,7 +171,7 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
               </div>
             </section>
 
-            {/* Context Map Visualization */}
+            {/* Context Map Visualization - Using Dynamic Image from Firestore */}
             <section className="pt-2">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -205,13 +182,26 @@ const CityBio: React.FC<Props> = ({ lang, onClose }) => {
                   {lang === 'ar' ? 'شمال أفريقيا' : (lang === 'fr' ? 'AFRIQUE DU NORD' : 'NORTH AFRICA')}
                 </div>
               </div>
-              <div className="h-56 rounded-[32px] overflow-hidden border border-slate-200 shadow-inner relative group/map">
-                <div ref={mapContainerRef} className="w-full h-full grayscale-[0.3] group-hover/map:grayscale-0 transition-all duration-700" />
-                <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[32px]"></div>
-                <div className={`absolute bottom-4 ${lang === 'ar' ? 'left-4' : 'right-4'} bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl text-[12px] font-black text-slate-800 border border-white shadow-xl flex items-center gap-2`}>
-                  <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                  {lang === 'ar' ? 'تقرت، الجزائر' : (lang === 'fr' ? 'Touggourt, Algérie' : 'Touggourt, Algeria')}
+              <div className="h-64 rounded-[32px] overflow-hidden border border-slate-200 shadow-inner relative group/map">
+                <img 
+                  src={data.location} 
+                  alt="Map of Touggourt location in Algeria" 
+                  className="w-full h-full object-cover transition-all duration-700 group-hover/map:scale-105"
+                />
+                <div className="absolute inset-0 bg-slate-900/10 pointer-events-none"></div>
+                
+                {/* Visual Pin Overlay */}
+                <div className="absolute top-[35%] left-[55%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                   <div className="relative">
+                      <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-40"></div>
+                      <div className="w-4 h-4 bg-orange-600 rounded-full border-2 border-white shadow-lg relative z-10"></div>
+                   </div>
+                   <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-xl text-[10px] font-black text-slate-800 border border-white shadow-xl whitespace-nowrap">
+                      {lang === 'ar' ? 'تقرت' : (lang === 'fr' ? 'Touggourt' : 'Touggourt')}
+                   </div>
                 </div>
+
+                <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[32px]"></div>
               </div>
             </section>
           </div>

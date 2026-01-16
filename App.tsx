@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2 } from 'lucide-react';
 import { db } from './firebase.ts';
-import { collection, getDocs } from 'firebase/firestore';
-import { Place, Language, Category } from './types.ts';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
+import { Place, Language, Category, CityBioData } from './types.ts';
 import { translations } from './i18n.ts';
 import PlaceCard from './components/PlaceCard.tsx';
 import DetailsView from './components/DetailsView.tsx';
@@ -22,6 +22,7 @@ const App: React.FC = () => {
   const [isBioOpen, setIsBioOpen] = useState(false);
   
   const [places, setPlaces] = useState<Place[]>([]);
+  const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,11 +35,13 @@ const App: React.FC = () => {
       sessionStorage.setItem('touggourt_bio_seen', 'true');
     }
 
-    const fetchPlaces = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
-        const querySnapshot = await getDocs(collection(db, "places"));
-        const fetchedPlaces = querySnapshot.docs.map(doc => {
+        
+        // Fetch Places
+        const placesSnapshot = await getDocs(collection(db, "places"));
+        const fetchedPlaces = placesSnapshot.docs.map(doc => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -56,14 +59,21 @@ const App: React.FC = () => {
           };
         }) as Place[];
         setPlaces(fetchedPlaces);
+
+        // Fetch City Bio
+        const bioQuery = query(collection(db, "aboutTouggourt"), limit(1));
+        const bioSnapshot = await getDocs(bioQuery);
+        if (!bioSnapshot.empty) {
+          setCityBio(bioSnapshot.docs[0].data() as CityBioData);
+        }
       } catch (error) {
-        console.error("Error fetching places from Firestore:", error);
+        console.error("Error fetching data from Firestore:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPlaces();
+    fetchData();
   }, []);
 
   const toggleFavorite = (id: string) => {
@@ -75,15 +85,15 @@ const App: React.FC = () => {
   };
 
   const filteredPlaces = useMemo(() => {
-    const query = searchQuery.toLowerCase();
+    const queryStr = searchQuery.toLowerCase();
     return places.filter(p => {
       const matchesSearch = 
-        p.name.en.toLowerCase().includes(query) || 
-        p.name.ar.toLowerCase().includes(query) || 
-        p.name.fr.toLowerCase().includes(query) ||
-        p.description.en.toLowerCase().includes(query) || 
-        p.description.ar.toLowerCase().includes(query) ||
-        p.description.fr.toLowerCase().includes(query);
+        p.name.en.toLowerCase().includes(queryStr) || 
+        p.name.ar.toLowerCase().includes(queryStr) || 
+        p.name.fr.toLowerCase().includes(queryStr) ||
+        p.description.en.toLowerCase().includes(queryStr) || 
+        p.description.ar.toLowerCase().includes(queryStr) ||
+        p.description.fr.toLowerCase().includes(queryStr);
         
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
@@ -350,6 +360,7 @@ const App: React.FC = () => {
       {isBioOpen && (
         <CityBio 
           lang={lang} 
+          data={cityBio}
           onClose={() => setIsBioOpen(false)} 
         />
       )}

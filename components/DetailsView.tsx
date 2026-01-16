@@ -27,13 +27,21 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   const handleShare = async () => {
     if (navigator.share) {
       try {
+        // Construct a safe URL. In some environments (like internal previewers), 
+        // window.location.href might not be a valid absolute URL with http/https.
+        const currentUrl = window.location.href;
+        const isValidUrl = currentUrl.startsWith('http');
+        
         await navigator.share({
           title: place.name[lang],
           text: place.description[lang],
-          url: window.location.href,
+          ...(isValidUrl ? { url: currentUrl } : {}),
         });
-      } catch (err) {
-        console.error('Error sharing:', err);
+      } catch (err: any) {
+        // Only log if it's not a user-initiated cancellation
+        if (err.name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
       }
     }
   };
