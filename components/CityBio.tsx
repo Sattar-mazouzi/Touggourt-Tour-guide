@@ -191,7 +191,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
                 <div className="absolute inset-0 bg-slate-900/10 pointer-events-none"></div>
                 
                 {/* Visual Pin Overlay */}
-                <div className="absolute top-[35%] left-[55%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                <div className="absolute top-[20%] left-[72%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
                    <div className="relative">
                       <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-40"></div>
                       <div className="w-4 h-4 bg-orange-600 rounded-full border-2 border-white shadow-lg relative z-10"></div>
