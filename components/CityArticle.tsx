@@ -1,0 +1,145 @@
+
+import React from 'react';
+import { ChevronLeft, History, MapPin, Globe, Share2 } from 'lucide-react';
+import { Language, CityBioData } from '../types';
+import { translations } from '../i18n';
+
+interface Props {
+  lang: Language;
+  data: CityBioData;
+  onClose: () => void;
+}
+
+const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
+  const t = translations;
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: t.cityBioTitle[lang],
+          text: data.bio[lang],
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Error sharing article:', err);
+      }
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-right duration-300">
+      {/* Sticky Top Header */}
+      <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex items-center justify-between">
+        <button 
+          onClick={onClose}
+          className="p-2 -ml-2 text-slate-900 hover:bg-slate-50 rounded-full transition-colors flex items-center gap-1"
+        >
+          <ChevronLeft size={24} className={lang === 'ar' ? 'rotate-180' : ''} />
+          <span className="font-bold text-sm">{t.back[lang]}</span>
+        </button>
+        <h1 className="text-lg font-black text-slate-900 truncate px-4">
+          {t.cityBioTitle[lang]}
+        </h1>
+        <button 
+          onClick={handleShare}
+          className="p-2 text-slate-900 hover:bg-slate-50 rounded-full transition-colors"
+        >
+          <Share2 size={20} />
+        </button>
+      </header>
+
+      {/* Main Content Area */}
+      <article className="flex-1 overflow-y-auto scrollbar-hide">
+        {/* Cover Hero */}
+        <div className="relative h-[40vh] w-full">
+          <img 
+            src={data.cover} 
+            alt={t.cityBioTitle[lang]} 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/20"></div>
+        </div>
+
+        {/* Article Body */}
+        <div className="px-6 py-8 max-w-2xl mx-auto space-y-12">
+          {/* Intro Section */}
+          <section>
+            <p className="text-2xl font-black text-slate-900 mb-6 leading-tight">
+              {data.bio[lang]}
+            </p>
+            <div className="space-y-4 text-slate-600 leading-relaxed text-lg">
+              {/* Splitting extendedBio by newlines if any, or just rendering as is */}
+              <p>{data.extendedBio[lang]}</p>
+            </div>
+          </section>
+
+          {/* Geography Section */}
+          <section className="bg-slate-50 -mx-6 px-6 py-10 border-y border-slate-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                <MapPin size={24} />
+              </div>
+              <h2 className="text-2xl font-black text-slate-900">{t.geography[lang]}</h2>
+            </div>
+            <div className="text-slate-600 leading-relaxed text-lg mb-8">
+              {data.geography[lang]}
+            </div>
+            {/* Context Map */}
+            <div className="rounded-[40px] overflow-hidden border-4 border-white shadow-2xl relative h-64 bg-slate-200">
+              <img src={data.location} alt="Map" className="w-full h-full object-cover" />
+              <div className="absolute top-[20%] left-[72%] -translate-x-1/2 -translate-y-1/2">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-40"></div>
+                  <div className="w-4 h-4 bg-orange-600 rounded-full border-2 border-white shadow-lg relative z-10"></div>
+                </div>
+              </div>
+              <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                {t.algeriaLocation[lang]}
+              </div>
+            </div>
+          </section>
+
+          {/* History Section */}
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
+                <History size={24} />
+              </div>
+              <h2 className="text-2xl font-black text-slate-900">{t.history[lang]}</h2>
+            </div>
+            <div className="space-y-6 text-slate-600 leading-relaxed text-lg">
+              <p className="font-bold text-slate-900">{data.histBio[lang]}</p>
+              <p>{data.extendedHistBio[lang]}</p>
+            </div>
+          </section>
+
+          {/* Gallery Highlight */}
+          <section>
+             <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
+                <Globe size={24} />
+              </div>
+              <h2 className="text-2xl font-black text-slate-900">{t.exploreGallery[lang]}</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+               <img src={data.gallery.architecture} className="w-full h-48 object-cover rounded-[32px] shadow-md" alt="Arch" />
+               <img src={data.gallery.oasis} className="w-full h-48 object-cover rounded-[32px] shadow-md" alt="Oasis" />
+               <img src={data.gallery.dunes} className="w-full col-span-2 h-64 object-cover rounded-[32px] shadow-md" alt="Dunes" />
+            </div>
+          </section>
+
+          {/* Footer Text */}
+          <footer className="pt-8 border-t border-slate-100 text-center">
+             <div className="w-12 h-1 bg-orange-500 mx-auto rounded-full mb-6"></div>
+             <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">
+                {t.appName[lang]} &copy; {new Date().getFullYear()}
+             </p>
+          </footer>
+        </div>
+      </article>
+    </div>
+  );
+};
+
+export default CityArticle;

@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { X, MapPin, History, Globe, Users, CloudSun, ChevronDown, ChevronUp, Sparkles, Loader2 } from 'lucide-react';
+import React from 'react';
+import { X, Globe, Users, CloudSun, Sparkles, Loader2, BookOpen } from 'lucide-react';
 import { Language, CityBioData } from '../types';
 import { translations } from '../i18n';
 
@@ -8,13 +8,12 @@ interface Props {
   lang: Language;
   data: CityBioData | null;
   onClose: () => void;
+  onOpenArticle: () => void;
 }
 
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
-const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
+const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
   const t = translations;
 
   if (!data) {
@@ -60,7 +59,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
 
           <div className={`absolute bottom-8 ${lang === 'ar' ? 'right-8' : 'left-8'} right-8`}>
             <span className="inline-block px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg shadow-orange-500/30">
-              {lang === 'ar' ? 'مدينة الواحات' : (lang === 'fr' ? 'Ville Oasis' : 'Oasis City')}
+              {t.wadiRigh[lang]}
             </span>
             <h2 className="text-4xl font-black text-slate-900 drop-shadow-sm leading-tight">
               {t.cityBioTitle[lang]}
@@ -71,7 +70,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
         {/* Content Section */}
         <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide space-y-8">
           
-          {/* Main Description with Expansion */}
+          {/* Brief Description */}
           <div className="relative pt-4">
              <div className={`absolute ${lang === 'ar' ? '-right-2' : '-left-2'} top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20`}></div>
              <div className={lang === 'ar' ? 'pr-4' : 'pl-4'}>
@@ -79,18 +78,12 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
                   "{data.bio[lang]}"
                </p>
                
-               <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                 <p className="text-slate-500 text-sm leading-relaxed mb-4">
-                   {data.extendedBio[lang]}
-                 </p>
-               </div>
-
                <button 
-                 onClick={() => setIsExpanded(!isExpanded)}
+                 onClick={onOpenArticle}
                  className="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-widest hover:text-orange-700 transition-colors"
                >
-                 {isExpanded ? t.readLess[lang] : t.readMore[lang]}
-                 {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                 {t.readMore[lang]}
+                 <BookOpen size={14} />
                </button>
              </div>
           </div>
@@ -117,104 +110,41 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
           {/* Quick Info Grid */}
           <div className="grid grid-cols-2 gap-3">
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                <Users size={18} className="text-orange-500 mb-2" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.population[lang]}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <Users size={18} className="text-orange-500" />
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.population[lang]}</p>
+                </div>
                 <p className="text-sm font-black text-slate-800">
                   {data.population || t.notAvailable[lang]}
                 </p>
              </div>
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                <CloudSun size={18} className="text-amber-500 mb-2" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.climate[lang]}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <CloudSun size={18} className="text-amber-500" />
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.climate[lang]}</p>
+                </div>
                 <p className="text-sm font-black text-slate-800">{data.climate[lang]}</p>
              </div>
           </div>
-
-          <div className="space-y-8">
-            <section className="flex gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center flex-shrink-0 shadow-inner">
-                <MapPin size={24} className="text-blue-500" />
-              </div>
-              <div>
-                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{t.geography[lang]}</h4>
-                <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                  {data.geography[lang]}
-                </p>
-              </div>
-            </section>
-
-            <section className="flex gap-5">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center flex-shrink-0 shadow-inner">
-                <History size={24} className="text-amber-500" />
-              </div>
-              <div>
-                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{t.history[lang]}</h4>
-                <div className="space-y-2">
-                  <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                    {data.histBio[lang]}
-                  </p>
-                  
-                  <div className={`overflow-hidden transition-all duration-500 ${isHistoryExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <p className="text-sm text-slate-500 leading-relaxed font-medium border-t border-slate-100 pt-2 mt-2">
-                      {data.extendedHistBio[lang]}
-                    </p>
-                  </div>
-
-                  <button 
-                    onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-                    className="flex items-center gap-1.5 text-amber-600 font-bold text-[10px] uppercase tracking-wider hover:text-amber-700 transition-colors"
-                  >
-                    {isHistoryExpanded ? t.readLess[lang] : t.readMore[lang]}
-                    {isHistoryExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            {/* Context Map Visualization - Using Dynamic Image from Firestore */}
-            <section className="pt-2">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Globe size={20} className="text-slate-400" />
-                  <h4 className="font-black text-slate-900">{t.algeriaLocation[lang]}</h4>
-                </div>
-                <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-500 tracking-tighter">
-                  {t.northAfrica[lang]}
-                </div>
-              </div>
-              <div className="h-64 rounded-[32px] overflow-hidden border border-slate-200 shadow-inner relative group/map">
-                <img 
-                  src={data.location} 
-                  alt="Map of Touggourt location in Algeria" 
-                  className="w-full h-full object-cover transition-all duration-700 group-hover/map:scale-105"
-                />
-                <div className="absolute inset-0 bg-slate-900/10 pointer-events-none"></div>
-                
-                {/* Visual Pin Overlay */}
-                <div className="absolute top-[20%] left-[72%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
-                   <div className="relative">
-                      <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-40"></div>
-                      <div className="w-4 h-4 bg-orange-600 rounded-full border-2 border-white shadow-lg relative z-10"></div>
-                   </div>
-                   <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-xl text-[10px] font-black text-slate-800 border border-white shadow-xl whitespace-nowrap">
-                      {lang === 'ar' ? 'تقرت' : (lang === 'fr' ? 'Touggourt' : 'Touggourt')}
-                   </div>
-                </div>
-
-                <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-[32px]"></div>
-              </div>
-            </section>
-          </div>
         </div>
 
-        {/* Footer Action Bar */}
+        {/* Footer Action Bar with Two Buttons */}
         <div className="px-8 pb-8 pt-4 bg-white/80 backdrop-blur-md border-t border-slate-50 flex-shrink-0">
-          <button 
-            onClick={onClose}
-            className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-lg shadow-2xl shadow-slate-900/20 active:scale-[0.97] transition-all hover:bg-orange-600 hover:shadow-orange-500/20"
-          >
-            {t.startExploring[lang]}
-          </button>
+          <div className="flex gap-3">
+            <button 
+              onClick={onOpenArticle}
+              className="flex-1 py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-3xl font-black text-base shadow-lg active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+            >
+              <BookOpen size={20} />
+              {t.readMore[lang]}
+            </button>
+            <button 
+              onClick={onClose}
+              className="flex-[1.5] py-5 bg-slate-900 text-white rounded-3xl font-black text-base shadow-2xl shadow-slate-900/20 active:scale-[0.97] transition-all hover:bg-orange-600 hover:shadow-orange-500/20 flex items-center justify-center"
+            >
+              {t.startExploring[lang]}
+            </button>
+          </div>
         </div>
       </div>
     </div>

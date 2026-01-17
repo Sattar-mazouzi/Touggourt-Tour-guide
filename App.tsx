@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2 } from 'lucide-react';
 import { db } from './firebase.ts';
-import { collection, getDocs, limit, query } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { Place, Language, Category, CityBioData } from './types.ts';
 import { translations } from './i18n.ts';
 import PlaceCard from './components/PlaceCard.tsx';
@@ -10,8 +9,10 @@ import DetailsView from './components/DetailsView.tsx';
 import LanguageSwitcher from './components/LanguageSwitcher.tsx';
 import MapView from './components/MapView.tsx';
 import CityBio from './components/CityBio.tsx';
+import CityArticle from './components/CityArticle.tsx';
 
 const App: React.FC = () => {
+  // Fix syntax error: properly close the generic type and set the initial value
   const [lang, setLang] = useState<Language>('ar');
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'favorites'>('home');
   const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
@@ -20,6 +21,7 @@ const App: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isBioOpen, setIsBioOpen] = useState(false);
+  const [isArticleOpen, setIsArticleOpen] = useState(false);
   
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
@@ -61,10 +63,16 @@ const App: React.FC = () => {
         }) as Place[];
         setPlaces(fetchedPlaces);
 
-        const bioQuery = query(collection(db, "aboutCity"), limit(1));
-        const bioSnapshot = await getDocs(bioQuery);
-        if (!bioSnapshot.empty) {
-          setCityBio(bioSnapshot.docs[0].data() as CityBioData);
+        const bioSnapshot = await getDocs(collection(db, "aboutCity"));
+        let mergedBioData: any = {};
+        
+        bioSnapshot.forEach(doc => {
+          const data = doc.data();
+          mergedBioData = { ...mergedBioData, ...data };
+        });
+
+        if (Object.keys(mergedBioData).length > 0) {
+          setCityBio(mergedBioData as CityBioData);
         }
       } catch (error) {
         console.error("Error fetching data from Firestore:", error);
@@ -362,6 +370,15 @@ const App: React.FC = () => {
           lang={lang} 
           data={cityBio}
           onClose={() => setIsBioOpen(false)} 
+          onOpenArticle={() => setIsArticleOpen(true)}
+        />
+      )}
+
+      {isArticleOpen && cityBio && (
+        <CityArticle 
+          lang={lang} 
+          data={cityBio}
+          onClose={() => setIsArticleOpen(false)} 
         />
       )}
     </div>

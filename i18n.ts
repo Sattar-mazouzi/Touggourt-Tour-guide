@@ -23,7 +23,16 @@ export const translations: TranslationDict = {
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
   welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت', fr: 'Bienvenue à Touggourt' },
   discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء', fr: 'Découvrez les trésors cachés du désert' },
-  cityBioTitle: { en: 'About Touggourt', ar: 'عن مدينة تقرت', fr: 'À propos de Touggourt' },
+  cityBioTitle: { 
+    en: 'Discover Our Joyous Touggourt', 
+    ar: 'اكتشف ولايتنا توقرت البهجة', 
+    fr: 'Découvrez notre joyeuse Touggourt' 
+  },
+  wadiRigh: {
+    en: 'Wadi Righ',
+    ar: 'وادي ريغ',
+    fr: 'Oued Righ'
+  },
   cityBioDescription: { 
     en: 'Touggourt, known as the "City of a Thousand Domes," is a historic oasis city in southeastern Algeria. It serves as the gateway to the deep Sahara and the heart of the Oued Righ region.',
     ar: 'تقرت، المعروفة باسم "مدينة الألف قبة"، هي مدينة واحات تاريخية في جنوب شرق الجزائر. تعد بوابة للصحراء الكبرى وقلب منطقة وادي ريغ.',
@@ -31,7 +40,7 @@ export const translations: TranslationDict = {
   },
   locationDetails: {
     en: 'Located approximately 600km south of Algiers, it is bordered by Biskra and El M\'Ghair to the north, El Oued to the east, Ouargla to the south, and Ghardaïa to the west.',
-    ar: 'تقع على بعد حوالي 600 كلم جنوب الجزائر العاصمة، يحدها شمالاً بسكرة والمغير، شرقاً الوادي، جنوباً ورقلة، وغرباً غرداية والجلفة.',
+    ar: 'تققع على بعد حوالي 600 كلم جنوب الجزائر العاصمة، يحدها شمالاً بسكرة والمغير، شرقاً الوادي، جنوباً ورقلة، وغرباً غرداية والجلفة.',
     fr: 'Située à environ 600 km au sud d\'Alger, elle est bordée par Biskra au nord, El Oued à l\'est, Ouargla au sud et Ghardaïa au ouest.'
   },
   historyDetails: {
@@ -39,19 +48,10 @@ export const translations: TranslationDict = {
     ar: 'تعود جذورها إلى القرن الخامس عشر، وكانت العاصمة التاريخية لسلطنة تقرت. تشتهر بواحات النخيل الشاسعة والمركز الروحي في تماسين.',
     fr: 'Avec des racines remontant au XVe siècle, elle fut la capitale historique du Sultanat de Touggourt. Elle est célèbre pour ses vastes palmeraies et le centre spirituel de Tamacine.'
   },
-  extendedHistory: {
-    en: 'The city was a vital stop for Saharan caravans and is historically renowned for its resilience. The region houses ancient religious landmarks like the Tidjania Zaouia, a beacon of knowledge and Sufism in the Islamic world.',
-    ar: 'كانت المدينة محطة حيوية للقوافل العابرة للصحراء، واشتهرت تاريخياً بمقاومتها وصمودها. تضم المنطقة معالم دينية عريقة مثل الزاوية التجانية التي تعد منارة للعلم والتصوف في العالم الإسلامي.',
-    fr: 'La ville était une étape vitale pour les caravanes sahariennes. La région abrite des monuments religieux anciens comme la Zaouïa Tidjania, un phare du soufisme dans le monde islamique.'
-  },
-  extendedBio: {
-    en: 'The city is a vital economic hub, famous for its high-quality dates (Deglet Nour) and its unique architectural style that features numerous small domes designed to regulate temperature.',
-    ar: 'تعد المدينة مركزاً اقتصادياً حيوياً، تشتهر بتمورها عالية الجودة (دقلة نور) وبطرازها المعماري الفريد الذي يتميز بالعديد من القباب الصغيرة المصممة لتنظيم درجة الحرارة.',
-    fr: 'La ville est un pôle économique vital, célèbre pour ses dattes (Deglet Nour) et son style architectural unique avec de nombreuses coupoles régulant la température.'
-  },
   exploreGallery: { en: 'Curiosity Gallery', ar: 'معرض الاستكشاف', fr: 'Galerie de Curiosités' },
   readMore: { en: 'Read More', ar: 'اقرأ المزيد', fr: 'Lire plus' },
   readLess: { en: 'Read Less', ar: 'عرض أقل', fr: 'Réduire' },
+  fullStory: { en: 'Full Story', ar: 'القصة الكاملة', fr: 'Histoire complète' },
   algeriaLocation: { en: 'Location in Algeria', ar: 'الموقع في الجزائر', fr: 'Localisation en Algérie' },
   close: { en: 'Close', ar: 'إغلاق', fr: 'Fermer' },
   startExploring: { en: 'Start Exploring', ar: 'ابدأ الاستكشاف', fr: 'Commencer l\'exploration' },
@@ -64,6 +64,7 @@ export const translations: TranslationDict = {
   geography: { en: 'Location & Geography', ar: 'الموقع والجغرافيا', fr: 'Géographie' },
   history: { en: 'Historical Glimpse', ar: 'لمحة تاريخية', fr: 'Histoire' },
   notAvailable: { en: 'N/A', ar: 'غير متوفر', fr: 'N/A' },
-  northAfrica: { en: 'NORTH AFRICA', ar: 'شمال أفريقيا', fr: 'AFRIQUE DU NORD' },
+  northAfrica: { en: 'NORTH AFRICA', ar: 'شمال أفريقيا', fr: 'AFRIQUE DU نورد' },
   interactiveMap: { en: 'Interactive Map', ar: 'خريطة تفاعلية', fr: 'Carte Interactive' },
+  back: { en: 'Back', ar: 'عودة', fr: 'Retour' },
 };
