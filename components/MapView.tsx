@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Place, Language } from '../types';
+import { translations } from '../i18n';
 
 declare const L: any;
 
@@ -24,6 +25,7 @@ const MapView: React.FC<Props> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const t = translations;
 
   useEffect(() => {
     if (!mapContainerRef.current || typeof L === 'undefined') return;
@@ -104,7 +106,7 @@ const MapView: React.FC<Props> = ({
     <div className={`w-full ${height} rounded-3xl overflow-hidden shadow-inner border border-slate-200 relative`}>
       <div ref={mapContainerRef} className="w-full h-full z-0" />
       <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm text-[10px] font-bold text-slate-500 uppercase tracking-widest border border-slate-100 pointer-events-none">
-        {lang === 'en' ? 'Interactive Map' : 'خريطة تفاعلية'}
+        {t.interactiveMap[lang]}
       </div>
     </div>
   );

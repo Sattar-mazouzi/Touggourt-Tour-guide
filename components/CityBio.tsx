@@ -23,7 +23,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
         <div className="bg-white w-full max-w-lg rounded-[40px] p-12 flex flex-col items-center justify-center gap-4">
            <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
            <p className="font-bold text-slate-400 uppercase tracking-widest text-sm text-center">
-             {lang === 'ar' ? 'تحميل معلومات المدينة...' : (lang === 'fr' ? 'Chargement...' : 'Loading City Info...')}
+             {t.loadingCityInfo[lang]}
            </p>
         </div>
       </div>
@@ -118,14 +118,14 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
           <div className="grid grid-cols-2 gap-3">
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <Users size={18} className="text-orange-500 mb-2" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'السكان' : (lang === 'fr' ? 'Population' : 'Population')}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.population[lang]}</p>
                 <p className="text-sm font-black text-slate-800">
-                  {data.population || (lang === 'ar' ? 'غير متوفر' : 'N/A')}
+                  {data.population || t.notAvailable[lang]}
                 </p>
              </div>
              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <CloudSun size={18} className="text-amber-500 mb-2" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'ar' ? 'المناخ' : (lang === 'fr' ? 'Climat' : 'Climate')}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.climate[lang]}</p>
                 <p className="text-sm font-black text-slate-800">{data.climate[lang]}</p>
              </div>
           </div>
@@ -136,7 +136,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
                 <MapPin size={24} className="text-blue-500" />
               </div>
               <div>
-                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'الموقع والجغرافيا' : (lang === 'fr' ? 'Géographie' : 'Location & Geography')}</h4>
+                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{t.geography[lang]}</h4>
                 <p className="text-sm text-slate-500 leading-relaxed font-medium">
                   {data.geography[lang]}
                 </p>
@@ -148,7 +148,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
                 <History size={24} className="text-amber-500" />
               </div>
               <div>
-                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{lang === 'ar' ? 'لمحة تاريخية' : (lang === 'fr' ? 'Histoire' : 'Historical Glimpse')}</h4>
+                <h4 className="font-black text-slate-900 mb-1.5 text-lg">{t.history[lang]}</h4>
                 <div className="space-y-2">
                   <p className="text-sm text-slate-500 leading-relaxed font-medium">
                     {data.histBio[lang]}
@@ -179,7 +179,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose }) => {
                   <h4 className="font-black text-slate-900">{t.algeriaLocation[lang]}</h4>
                 </div>
                 <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-500 tracking-tighter">
-                  {lang === 'ar' ? 'شمال أفريقيا' : (lang === 'fr' ? 'AFRIQUE DU NORD' : 'NORTH AFRICA')}
+                  {t.northAfrica[lang]}
                 </div>
               </div>
               <div className="h-64 rounded-[32px] overflow-hidden border border-slate-200 shadow-inner relative group/map">

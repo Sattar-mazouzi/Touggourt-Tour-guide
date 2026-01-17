@@ -19,7 +19,6 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
       console.error("Invalid location data for directions");
       return;
     }
-    // Using the Google Maps Directions API URL format for better navigation behavior
     const url = `https://www.google.com/maps/dir/?api=1&destination=${place.location.lat},${place.location.lng}`;
     window.open(url, '_blank');
   };
@@ -27,8 +26,6 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        // Construct a safe URL. In some environments (like internal previewers), 
-        // window.location.href might not be a valid absolute URL with http/https.
         const currentUrl = window.location.href;
         const isValidUrl = currentUrl.startsWith('http');
         
@@ -38,7 +35,6 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
           ...(isValidUrl ? { url: currentUrl } : {}),
         });
       } catch (err: any) {
-        // Only log if it's not a user-initiated cancellation
         if (err.name !== 'AbortError') {
           console.error('Error sharing:', err);
         }
@@ -95,7 +91,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
             <section>
               <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
                 <span className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><Info size={16} className="text-blue-500" /></span>
-                {lang === 'en' ? 'Overview' : 'نظرة عامة'}
+                {t.overview[lang]}
               </h3>
               <p className="text-slate-600 leading-relaxed text-base">
                 {place.description[lang]}

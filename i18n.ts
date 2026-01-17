@@ -22,7 +22,7 @@ export const translations: TranslationDict = {
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات', fr: 'Itinéraire' },
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
   welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت', fr: 'Bienvenue à Touggourt' },
-  discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء', fr: 'Découvrez les trésors cachés du dését' },
+  discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء', fr: 'Découvrez les trésors cachés du désert' },
   cityBioTitle: { en: 'About Touggourt', ar: 'عن مدينة تقرت', fr: 'À propos de Touggourt' },
   cityBioDescription: { 
     en: 'Touggourt, known as the "City of a Thousand Domes," is a historic oasis city in southeastern Algeria. It serves as the gateway to the deep Sahara and the heart of the Oued Righ region.',
@@ -31,7 +31,7 @@ export const translations: TranslationDict = {
   },
   locationDetails: {
     en: 'Located approximately 600km south of Algiers, it is bordered by Biskra and El M\'Ghair to the north, El Oued to the east, Ouargla to the south, and Ghardaïa to the west.',
-    ar: 'تققع على بعد حوالي 600 كلم جنوب الجزائر العاصمة، يحدها شمالاً بسكرة والمغير، شرقاً الوادي، جنوباً ورقلة، وغرباً غرداية والجلفة.',
+    ar: 'تقع على بعد حوالي 600 كلم جنوب الجزائر العاصمة، يحدها شمالاً بسكرة والمغير، شرقاً الوادي، جنوباً ورقلة، وغرباً غرداية والجلفة.',
     fr: 'Située à environ 600 km au sud d\'Alger, elle est bordée par Biskra au nord, El Oued à l\'est, Ouargla au sud et Ghardaïa au ouest.'
   },
   historyDetails: {
@@ -55,4 +55,15 @@ export const translations: TranslationDict = {
   algeriaLocation: { en: 'Location in Algeria', ar: 'الموقع في الجزائر', fr: 'Localisation en Algérie' },
   close: { en: 'Close', ar: 'إغلاق', fr: 'Fermer' },
   startExploring: { en: 'Start Exploring', ar: 'ابدأ الاستكشاف', fr: 'Commencer l\'exploration' },
+  overview: { en: 'Overview', ar: 'نظرة عامة', fr: 'Aperçu' },
+  loading: { en: 'Loading...', ar: 'جاري التحميل...', fr: 'Chargement...' },
+  loadingCityInfo: { en: 'Loading City Info...', ar: 'تحميل معلومات المدينة...', fr: 'Chargement des infos...' },
+  noPlacesFound: { en: 'No places found', ar: 'لم يتم العثور على أماكن', fr: 'Aucun lieu trouvé' },
+  population: { en: 'Population', ar: 'السكان', fr: 'Population' },
+  climate: { en: 'Climate', ar: 'المناخ', fr: 'Climat' },
+  geography: { en: 'Location & Geography', ar: 'الموقع والجغرافيا', fr: 'Géographie' },
+  history: { en: 'Historical Glimpse', ar: 'لمحة تاريخية', fr: 'Histoire' },
+  notAvailable: { en: 'N/A', ar: 'غير متوفر', fr: 'N/A' },
+  northAfrica: { en: 'NORTH AFRICA', ar: 'شمال أفريقيا', fr: 'AFRIQUE DU NORD' },
+  interactiveMap: { en: 'Interactive Map', ar: 'خريطة تفاعلية', fr: 'Carte Interactive' },
 };

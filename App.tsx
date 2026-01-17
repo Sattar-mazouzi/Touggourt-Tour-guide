@@ -25,6 +25,8 @@ const App: React.FC = () => {
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const t = translations;
+
   useEffect(() => {
     const saved = localStorage.getItem('touggourt_favs');
     if (saved) setFavorites(JSON.parse(saved));
@@ -39,7 +41,6 @@ const App: React.FC = () => {
       try {
         setIsLoading(true);
         
-        // Fetch Places
         const placesSnapshot = await getDocs(collection(db, "places"));
         const fetchedPlaces = placesSnapshot.docs.map(doc => {
           const data = doc.data();
@@ -60,8 +61,7 @@ const App: React.FC = () => {
         }) as Place[];
         setPlaces(fetchedPlaces);
 
-        // Fetch City Bio
-        const bioQuery = query(collection(db, "aboutTouggourt"), limit(1));
+        const bioQuery = query(collection(db, "aboutCity"), limit(1));
         const bioSnapshot = await getDocs(bioQuery);
         if (!bioSnapshot.empty) {
           setCityBio(bioSnapshot.docs[0].data() as CityBioData);
@@ -116,7 +116,7 @@ const App: React.FC = () => {
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
             <div>
               <h1 className="text-xl font-black text-slate-900 leading-tight">
-                {translations.appName[lang]}
+                {t.appName[lang]}
               </h1>
               <p className="text-[10px] uppercase tracking-widest text-orange-600 font-bold">
                 {lang === 'ar' ? 'الجزائر' : (lang === 'fr' ? 'Algérie' : 'Algeria')}
@@ -134,7 +134,7 @@ const App: React.FC = () => {
             <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-4">
               <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
               <p className="font-bold text-xs uppercase tracking-widest">
-                {lang === 'ar' ? 'جاري التحميل...' : (lang === 'fr' ? 'Chargement...' : 'Loading...')}
+                {t.loading[lang]}
               </p>
             </div>
           ) : (
@@ -149,12 +149,12 @@ const App: React.FC = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-orange-500 group-hover:rotate-12 transition-transform"><Sparkles size={18} /></span>
                       <h2 className="text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">
-                        {translations.welcome[lang]}
+                        {t.welcome[lang]}
                       </h2>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="text-slate-500 text-sm font-medium">
-                        {translations.discoverPrompt[lang]}
+                        {t.discoverPrompt[lang]}
                       </p>
                     </div>
                   </button>
@@ -167,7 +167,7 @@ const App: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={translations.searchPlaceholder[lang]}
+                  placeholder={t.searchPlaceholder[lang]}
                   className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm`}
                 />
               </div>
@@ -178,7 +178,7 @@ const App: React.FC = () => {
                     <section className="mb-8">
                       <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
                         <Compass size={24} className="text-orange-500" />
-                        {translations.featured[lang]}
+                        {t.featured[lang]}
                       </h2>
                       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
                         {featuredPlaces.map(place => (
@@ -192,7 +192,7 @@ const App: React.FC = () => {
                             <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
                               <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
                               <p className="text-white/80 text-xs mt-1 flex items-center gap-1">
-                                <MapIcon size={12} /> {place.address[lang]}
+                                <MapIcon size={12} /> {place.address?.[lang] || ''}
                               </p>
                             </div>
                           </div>
@@ -202,7 +202,7 @@ const App: React.FC = () => {
                   )}
 
                   <section className="mb-8">
-                    <h2 className="text-xl font-bold text-slate-900 mb-4">{translations.categories[lang]}</h2>
+                    <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
                     <div className="grid grid-cols-3 gap-3">
                       {categories.filter(c => c !== 'all').map(cat => (
                         <button
@@ -221,7 +221,7 @@ const App: React.FC = () => {
                             {cat === 'hotels' && <Home size={20} />}
                             {cat === 'restaurants' && <Menu size={20} />}
                           </div>
-                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{translations[cat][lang]}</span>
+                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{t[cat][lang]}</span>
                         </button>
                       ))}
                     </div>
@@ -237,14 +237,14 @@ const App: React.FC = () => {
                       className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
                     >
                       <List size={16} />
-                      {translations.list[lang]}
+                      {t.list[lang]}
                     </button>
                     <button 
                       onClick={() => setExploreMode('map')}
                       className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
                     >
                       <MapIcon size={16} />
-                      {translations.map[lang]}
+                      {t.map[lang]}
                     </button>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ const App: React.FC = () => {
                           : 'bg-white text-slate-500 border border-slate-200'
                       }`}
                     >
-                      {translations[cat][lang]}
+                      {t[cat][lang]}
                     </button>
                   ))}
                 </div>
@@ -271,7 +271,7 @@ const App: React.FC = () => {
               <section>
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-slate-900">
-                    {activeTab === 'favorites' ? translations.favorites[lang] : (searchQuery ? `"${searchQuery}"` : translations.explore[lang])}
+                    {activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}
                   </h2>
                   <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
                     {filteredPlaces.length}
@@ -303,7 +303,7 @@ const App: React.FC = () => {
                           <Compass size={40} className="text-slate-300" />
                         </div>
                         <p className="text-slate-500 font-medium">
-                          {activeTab === 'favorites' ? translations.noFavorites[lang] : (lang === 'ar' ? 'لم يتم العثور على أماكن' : 'No places found')}
+                          {activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}
                         </p>
                       </div>
                     )}
@@ -324,7 +324,7 @@ const App: React.FC = () => {
             <div className={`p-1.5 rounded-xl transition-colors ${activeTab === 'home' ? 'bg-orange-50' : 'group-hover:bg-slate-50'}`}>
               <Home size={24} strokeWidth={activeTab === 'home' ? 2.5 : 2} />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest">{translations.home[lang]}</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span>
           </button>
           
           <button 
@@ -334,7 +334,7 @@ const App: React.FC = () => {
             <div className={`p-1.5 rounded-xl transition-colors ${activeTab === 'explore' ? 'bg-orange-50' : 'group-hover:bg-slate-50'}`}>
               <Compass size={24} strokeWidth={activeTab === 'explore' ? 2.5 : 2} />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest">{translations.explore[lang]}</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">{t.explore[lang]}</span>
           </button>
           
           <button 
@@ -344,7 +344,7 @@ const App: React.FC = () => {
             <div className={`p-1.5 rounded-xl transition-colors ${activeTab === 'favorites' ? 'bg-orange-50' : 'group-hover:bg-slate-50'}`}>
               <Heart size={24} strokeWidth={activeTab === 'favorites' ? 2.5 : 2} />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest">{translations.favorites[lang]}</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">{t.favorites[lang]}</span>
           </button>
         </div>
       </nav>
