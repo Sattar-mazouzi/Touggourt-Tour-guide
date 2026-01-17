@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronLeft, History, MapPin, Globe, Share2 } from 'lucide-react';
+import { ChevronLeft, History, MapPin, Globe, Share2, CloudSun, Wind } from 'lucide-react';
 import { Language, CityBioData } from '../types';
 import { translations } from '../i18n';
 
@@ -69,7 +69,6 @@ const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
               {data.bio[lang]}
             </p>
             <div className="space-y-4 text-slate-600 leading-relaxed text-lg">
-              {/* Splitting extendedBio by newlines if any, or just rendering as is */}
               <p>{data.extendedBio[lang]}</p>
             </div>
           </section>
@@ -100,6 +99,26 @@ const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
             </div>
           </section>
 
+          {/* Detailed Climate & Topography Section */}
+          {data.climateandTopography && (
+            <section className="bg-orange-50/30 -mx-6 px-6 py-10 border-y border-orange-100/50">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
+                  <CloudSun size={24} />
+                </div>
+                <h2 className="text-2xl font-black text-slate-900">{t.climateAndTopography[lang]}</h2>
+              </div>
+              <div className="bg-white/80 backdrop-blur rounded-[32px] p-6 shadow-sm border border-orange-100">
+                <div className="flex items-start gap-3 mb-4">
+                  <Wind className="text-orange-400 mt-1 flex-shrink-0" size={20} />
+                  <div className="text-slate-700 leading-relaxed text-lg whitespace-pre-wrap">
+                    {data.climateandTopography[lang]}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* History Section */}
           <section>
             <div className="flex items-center gap-3 mb-6">
@@ -117,7 +136,7 @@ const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
           {/* Gallery Highlight */}
           <section>
              <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
+              <div className="w-12 h-12 rounded-2xl bg-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-600/20">
                 <Globe size={24} />
               </div>
               <h2 className="text-2xl font-black text-slate-900">{t.exploreGallery[lang]}</h2>

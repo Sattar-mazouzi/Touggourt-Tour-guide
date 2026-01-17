@@ -61,10 +61,11 @@ export const translations: TranslationDict = {
   noPlacesFound: { en: 'No places found', ar: 'لم يتم العثور على أماكن', fr: 'Aucun lieu trouvé' },
   population: { en: 'Population', ar: 'السكان', fr: 'Population' },
   climate: { en: 'Climate', ar: 'المناخ', fr: 'Climat' },
+  climateAndTopography: { en: 'Climate & Topography', ar: 'المناخ والتضاريس', fr: 'Climat et Topographie' },
   geography: { en: 'Location & Geography', ar: 'الموقع والجغرافيا', fr: 'Géographie' },
   history: { en: 'Historical Glimpse', ar: 'لمحة تاريخية', fr: 'Histoire' },
   notAvailable: { en: 'N/A', ar: 'غير متوفر', fr: 'N/A' },
-  northAfrica: { en: 'NORTH AFRICA', ar: 'شمال أفريقيا', fr: 'AFRIQUE DU نورد' },
+  northAfrica: { en: 'NORTH AFRICA', ar: 'شمال أفريقيا', fr: 'AFRIQUE DU NORD' },
   interactiveMap: { en: 'Interactive Map', ar: 'خريطة تفاعلية', fr: 'Carte Interactive' },
   back: { en: 'Back', ar: 'عودة', fr: 'Retour' },
 };

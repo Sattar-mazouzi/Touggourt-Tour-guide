@@ -23,6 +23,7 @@ export interface CityBioData {
   extendedHistBio: { en: string; ar: string; fr: string };
   geography: { en: string; ar: string; fr: string };
   climate: { en: string; ar: string; fr: string };
+  climateandTopography?: { en: string; ar: string; fr: string };
   population: string | number;
   location: string;
   cover: string;
