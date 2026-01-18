@@ -17,6 +17,7 @@ export interface Place {
 }
 
 export interface CityBioData {
+  name?: { en: string; ar: string; fr: string };
   bio: { en: string; ar: string; fr: string };
   extendedBio: { en: string; ar: string; fr: string };
   histBio: { en: string; ar: string; fr: string };

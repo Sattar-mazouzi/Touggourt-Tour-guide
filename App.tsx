@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2 } from 'lucide-react';
 import { db } from './firebase.ts';
@@ -12,7 +13,6 @@ import CityBio from './components/CityBio.tsx';
 import CityArticle from './components/CityArticle.tsx';
 
 const App: React.FC = () => {
-  // Fix syntax error: properly close the generic type and set the initial value
   const [lang, setLang] = useState<Language>('ar');
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'favorites'>('home');
   const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
@@ -111,6 +111,16 @@ const App: React.FC = () => {
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
 
+  const welcomeMessage = useMemo(() => {
+    if (cityBio?.name?.[lang]) {
+      const cityName = cityBio.name[lang];
+      if (lang === 'ar') return `مرحباً بكم في ${cityName}`;
+      if (lang === 'fr') return `Bienvenue à ${cityName}`;
+      return `Welcome to ${cityName}`;
+    }
+    return t.welcome[lang];
+  }, [cityBio, lang, t]);
+
   const categories: Category[] = ['all', 'religion', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
 
   return (
@@ -157,7 +167,7 @@ const App: React.FC = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-orange-500 group-hover:rotate-12 transition-transform"><Sparkles size={18} /></span>
                       <h2 className="text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">
-                        {t.welcome[lang]}
+                        {welcomeMessage}
                       </h2>
                     </div>
                     <div className="flex items-center justify-between">
