@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Wand2 } from 'lucide-react';
 import { db } from './firebase.ts';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { Place, Language, Category, CityBioData } from './types.ts';
 import { translations } from './i18n.ts';
 import PlaceCard from './components/PlaceCard.tsx';
@@ -11,6 +11,7 @@ import LanguageSwitcher from './components/LanguageSwitcher.tsx';
 import MapView from './components/MapView.tsx';
 import CityBio from './components/CityBio.tsx';
 import CityArticle from './components/CityArticle.tsx';
+import { translateCityData } from './services/gemini.ts';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
@@ -26,8 +27,73 @@ const App: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const t = translations;
+
+  const fetchData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      
+      // Use a short timeout for the initial check to allow offline mode to kick in gracefully
+      const placesSnapshot = await getDocs(collection(db, "places"));
+      const fetchedPlaces = placesSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name || { en: 'Unnamed', ar: 'غير مسمى', fr: 'Sans nom' },
+          description: data.description || { en: '', ar: '', fr: '' },
+          category: data.category || 'all',
+          rating: Number(data.rating) || 0,
+          imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop',
+          featured: !!data.featured,
+          location: {
+            lat: data.location?.lat || 33.1064,
+            lng: data.location?.lng || 6.0628,
+          },
+          address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' }
+        };
+      }) as Place[];
+      setPlaces(fetchedPlaces);
+
+      const bioSnapshot = await getDocs(collection(db, "aboutCity"));
+      let mergedBioData: any = {};
+      
+      bioSnapshot.forEach(doc => {
+        const data = doc.data();
+        mergedBioData = { ...mergedBioData, ...data };
+      });
+
+      if (Object.keys(mergedBioData).length > 0) {
+        // Normalization for fields that are simple strings in Arabic
+        const fieldsToNormalize = [
+          'geography', 'climate', 'climateandTopography', 
+          'bio', 'extendedBio', 'histBio', 'extendedHistBio'
+        ];
+
+        fieldsToNormalize.forEach(key => {
+          if (mergedBioData[key] && typeof mergedBioData[key] === 'string') {
+            mergedBioData[key] = { ar: mergedBioData[key], en: '', fr: '' };
+          }
+        });
+
+        if (mergedBioData.heritage) {
+          const hKeys = ['industries', 'clothing', 'culinaryArts', 'folklore', 'festivals', 'games'];
+          hKeys.forEach(key => {
+            if (mergedBioData.heritage[key] && typeof mergedBioData.heritage[key] === 'string') {
+              mergedBioData.heritage[key] = { ar: mergedBioData.heritage[key], en: '', fr: '' };
+            }
+          });
+        }
+        setCityBio(mergedBioData as CityBioData);
+      }
+    } catch (error) {
+      console.error("Firestore loading error:", error);
+      // Data might still be available via persistence if fetched previously
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem('touggourt_favs');
@@ -39,50 +105,36 @@ const App: React.FC = () => {
       sessionStorage.setItem('touggourt_bio_seen', 'true');
     }
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        
-        const placesSnapshot = await getDocs(collection(db, "places"));
-        const fetchedPlaces = placesSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name || { en: 'Unnamed', ar: 'غير مسمى', fr: 'Sans nom' },
-            description: data.description || { en: '', ar: '', fr: '' },
-            category: data.category || 'all',
-            rating: Number(data.rating) || 0,
-            imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop',
-            featured: !!data.featured,
-            location: {
-              lat: data.location?.lat || 33.1064,
-              lng: data.location?.lng || 6.0628,
-            },
-            address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' }
-          };
-        }) as Place[];
-        setPlaces(fetchedPlaces);
+    fetchData();
+  }, [fetchData]);
 
-        const bioSnapshot = await getDocs(collection(db, "aboutCity"));
-        let mergedBioData: any = {};
-        
-        bioSnapshot.forEach(doc => {
-          const data = doc.data();
-          mergedBioData = { ...mergedBioData, ...data };
-        });
+  // Handle Auto-Translation when language changes
+  useEffect(() => {
+    const checkAndTranslate = async () => {
+      if (!cityBio || isTranslating || lang === 'ar') return;
 
-        if (Object.keys(mergedBioData).length > 0) {
-          setCityBio(mergedBioData as CityBioData);
+      // Check if translation exists for current language in multiple sections
+      const hasBioTranslation = cityBio.bio[lang] && cityBio.extendedBio[lang];
+      const hasGeographyTranslation = !cityBio.geography || cityBio.geography[lang];
+      const hasClimateTranslation = !cityBio.climateandTopography || cityBio.climateandTopography[lang];
+      const hasHeritageTranslation = !cityBio.heritage || (cityBio.heritage.clothing && cityBio.heritage.clothing[lang]);
+      
+      // Trigger translation if any critical part is missing for non-Arabic languages
+      if (!hasBioTranslation || !hasGeographyTranslation || !hasHeritageTranslation || !hasClimateTranslation) {
+        setIsTranslating(true);
+        try {
+          const translatedData = await translateCityData(cityBio, lang);
+          setCityBio(translatedData);
+        } catch (error) {
+          console.error("Auto-translation failed:", error);
+        } finally {
+          setIsTranslating(false);
         }
-      } catch (error) {
-        console.error("Error fetching data from Firestore:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    checkAndTranslate();
+  }, [lang, cityBio, isTranslating]);
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
@@ -107,7 +159,7 @@ const App: React.FC = () => {
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
     });
-  }, [searchQuery, selectedCategory, lang, activeTab, favorites, places]);
+  }, [searchQuery, selectedCategory, activeTab, favorites, places]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
 
@@ -144,6 +196,13 @@ const App: React.FC = () => {
           <LanguageSwitcher current={lang} onChange={setLang} />
         </div>
       </header>
+
+      {isTranslating && (
+        <div className="bg-orange-500 text-white text-[10px] font-bold py-1 px-4 flex items-center justify-center gap-2 animate-pulse z-[100]">
+          <Wand2 size={12} className="animate-bounce" />
+          {t.autoTranslating[lang]}
+        </div>
+      )}
 
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
@@ -381,6 +440,7 @@ const App: React.FC = () => {
           data={cityBio}
           onClose={() => setIsBioOpen(false)} 
           onOpenArticle={() => setIsArticleOpen(true)}
+          isTranslating={isTranslating}
         />
       )}
 
@@ -389,6 +449,7 @@ const App: React.FC = () => {
           lang={lang} 
           data={cityBio}
           onClose={() => setIsArticleOpen(false)} 
+          isTranslating={isTranslating}
         />
       )}
     </div>

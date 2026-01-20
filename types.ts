@@ -16,6 +16,15 @@ export interface Place {
   featured?: boolean;
 }
 
+export interface HeritageData {
+  industries: { en: string; ar: string; fr: string };
+  clothing: { en: string; ar: string; fr: string };
+  culinaryArts: { en: string; ar: string; fr: string };
+  folklore: { en: string; ar: string; fr: string };
+  festivals: { en: string; ar: string; fr: string };
+  games: { en: string; ar: string; fr: string };
+}
+
 export interface CityBioData {
   name?: { en: string; ar: string; fr: string };
   bio: { en: string; ar: string; fr: string };
@@ -25,6 +34,7 @@ export interface CityBioData {
   geography: { en: string; ar: string; fr: string };
   climate: { en: string; ar: string; fr: string };
   climateandTopography?: { en: string; ar: string; fr: string };
+  heritage?: HeritageData;
   population: string | number;
   location: string;
   cover: string;
