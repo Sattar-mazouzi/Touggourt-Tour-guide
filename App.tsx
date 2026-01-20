@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Wand2 } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Wand2, Key } from 'lucide-react';
 import { db } from './firebase.ts';
 import { collection, getDocs } from 'firebase/firestore';
 import { Place, Language, Category, CityBioData } from './types.ts';
@@ -28,14 +28,33 @@ const App: React.FC = () => {
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [hasApiKey, setHasApiKey] = useState(!!process.env.API_KEY);
 
   const t = translations;
+
+  const checkKey = useCallback(async () => {
+    if (window.aistudio) {
+      const hasKey = await window.aistudio.hasSelectedApiKey();
+      setHasApiKey(hasKey || !!process.env.API_KEY);
+      return hasKey;
+    }
+    return !!process.env.API_KEY;
+  }, []);
+
+  useEffect(() => {
+    checkKey();
+  }, [checkKey]);
+
+  const handleSelectKey = async () => {
+    if (window.aistudio) {
+      await window.aistudio.openSelectKey();
+      setHasApiKey(true);
+    }
+  };
 
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      
-      // Use a short timeout for the initial check to allow offline mode to kick in gracefully
       const placesSnapshot = await getDocs(collection(db, "places"));
       const fetchedPlaces = placesSnapshot.docs.map(doc => {
         const data = doc.data();
@@ -58,14 +77,12 @@ const App: React.FC = () => {
 
       const bioSnapshot = await getDocs(collection(db, "aboutCity"));
       let mergedBioData: any = {};
-      
       bioSnapshot.forEach(doc => {
         const data = doc.data();
         mergedBioData = { ...mergedBioData, ...data };
       });
 
       if (Object.keys(mergedBioData).length > 0) {
-        // Normalization for fields that are simple strings in Arabic
         const fieldsToNormalize = [
           'geography', 'climate', 'climateandTopography', 
           'bio', 'extendedBio', 'histBio', 'extendedHistBio'
@@ -89,7 +106,6 @@ const App: React.FC = () => {
       }
     } catch (error) {
       console.error("Firestore loading error:", error);
-      // Data might still be available via persistence if fetched previously
     } finally {
       setIsLoading(false);
     }
@@ -98,35 +114,31 @@ const App: React.FC = () => {
   useEffect(() => {
     const saved = localStorage.getItem('touggourt_favs');
     if (saved) setFavorites(JSON.parse(saved));
-    
     const bioSeen = sessionStorage.getItem('touggourt_bio_seen');
     if (!bioSeen) {
       setIsBioOpen(true);
       sessionStorage.setItem('touggourt_bio_seen', 'true');
     }
-
     fetchData();
   }, [fetchData]);
 
-  // Handle Auto-Translation when language changes
+  // Updated translation effect to use LibreTranslate (no API key required)
   useEffect(() => {
     const checkAndTranslate = async () => {
       if (!cityBio || isTranslating || lang === 'ar') return;
-
-      // Check if translation exists for current language in multiple sections
-      const hasBioTranslation = cityBio.bio[lang] && cityBio.extendedBio[lang];
-      const hasGeographyTranslation = !cityBio.geography || cityBio.geography[lang];
-      const hasClimateTranslation = !cityBio.climateandTopography || cityBio.climateandTopography[lang];
-      const hasHeritageTranslation = !cityBio.heritage || (cityBio.heritage.clothing && cityBio.heritage.clothing[lang]);
       
-      // Trigger translation if any critical part is missing for non-Arabic languages
-      if (!hasBioTranslation || !hasGeographyTranslation || !hasHeritageTranslation || !hasClimateTranslation) {
+      const isMissingCore = 
+        (cityBio.bio && !cityBio.bio[lang]) || 
+        (cityBio.geography && !cityBio.geography[lang]);
+
+      if (isMissingCore) {
         setIsTranslating(true);
         try {
-          const translatedData = await translateCityData(cityBio, lang);
-          setCityBio(translatedData);
-        } catch (error) {
-          console.error("Auto-translation failed:", error);
+          await translateCityData(cityBio, lang, (partialData) => {
+            setCityBio(partialData);
+          });
+        } catch (error: any) {
+          console.error("Translation failed:", error.message);
         } finally {
           setIsTranslating(false);
         }
@@ -154,7 +166,6 @@ const App: React.FC = () => {
         p.description.en.toLowerCase().includes(queryStr) || 
         p.description.ar.toLowerCase().includes(queryStr) ||
         p.description.fr.toLowerCase().includes(queryStr);
-        
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
@@ -193,14 +204,25 @@ const App: React.FC = () => {
               </p>
             </div>
           </div>
-          <LanguageSwitcher current={lang} onChange={setLang} />
+          <div className="flex items-center gap-2">
+            {!hasApiKey && window.aistudio && (
+              <button 
+                onClick={handleSelectKey}
+                className="p-2 bg-orange-100 text-orange-600 rounded-xl hover:bg-orange-200 transition-colors"
+                title="Select API Key"
+              >
+                <Key size={20} />
+              </button>
+            )}
+            <LanguageSwitcher current={lang} onChange={setLang} />
+          </div>
         </div>
       </header>
 
       {isTranslating && (
         <div className="bg-orange-500 text-white text-[10px] font-bold py-1 px-4 flex items-center justify-center gap-2 animate-pulse z-[100]">
           <Wand2 size={12} className="animate-bounce" />
-          {t.autoTranslating[lang]}
+          {lang === 'ar' ? 'جاري الترجمة...' : (lang === 'fr' ? 'Traduction en cours...' : 'Translating...')}
         </div>
       )}
 
