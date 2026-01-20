@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Wand2, Key } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Key } from 'lucide-react';
 import { db } from './firebase.ts';
 import { collection, getDocs } from 'firebase/firestore';
 import { Place, Language, Category, CityBioData } from './types.ts';
@@ -11,7 +11,6 @@ import LanguageSwitcher from './components/LanguageSwitcher.tsx';
 import MapView from './components/MapView.tsx';
 import CityBio from './components/CityBio.tsx';
 import CityArticle from './components/CityArticle.tsx';
-import { translateCityData } from './services/gemini.ts';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
@@ -27,7 +26,6 @@ const App: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isTranslating, setIsTranslating] = useState(false);
   const [hasApiKey, setHasApiKey] = useState(!!process.env.API_KEY);
 
   const t = translations;
@@ -83,6 +81,7 @@ const App: React.FC = () => {
       });
 
       if (Object.keys(mergedBioData).length > 0) {
+        // Ensure all required fields exist for current language logic
         const fieldsToNormalize = [
           'geography', 'climate', 'climateandTopography', 
           'bio', 'extendedBio', 'histBio', 'extendedHistBio'
@@ -90,7 +89,7 @@ const App: React.FC = () => {
 
         fieldsToNormalize.forEach(key => {
           if (mergedBioData[key] && typeof mergedBioData[key] === 'string') {
-            mergedBioData[key] = { ar: mergedBioData[key], en: '', fr: '' };
+            mergedBioData[key] = { ar: mergedBioData[key], en: mergedBioData[key], fr: mergedBioData[key] };
           }
         });
 
@@ -98,7 +97,7 @@ const App: React.FC = () => {
           const hKeys = ['industries', 'clothing', 'culinaryArts', 'folklore', 'festivals', 'games'];
           hKeys.forEach(key => {
             if (mergedBioData.heritage[key] && typeof mergedBioData.heritage[key] === 'string') {
-              mergedBioData.heritage[key] = { ar: mergedBioData.heritage[key], en: '', fr: '' };
+              mergedBioData.heritage[key] = { ar: mergedBioData.heritage[key], en: mergedBioData.heritage[key], fr: mergedBioData.heritage[key] };
             }
           });
         }
@@ -122,32 +121,6 @@ const App: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  // Updated translation effect to use LibreTranslate (no API key required)
-  useEffect(() => {
-    const checkAndTranslate = async () => {
-      if (!cityBio || isTranslating || lang === 'ar') return;
-      
-      const isMissingCore = 
-        (cityBio.bio && !cityBio.bio[lang]) || 
-        (cityBio.geography && !cityBio.geography[lang]);
-
-      if (isMissingCore) {
-        setIsTranslating(true);
-        try {
-          await translateCityData(cityBio, lang, (partialData) => {
-            setCityBio(partialData);
-          });
-        } catch (error: any) {
-          console.error("Translation failed:", error.message);
-        } finally {
-          setIsTranslating(false);
-        }
-      }
-    };
-
-    checkAndTranslate();
-  }, [lang, cityBio, isTranslating]);
-
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
       const updated = prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id];
@@ -160,17 +133,13 @@ const App: React.FC = () => {
     const queryStr = searchQuery.toLowerCase();
     return places.filter(p => {
       const matchesSearch = 
-        p.name.en.toLowerCase().includes(queryStr) || 
-        p.name.ar.toLowerCase().includes(queryStr) || 
-        p.name.fr.toLowerCase().includes(queryStr) ||
-        p.description.en.toLowerCase().includes(queryStr) || 
-        p.description.ar.toLowerCase().includes(queryStr) ||
-        p.description.fr.toLowerCase().includes(queryStr);
+        (p.name[lang] || '').toLowerCase().includes(queryStr) || 
+        (p.description[lang] || '').toLowerCase().includes(queryStr);
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
     });
-  }, [searchQuery, selectedCategory, activeTab, favorites, places]);
+  }, [searchQuery, selectedCategory, activeTab, favorites, places, lang]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
 
@@ -218,13 +187,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </header>
-
-      {isTranslating && (
-        <div className="bg-orange-500 text-white text-[10px] font-bold py-1 px-4 flex items-center justify-center gap-2 animate-pulse z-[100]">
-          <Wand2 size={12} className="animate-bounce" />
-          {lang === 'ar' ? 'جاري الترجمة...' : (lang === 'fr' ? 'Traduction en cours...' : 'Translating...')}
-        </div>
-      )}
 
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
@@ -462,7 +424,6 @@ const App: React.FC = () => {
           data={cityBio}
           onClose={() => setIsBioOpen(false)} 
           onOpenArticle={() => setIsArticleOpen(true)}
-          isTranslating={isTranslating}
         />
       )}
 
@@ -471,7 +432,6 @@ const App: React.FC = () => {
           lang={lang} 
           data={cityBio}
           onClose={() => setIsArticleOpen(false)} 
-          isTranslating={isTranslating}
         />
       )}
     </div>

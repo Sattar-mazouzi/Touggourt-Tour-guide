@@ -56,20 +56,3 @@ export interface TranslationDict {
     fr: string;
   };
 }
-
-// Global interface for AI Studio key management
-// Fixed the error: Subsequent property declarations must have the same type.
-// By defining the AIStudio interface within declare global, we ensure it matches the 
-// pre-configured environment type used in the Window object.
-declare global {
-  interface AIStudio {
-    hasSelectedApiKey: () => Promise<boolean>;
-    openSelectKey: () => Promise<void>;
-  }
-  interface Window {
-    aistudio?: AIStudio;
-  }
-}
-
-// Exported for module compatibility and internal type usage
-export type { AIStudio };

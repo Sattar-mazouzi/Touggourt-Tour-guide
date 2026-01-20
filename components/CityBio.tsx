@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Globe, Users, CloudSun, Sparkles, Loader2, BookOpen, Wand2 } from 'lucide-react';
+import { X, Users, CloudSun, Sparkles, Loader2, BookOpen } from 'lucide-react';
 import { Language, CityBioData } from '../types';
 import { translations } from '../i18n';
 
@@ -9,12 +9,11 @@ interface Props {
   data: CityBioData | null;
   onClose: () => void;
   onOpenArticle: () => void;
-  isTranslating?: boolean;
 }
 
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
-const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle, isTranslating }) => {
+const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
   const t = translations;
 
   if (!data) {
@@ -72,28 +71,23 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle, isTransl
         <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide space-y-8">
           
           {/* Brief Description */}
-          <div className={`relative pt-4 ${isTranslating ? 'skeleton rounded-xl min-h-[100px]' : ''}`}>
-             {!isTranslating && (
-               <>
-                 <div className={`absolute ${lang === 'ar' ? '-right-2' : '-left-2'} top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20`}></div>
-                 <div className={lang === 'ar' ? 'pr-4' : 'pl-4'}>
-                   <p className="text-slate-600 font-medium leading-relaxed italic text-lg mb-3">
-                      "{data.bio[lang] || ''}"
-                   </p>
-                   
-                   <div className="flex items-center justify-between">
-                      <button 
-                        onClick={onOpenArticle}
-                        className="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-widest hover:text-orange-700 transition-colors"
-                      >
-                        {t.readMore[lang]}
-                        <BookOpen size={14} />
-                      </button>
-                      {isTranslating && <Wand2 size={14} className="text-orange-300 animate-pulse" />}
-                   </div>
-                 </div>
-               </>
-             )}
+          <div className="relative pt-4">
+             <div className={`absolute ${lang === 'ar' ? '-right-2' : '-left-2'} top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20`}></div>
+             <div className={lang === 'ar' ? 'pr-4' : 'pl-4'}>
+               <p className="text-slate-600 font-medium leading-relaxed italic text-lg mb-3">
+                  "{data.bio[lang] || ''}"
+               </p>
+               
+               <div className="flex items-center justify-between">
+                  <button 
+                    onClick={onOpenArticle}
+                    className="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-widest hover:text-orange-700 transition-colors"
+                  >
+                    {t.readMore[lang]}
+                    <BookOpen size={14} />
+                  </button>
+               </div>
+             </div>
           </div>
 
           {/* Curiosity Gallery Section */}
@@ -132,7 +126,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle, isTransl
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.climate[lang]}</p>
                 </div>
                 <p className="text-sm font-black text-slate-800">
-                  {isTranslating ? '...' : (data.climate[lang] || '')}
+                  {data.climate[lang] || ''}
                 </p>
              </div>
           </div>
@@ -142,9 +136,8 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle, isTransl
         <div className="px-8 pb-8 pt-4 bg-white/80 backdrop-blur-md border-t border-slate-50 flex-shrink-0">
           <div className="flex gap-3">
             <button 
-              disabled={isTranslating}
               onClick={onOpenArticle}
-              className={`flex-1 py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-3xl font-black text-base shadow-lg active:scale-[0.97] transition-all flex items-center justify-center gap-2 ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className="flex-1 py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-3xl font-black text-base shadow-lg active:scale-[0.97] transition-all flex items-center justify-center gap-2"
             >
               <BookOpen size={20} />
               {t.readMore[lang]}
