@@ -1,6 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,6 +16,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Analytics
+export const analytics = getAnalytics(app);
 
 // Initialize Firestore with settings to improve connectivity on restrictive networks
 export const db = initializeFirestore(app, {

@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Key } from 'lucide-react';
-import { db } from './firebase.ts';
+import { db, analytics } from './firebase.ts';
+import { logEvent } from 'firebase/analytics';
 import { collection, getDocs } from 'firebase/firestore';
 import { Place, Language, Category, CityBioData } from './types.ts';
 import { translations } from './i18n.ts';
@@ -30,6 +31,24 @@ const App: React.FC = () => {
 
   const t = translations;
 
+  // Track Tab Changes
+  useEffect(() => {
+    logEvent(analytics, 'screen_view', {
+      firebase_screen: activeTab,
+      firebase_screen_class: 'App'
+    });
+  }, [activeTab]);
+
+  // Track Category selection
+  useEffect(() => {
+    if (selectedCategory !== 'all') {
+      logEvent(analytics, 'select_content', {
+        content_type: 'category',
+        item_id: selectedCategory
+      });
+    }
+  }, [selectedCategory]);
+
   const checkKey = useCallback(async () => {
     if (window.aistudio) {
       const hasKey = await window.aistudio.hasSelectedApiKey();
@@ -47,6 +66,7 @@ const App: React.FC = () => {
     if (window.aistudio) {
       await window.aistudio.openSelectKey();
       setHasApiKey(true);
+      logEvent(analytics, 'api_key_selected');
     }
   };
 
@@ -81,7 +101,6 @@ const App: React.FC = () => {
       });
 
       if (Object.keys(mergedBioData).length > 0) {
-        // Ensure all required fields exist for current language logic
         const fieldsToNormalize = [
           'geography', 'climate', 'climateandTopography', 
           'bio', 'extendedBio', 'histBio', 'extendedHistBio'
@@ -123,9 +142,26 @@ const App: React.FC = () => {
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
-      const updated = prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id];
+      const isAdding = !prev.includes(id);
+      const updated = isAdding ? [...prev, id] : prev.filter(f => f !== id);
       localStorage.setItem('touggourt_favs', JSON.stringify(updated));
+      
+      if (isAdding) {
+        logEvent(analytics, 'add_to_wishlist', {
+          item_id: id
+        });
+      }
+      
       return updated;
+    });
+  };
+
+  const handlePlaceSelect = (place: Place) => {
+    setSelectedPlace(place);
+    logEvent(analytics, 'view_item', {
+      item_id: place.id,
+      item_name: place.name.en,
+      item_category: place.category
     });
   };
 
@@ -183,7 +219,10 @@ const App: React.FC = () => {
                 <Key size={20} />
               </button>
             )}
-            <LanguageSwitcher current={lang} onChange={setLang} />
+            <LanguageSwitcher current={lang} onChange={(newLang) => {
+              setLang(newLang);
+              logEvent(analytics, 'change_language', { language: newLang });
+            }} />
           </div>
         </div>
       </header>
@@ -203,7 +242,10 @@ const App: React.FC = () => {
               {activeTab === 'home' && searchQuery === '' && (
                 <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
                   <button 
-                    onClick={() => setIsBioOpen(true)}
+                    onClick={() => {
+                      setIsBioOpen(true);
+                      logEvent(analytics, 'view_city_bio');
+                    }}
                     className="text-left w-full group focus:outline-none"
                     dir={lang === 'ar' ? 'rtl' : 'ltr'}
                   >
@@ -228,6 +270,11 @@ const App: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onBlur={() => {
+                    if (searchQuery.length > 2) {
+                      logEvent(analytics, 'search', { search_term: searchQuery });
+                    }
+                  }}
                   placeholder={t.searchPlaceholder[lang]}
                   className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm`}
                 />
@@ -245,7 +292,7 @@ const App: React.FC = () => {
                         {featuredPlaces.map(place => (
                           <div 
                             key={place.id}
-                            onClick={() => setSelectedPlace(place)}
+                            onClick={() => handlePlaceSelect(place)}
                             className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md"
                           >
                             <img src={place.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
@@ -343,7 +390,7 @@ const App: React.FC = () => {
                   <MapView 
                     places={filteredPlaces} 
                     lang={lang} 
-                    onSelectPlace={setSelectedPlace} 
+                    onSelectPlace={handlePlaceSelect} 
                   />
                 ) : (
                   <div className="space-y-4">
@@ -353,7 +400,7 @@ const App: React.FC = () => {
                           key={place.id} 
                           place={place} 
                           lang={lang} 
-                          onSelect={setSelectedPlace}
+                          onSelect={handlePlaceSelect}
                           isFavorite={favorites.includes(place.id)}
                           onToggleFavorite={toggleFavorite}
                         />
@@ -423,7 +470,10 @@ const App: React.FC = () => {
           lang={lang} 
           data={cityBio}
           onClose={() => setIsBioOpen(false)} 
-          onOpenArticle={() => setIsArticleOpen(true)}
+          onOpenArticle={() => {
+            setIsArticleOpen(true);
+            logEvent(analytics, 'view_city_article');
+          }}
         />
       )}
 
