@@ -93,6 +93,10 @@ const App: React.FC = () => {
           imgObj = { ...data.imageUrl };
         }
 
+        // Support both 'lat'/'lng' and 'latitude'/'longitude' field names
+        const lat = data.location?.latitude ?? data.location?.lat ?? 33.1064;
+        const lng = data.location?.longitude ?? data.location?.lng ?? 6.0628;
+
         return {
           id: doc.id,
           name: data.name || { en: 'Unnamed', ar: 'غير مسمى', fr: 'Sans nom' },
@@ -101,10 +105,7 @@ const App: React.FC = () => {
           rating: Number(data.rating) || 0,
           imageUrl: imgObj,
           featured: !!data.featured,
-          location: {
-            lat: data.location?.lat || 33.1064,
-            lng: data.location?.lng || 6.0628,
-          },
+          location: { lat: Number(lat), lng: Number(lng) },
           address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' }
         };
       }) as Place[];
