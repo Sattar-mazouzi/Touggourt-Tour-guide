@@ -31,7 +31,6 @@ const App: React.FC = () => {
 
   const t = translations;
 
-  // Track Tab Changes
   useEffect(() => {
     logEvent(analytics, 'screen_view', {
       firebase_screen: activeTab,
@@ -39,7 +38,6 @@ const App: React.FC = () => {
     });
   }, [activeTab]);
 
-  // Track Category selection
   useEffect(() => {
     if (selectedCategory !== 'all') {
       logEvent(analytics, 'select_content', {
@@ -50,8 +48,8 @@ const App: React.FC = () => {
   }, [selectedCategory]);
 
   const checkKey = useCallback(async () => {
-    if (window.aistudio) {
-      const hasKey = await window.aistudio.hasSelectedApiKey();
+    if ((window as any).aistudio) {
+      const hasKey = await (window as any).aistudio.hasSelectedApiKey();
       setHasApiKey(hasKey || !!process.env.API_KEY);
       return hasKey;
     }
@@ -63,8 +61,8 @@ const App: React.FC = () => {
   }, [checkKey]);
 
   const handleSelectKey = async () => {
-    if (window.aistudio) {
-      await window.aistudio.openSelectKey();
+    if ((window as any).aistudio) {
+      await (window as any).aistudio.openSelectKey();
       setHasApiKey(true);
       logEvent(analytics, 'api_key_selected');
     }
@@ -76,13 +74,23 @@ const App: React.FC = () => {
       const placesSnapshot = await getDocs(collection(db, "places"));
       const fetchedPlaces = placesSnapshot.docs.map(doc => {
         const data = doc.data();
+        
+        // Handle migration from legacy string imageUrl to new map/object structure
+        let imgObj: any = { cover: 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop' };
+        
+        if (typeof data.imageUrl === 'string') {
+          imgObj.cover = data.imageUrl;
+        } else if (data.imageUrl && typeof data.imageUrl === 'object') {
+          imgObj = { ...data.imageUrl };
+        }
+
         return {
           id: doc.id,
           name: data.name || { en: 'Unnamed', ar: 'غير مسمى', fr: 'Sans nom' },
           description: data.description || { en: '', ar: '', fr: '' },
           category: data.category || 'all',
           rating: Number(data.rating) || 0,
-          imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop',
+          imageUrl: imgObj,
           featured: !!data.featured,
           location: {
             lat: data.location?.lat || 33.1064,
@@ -145,13 +153,9 @@ const App: React.FC = () => {
       const isAdding = !prev.includes(id);
       const updated = isAdding ? [...prev, id] : prev.filter(f => f !== id);
       localStorage.setItem('touggourt_favs', JSON.stringify(updated));
-      
       if (isAdding) {
-        logEvent(analytics, 'add_to_wishlist', {
-          item_id: id
-        });
+        logEvent(analytics, 'add_to_wishlist', { item_id: id });
       }
-      
       return updated;
     });
   };
@@ -168,9 +172,9 @@ const App: React.FC = () => {
   const filteredPlaces = useMemo(() => {
     const queryStr = searchQuery.toLowerCase();
     return places.filter(p => {
-      const matchesSearch = 
-        (p.name[lang] || '').toLowerCase().includes(queryStr) || 
-        (p.description[lang] || '').toLowerCase().includes(queryStr);
+      const nameInLang = p.name[lang] || '';
+      const descInLang = p.description[lang] || '';
+      const matchesSearch = nameInLang.toLowerCase().includes(queryStr) || descInLang.toLowerCase().includes(queryStr);
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
@@ -178,6 +182,8 @@ const App: React.FC = () => {
   }, [searchQuery, selectedCategory, activeTab, favorites, places, lang]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
+
+  const categories: Category[] = ['all', 'religion', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
 
   const welcomeMessage = useMemo(() => {
     if (cityBio?.name?.[lang]) {
@@ -188,8 +194,6 @@ const App: React.FC = () => {
     }
     return t.welcome[lang];
   }, [cityBio, lang, t]);
-
-  const categories: Category[] = ['all', 'religion', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
 
   return (
     <div 
@@ -210,7 +214,7 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {!hasApiKey && window.aistudio && (
+            {!hasApiKey && (window as any).aistudio && (
               <button 
                 onClick={handleSelectKey}
                 className="p-2 bg-orange-100 text-orange-600 rounded-xl hover:bg-orange-200 transition-colors"
@@ -229,23 +233,17 @@ const App: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
-          
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-4">
               <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-              <p className="font-bold text-xs uppercase tracking-widest">
-                {t.loading[lang]}
-              </p>
+              <p className="font-bold text-xs uppercase tracking-widest">{t.loading[lang]}</p>
             </div>
           ) : (
             <>
               {activeTab === 'home' && searchQuery === '' && (
                 <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
                   <button 
-                    onClick={() => {
-                      setIsBioOpen(true);
-                      logEvent(analytics, 'view_city_bio');
-                    }}
+                    onClick={() => setIsBioOpen(true)}
                     className="text-left w-full group focus:outline-none"
                     dir={lang === 'ar' ? 'rtl' : 'ltr'}
                   >
@@ -255,11 +253,7 @@ const App: React.FC = () => {
                         {welcomeMessage}
                       </h2>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-slate-500 text-sm font-medium">
-                        {t.discoverPrompt[lang]}
-                      </p>
-                    </div>
+                    <p className="text-slate-500 text-sm font-medium">{t.discoverPrompt[lang]}</p>
                   </button>
                 </div>
               )}
@@ -270,13 +264,8 @@ const App: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onBlur={() => {
-                    if (searchQuery.length > 2) {
-                      logEvent(analytics, 'search', { search_term: searchQuery });
-                    }
-                  }}
                   placeholder={t.searchPlaceholder[lang]}
-                  className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm`}
+                  className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all shadow-sm font-medium`}
                 />
               </div>
 
@@ -295,7 +284,7 @@ const App: React.FC = () => {
                             onClick={() => handlePlaceSelect(place)}
                             className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md"
                           >
-                            <img src={place.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
+                            <img src={place.imageUrl.cover} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                             <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
                               <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
@@ -381,17 +370,10 @@ const App: React.FC = () => {
                   <h2 className="text-xl font-bold text-slate-900">
                     {activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}
                   </h2>
-                  <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
-                    {filteredPlaces.length}
-                  </span>
                 </div>
 
                 {activeTab === 'explore' && exploreMode === 'map' ? (
-                  <MapView 
-                    places={filteredPlaces} 
-                    lang={lang} 
-                    onSelectPlace={handlePlaceSelect} 
-                  />
+                  <MapView places={filteredPlaces} lang={lang} onSelectPlace={handlePlaceSelect} />
                 ) : (
                   <div className="space-y-4">
                     {filteredPlaces.length > 0 ? (
@@ -406,13 +388,9 @@ const App: React.FC = () => {
                         />
                       ))
                     ) : (
-                      <div className="py-20 text-center">
-                        <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Compass size={40} className="text-slate-300" />
-                        </div>
-                        <p className="text-slate-500 font-medium">
-                          {activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}
-                        </p>
+                      <div className="py-20 text-center text-slate-400">
+                        <Compass size={40} className="mx-auto mb-2 opacity-20" />
+                        <p>{t.noPlacesFound[lang]}</p>
                       </div>
                     )}
                   </div>
@@ -429,9 +407,7 @@ const App: React.FC = () => {
             onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }}
             className={`flex flex-col items-center gap-1 group transition-colors ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}
           >
-            <div className={`p-1.5 rounded-xl transition-colors ${activeTab === 'home' ? 'bg-orange-50' : 'group-hover:bg-slate-50'}`}>
-              <Home size={24} strokeWidth={activeTab === 'home' ? 2.5 : 2} />
-            </div>
+            <Home size={24} strokeWidth={activeTab === 'home' ? 2.5 : 2} />
             <span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span>
           </button>
           
@@ -439,9 +415,7 @@ const App: React.FC = () => {
             onClick={() => { setActiveTab('explore'); setSelectedCategory('all'); }}
             className={`flex flex-col items-center gap-1 group transition-colors ${activeTab === 'explore' ? 'text-orange-500' : 'text-slate-400'}`}
           >
-            <div className={`p-1.5 rounded-xl transition-colors ${activeTab === 'explore' ? 'bg-orange-50' : 'group-hover:bg-slate-50'}`}>
-              <Compass size={24} strokeWidth={activeTab === 'explore' ? 2.5 : 2} />
-            </div>
+            <Compass size={24} strokeWidth={activeTab === 'explore' ? 2.5 : 2} />
             <span className="text-[10px] font-bold uppercase tracking-widest">{t.explore[lang]}</span>
           </button>
           
@@ -449,41 +423,15 @@ const App: React.FC = () => {
             onClick={() => setActiveTab('favorites')}
             className={`flex flex-col items-center gap-1 group transition-colors ${activeTab === 'favorites' ? 'text-orange-500' : 'text-slate-400'}`}
           >
-            <div className={`p-1.5 rounded-xl transition-colors ${activeTab === 'favorites' ? 'bg-orange-50' : 'group-hover:bg-slate-50'}`}>
-              <Heart size={24} strokeWidth={activeTab === 'favorites' ? 2.5 : 2} />
-            </div>
+            <Heart size={24} strokeWidth={activeTab === 'favorites' ? 2.5 : 2} />
             <span className="text-[10px] font-bold uppercase tracking-widest">{t.favorites[lang]}</span>
           </button>
         </div>
       </nav>
 
-      {selectedPlace && (
-        <DetailsView 
-          place={selectedPlace} 
-          lang={lang} 
-          onClose={() => setSelectedPlace(null)} 
-        />
-      )}
-
-      {isBioOpen && (
-        <CityBio 
-          lang={lang} 
-          data={cityBio}
-          onClose={() => setIsBioOpen(false)} 
-          onOpenArticle={() => {
-            setIsArticleOpen(true);
-            logEvent(analytics, 'view_city_article');
-          }}
-        />
-      )}
-
-      {isArticleOpen && cityBio && (
-        <CityArticle 
-          lang={lang} 
-          data={cityBio}
-          onClose={() => setIsArticleOpen(false)} 
-        />
-      )}
+      {selectedPlace && <DetailsView place={selectedPlace} lang={lang} onClose={() => setSelectedPlace(null)} />}
+      {isBioOpen && <CityBio lang={lang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => setIsArticleOpen(true)} />}
+      {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
     </div>
   );
 };

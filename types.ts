@@ -7,7 +7,14 @@ export interface Place {
   description: { en: string; ar: string; fr: string };
   category: Category;
   rating: number;
-  imageUrl: string;
+  imageUrl: {
+    cover: string;
+    img1?: string;
+    img2?: string;
+    img3?: string;
+    img4?: string;
+    img5?: string;
+  };
   location: {
     lat: number;
     lng: number;

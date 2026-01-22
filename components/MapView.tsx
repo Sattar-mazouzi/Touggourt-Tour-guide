@@ -68,9 +68,12 @@ const MapView: React.FC<Props> = ({
       const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapRef.current);
       
       if (onSelectPlace) {
+        // Use cover image for popups
+        const coverImg = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
+        
         const popupContent = `
           <div class="cursor-pointer overflow-hidden rounded-xl">
-            <img src="${place.imageUrl}" class="w-full h-24 object-cover" />
+            <img src="${coverImg}" class="w-full h-24 object-cover" />
             <div class="p-2">
               <h4 class="font-bold text-sm text-slate-900">${place.name[lang]}</h4>
               <p class="text-[10px] text-slate-500">${place.address?.[lang] || ''}</p>

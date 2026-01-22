@@ -12,6 +12,9 @@ interface Props {
 }
 
 const PlaceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onToggleFavorite }) => {
+  // Use the cover image from the new object structure
+  const displayImage = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
+
   return (
     <div 
       className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 mb-4 group active:scale-[0.98] transition-all"
@@ -19,7 +22,7 @@ const PlaceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onToggl
     >
       <div className="relative h-48 overflow-hidden">
         <img 
-          src={place.imageUrl} 
+          src={displayImage} 
           alt={place.name[lang]} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />

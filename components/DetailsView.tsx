@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Place, Language } from '../types';
 import { X, MapPin, Star, Navigation, Share2, Info } from 'lucide-react';
 import { translations } from '../i18n';
@@ -13,6 +13,28 @@ interface Props {
 
 const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   const t = translations;
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Collect all available images into an array for the carousel
+  const images = [
+    place.imageUrl.cover,
+    place.imageUrl.img1,
+    place.imageUrl.img2,
+    place.imageUrl.img3,
+    place.imageUrl.img4,
+    place.imageUrl.img5,
+  ].filter(Boolean) as string[];
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const index = Math.round(scrollLeft / clientWidth);
+      if (index !== activeImageIndex) {
+        setActiveImageIndex(index);
+      }
+    }
+  };
 
   const handleOpenMap = () => {
     if (!place.location || typeof place.location.lat !== 'number' || typeof place.location.lng !== 'number') {
@@ -27,12 +49,10 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
     if (navigator.share) {
       try {
         const currentUrl = window.location.href;
-        const isValidUrl = currentUrl.startsWith('http');
-        
         await navigator.share({
           title: place.name[lang],
           text: place.description[lang],
-          ...(isValidUrl ? { url: currentUrl } : {}),
+          url: currentUrl,
         });
       } catch (err: any) {
         if (err.name !== 'AbortError') {
@@ -45,16 +65,44 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-32">
-        <div className="relative h-[40vh] flex-shrink-0">
-          <img 
-            src={place.imageUrl} 
-            alt={place.name[lang]} 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-start pt-[calc(1rem+env(safe-area-inset-top))]">
+        {/* Carousel Header Section */}
+        <div className="relative h-[45vh] flex-shrink-0 bg-slate-900">
+          <div 
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+          >
+            {images.map((img, idx) => (
+              <div key={idx} className="w-full h-full flex-shrink-0 snap-center">
+                <img 
+                  src={img} 
+                  alt={`${place.name[lang]} ${idx + 1}`} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Carousel Indicators (Dots) */}
+          {images.length > 1 && (
+            <div className="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-20">
+              {images.map((_, idx) => (
+                <div 
+                  key={idx}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    activeImageIndex === idx ? 'w-6 bg-white shadow-sm' : 'w-1.5 bg-white/40'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-start pt-[calc(1rem+env(safe-area-inset-top))] z-20">
             <button 
               onClick={onClose}
               className="p-2 bg-white/80 backdrop-blur rounded-full shadow-lg active:scale-90 transition-transform"
+              aria-label="Close"
             >
               <X size={24} className="text-slate-900" />
             </button>
@@ -62,19 +110,28 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
               <button 
                 onClick={handleShare}
                 className="p-2 bg-white/80 backdrop-blur rounded-full shadow-lg active:scale-90 transition-transform"
+                aria-label="Share"
               >
                 <Share2 size={24} className="text-slate-900" />
               </button>
             </div>
           </div>
-          <div className="absolute bottom-10 left-6 right-6">
-            <span className="inline-block bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2">
-              {t[place.category]?.[lang] || place.category}
-            </span>
-            <h2 className="text-3xl font-black text-white drop-shadow-md">{place.name[lang]}</h2>
+          
+          {/* Label & Title Overlay */}
+          <div className="absolute bottom-10 left-6 right-6 z-10 pointer-events-none">
+            <div className="bg-black/20 backdrop-blur-sm p-4 rounded-3xl -mx-2">
+              <span className="inline-block bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2">
+                {t[place.category]?.[lang] || place.category}
+              </span>
+              <h2 className="text-3xl font-black text-white drop-shadow-md leading-tight">{place.name[lang]}</h2>
+            </div>
           </div>
+
+          {/* Subtle gradient for text readability */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
         </div>
 
+        {/* Content Body */}
         <div className="bg-white -mt-8 rounded-t-[40px] p-8 shadow-2xl relative z-10">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2 text-slate-500">
