@@ -75,6 +75,15 @@ const App: React.FC = () => {
       const fetchedPlaces = placesSnapshot.docs.map(doc => {
         const data = doc.data();
         
+        // Normalize Category (e.g., 'nature' -> 'natural')
+        let normalizedCategory = (data.category || 'all').toLowerCase();
+        if (normalizedCategory === 'nature') normalizedCategory = 'natural';
+        if (normalizedCategory === 'religious') normalizedCategory = 'religion';
+        if (normalizedCategory === 'history') normalizedCategory = 'historical';
+        if (normalizedCategory === 'culture') normalizedCategory = 'cultural';
+        if (normalizedCategory === 'hotel') normalizedCategory = 'hotels';
+        if (normalizedCategory === 'restaurant') normalizedCategory = 'restaurants';
+
         // Handle migration from legacy string imageUrl to new map/object structure
         let imgObj: any = { cover: 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop' };
         
@@ -88,7 +97,7 @@ const App: React.FC = () => {
           id: doc.id,
           name: data.name || { en: 'Unnamed', ar: 'غير مسمى', fr: 'Sans nom' },
           description: data.description || { en: '', ar: '', fr: '' },
-          category: data.category || 'all',
+          category: normalizedCategory as Category,
           rating: Number(data.rating) || 0,
           imageUrl: imgObj,
           featured: !!data.featured,
