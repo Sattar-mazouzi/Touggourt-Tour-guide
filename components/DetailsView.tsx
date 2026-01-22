@@ -66,7 +66,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
+    <div className="fixed inset-0 z-[1000] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-32">
         {/* Carousel Header Section */}
         <div className="relative h-[45vh] flex-shrink-0 bg-slate-900 group">
@@ -189,8 +189,8 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
 
       {/* Full Screen Image Gallery Modal */}
       {isFullScreen && (
-        <div className="fixed inset-0 z-[100] bg-black flex flex-col animate-in fade-in duration-200">
-          <div className="absolute top-0 left-0 w-full p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-end z-[110]">
+        <div className="fixed inset-0 z-[1100] bg-black flex flex-col animate-in fade-in duration-200">
+          <div className="absolute top-0 left-0 w-full p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-end z-[1110]">
             <button 
               onClick={() => setIsFullScreen(false)}
               className="p-3 bg-white/10 backdrop-blur-xl text-white rounded-full hover:bg-white/20 transition-all border border-white/10 active:scale-90"

@@ -18,7 +18,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
 
   if (!data) {
     return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
+      <div className="fixed inset-0 z-[1200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
         <div className="bg-white w-full max-w-lg rounded-[40px] p-12 flex flex-col items-center justify-center gap-4">
            <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
            <p className="font-bold text-slate-400 uppercase tracking-widest text-sm text-center">
@@ -38,7 +38,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
   ];
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[1200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
       <div className="bg-white w-full max-w-lg rounded-[40px] overflow-hidden flex flex-col max-h-[92vh] shadow-2xl animate-in slide-in-from-bottom-12 duration-500 ring-1 ring-black/5">
         
         {/* Header Image Section */}

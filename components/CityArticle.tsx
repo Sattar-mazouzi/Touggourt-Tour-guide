@@ -50,7 +50,7 @@ const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[70] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-0 z-[1300] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-right duration-300">
       {/* Sticky Top Header */}
       <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex items-center justify-between">
         <button 
