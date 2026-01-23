@@ -1,5 +1,5 @@
 
-export type Category = 'historical' | 'religion' | 'cultural' | 'natural' | 'hotels' | 'restaurants' | 'all';
+export type Category = string;
 
 export interface Place {
   id: string;
@@ -57,6 +57,14 @@ export interface CityBioData {
 export type Language = 'en' | 'ar' | 'fr';
 
 export interface TranslationDict {
+  [key: string]: {
+    en: string;
+    ar: string;
+    fr: string;
+  };
+}
+
+export interface CategoryConfig {
   [key: string]: {
     en: string;
     ar: string;

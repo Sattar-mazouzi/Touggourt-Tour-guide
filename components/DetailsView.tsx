@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Place, Language } from '../types';
+import { Place, Language, CategoryConfig } from '../types';
 import { X, MapPin, Star, Navigation, Share2, Info, Maximize2 } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
@@ -8,10 +8,11 @@ import MapView from './MapView';
 interface Props {
   place: Place;
   lang: Language;
+  categoryConfig?: CategoryConfig;
   onClose: () => void;
 }
 
-const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
+const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) => {
   const t = translations;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -64,6 +65,10 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
       } catch (err) {}
     }
   };
+
+  const categoryLabel = categoryConfig?.[place.category]?.[lang] || 
+                        t[place.category]?.[lang] || 
+                        place.category;
 
   return (
     <div className="fixed inset-0 z-[1000] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
@@ -128,7 +133,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, onClose }) => {
           <div className="absolute bottom-10 left-6 right-6 z-10 pointer-events-none">
             <div className="bg-black/20 backdrop-blur-sm p-4 rounded-3xl -mx-2">
               <span className="inline-block bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-2 shadow-lg shadow-orange-500/20">
-                {t[place.category]?.[lang] || place.category}
+                {categoryLabel}
               </span>
               <h2 className="text-3xl font-black text-white drop-shadow-md leading-tight">{place.name[lang]}</h2>
             </div>

@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Key } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Key, Bed, Utensils, History, Leaf } from 'lucide-react';
 import { db, analytics } from './firebase.ts';
 import { logEvent } from 'firebase/analytics';
-import { collection, getDocs } from 'firebase/firestore';
-import { Place, Language, Category, CityBioData } from './types.ts';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { Place, Language, Category, CityBioData, CategoryConfig } from './types.ts';
 import { translations } from './i18n.ts';
 import PlaceCard from './components/PlaceCard.tsx';
 import DetailsView from './components/DetailsView.tsx';
@@ -12,6 +12,15 @@ import LanguageSwitcher from './components/LanguageSwitcher.tsx';
 import MapView from './components/MapView.tsx';
 import CityBio from './components/CityBio.tsx';
 import CityArticle from './components/CityArticle.tsx';
+
+const DEFAULT_CATEGORIES: CategoryConfig = {
+  historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
+  religion: { en: 'Religious', ar: 'ديني', fr: 'Religieux' },
+  cultural: { en: 'Cultural', ar: 'ثقافي', fr: 'Culturel' },
+  natural: { en: 'Natural', ar: 'طبيعي', fr: 'Naturel' },
+  hotels: { en: 'Hotels', ar: 'فنادق', fr: 'Hôtels' },
+  restaurants: { en: 'Restaurants', ar: 'مطاعم', fr: 'Restaurants' },
+};
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
@@ -26,6 +35,7 @@ const App: React.FC = () => {
   
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
+  const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
   const [isLoading, setIsLoading] = useState(true);
   const [hasApiKey, setHasApiKey] = useState(!!process.env.API_KEY);
 
@@ -37,15 +47,6 @@ const App: React.FC = () => {
       firebase_screen_class: 'App'
     });
   }, [activeTab]);
-
-  useEffect(() => {
-    if (selectedCategory !== 'all') {
-      logEvent(analytics, 'select_content', {
-        content_type: 'category',
-        item_id: selectedCategory
-      });
-    }
-  }, [selectedCategory]);
 
   const checkKey = useCallback(async () => {
     if ((window as any).aistudio) {
@@ -68,32 +69,44 @@ const App: React.FC = () => {
     }
   };
 
+  const getCategoryIcon = (catKey: string) => {
+    const key = catKey.toLowerCase();
+    if (key.includes('religion') || key.includes('religious')) return <Landmark size={20} />;
+    if (key.includes('historical') || key.includes('history')) return <History size={20} />;
+    if (key.includes('cultural') || key.includes('culture')) return <Compass size={20} />;
+    if (key.includes('natural') || key.includes('nature')) return <Leaf size={20} />;
+    if (key.includes('hotel')) return <Bed size={20} />;
+    if (key.includes('restaurant')) return <Utensils size={20} />;
+    return <Sparkles size={20} />;
+  };
+
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
+      
+      // 1. Fetch Categories Config from Firestore
+      const catDocRef = doc(db, "appConfig", "categories");
+      const catSnap = await getDoc(catDocRef);
+      if (catSnap.exists()) {
+        const data = catSnap.data() as CategoryConfig;
+        if (Object.keys(data).length > 0) {
+          setCategoryConfig(data);
+        }
+      }
+
+      // 2. Fetch Places
       const placesSnapshot = await getDocs(collection(db, "places"));
       const fetchedPlaces = placesSnapshot.docs.map(doc => {
         const data = doc.data();
-        
-        // Normalize Category (e.g., 'nature' -> 'natural')
         let normalizedCategory = (data.category || 'all').toLowerCase();
-        if (normalizedCategory === 'nature') normalizedCategory = 'natural';
-        if (normalizedCategory === 'religious') normalizedCategory = 'religion';
-        if (normalizedCategory === 'history') normalizedCategory = 'historical';
-        if (normalizedCategory === 'culture') normalizedCategory = 'cultural';
-        if (normalizedCategory === 'hotel') normalizedCategory = 'hotels';
-        if (normalizedCategory === 'restaurant') normalizedCategory = 'restaurants';
-
-        // Handle migration from legacy string imageUrl to new map/object structure
-        let imgObj: any = { cover: 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop' };
         
+        let imgObj: any = { cover: 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop' };
         if (typeof data.imageUrl === 'string') {
           imgObj.cover = data.imageUrl;
         } else if (data.imageUrl && typeof data.imageUrl === 'object') {
           imgObj = { ...data.imageUrl };
         }
 
-        // Support both 'lat'/'lng' and 'latitude'/'longitude' field names
         const lat = data.location?.latitude ?? data.location?.lat ?? 33.1064;
         const lng = data.location?.longitude ?? data.location?.lng ?? 6.0628;
 
@@ -111,6 +124,7 @@ const App: React.FC = () => {
       }) as Place[];
       setPlaces(fetchedPlaces);
 
+      // 3. Fetch City Bio
       const bioSnapshot = await getDocs(collection(db, "aboutCity"));
       let mergedBioData: any = {};
       bioSnapshot.forEach(doc => {
@@ -185,7 +199,21 @@ const App: React.FC = () => {
       const nameInLang = p.name[lang] || '';
       const descInLang = p.description[lang] || '';
       const matchesSearch = nameInLang.toLowerCase().includes(queryStr) || descInLang.toLowerCase().includes(queryStr);
-      const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+      
+      const catMatches = (selectedCat: string, placeCat: string) => {
+        const s = selectedCat.toLowerCase();
+        const pc = placeCat.toLowerCase();
+        if (s === 'all') return true;
+        if (s === pc) return true;
+        // Handle common aliases
+        if (s === 'religion' && pc === 'religious') return true;
+        if (s === 'religious' && pc === 'religion') return true;
+        if (s === 'historical' && pc === 'history') return true;
+        if (s === 'history' && pc === 'historical') return true;
+        return false;
+      };
+
+      const matchesCategory = catMatches(selectedCategory, p.category);
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
     });
@@ -193,7 +221,10 @@ const App: React.FC = () => {
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
 
-  const categories: Category[] = ['all', 'religion', 'historical', 'cultural', 'natural', 'hotels', 'restaurants'];
+  const dynamicCategories = useMemo(() => {
+    const keys = Object.keys(categoryConfig);
+    return ['all', ...keys];
+  }, [categoryConfig]);
 
   const welcomeMessage = useMemo(() => {
     if (cityBio?.name?.[lang]) {
@@ -255,7 +286,6 @@ const App: React.FC = () => {
                   <button 
                     onClick={() => setIsBioOpen(true)}
                     className="text-left w-full group focus:outline-none"
-                    dir={lang === 'ar' ? 'rtl' : 'ltr'}
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-orange-500 group-hover:rotate-12 transition-transform"><Sparkles size={18} /></span>
@@ -311,24 +341,22 @@ const App: React.FC = () => {
                   <section className="mb-8">
                     <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
                     <div className="grid grid-cols-3 gap-3">
-                      {categories.filter(c => c !== 'all').map(cat => (
+                      {dynamicCategories.filter(c => c !== 'all').map(cat => (
                         <button
                           key={cat}
                           onClick={() => {
                             setSelectedCategory(cat);
                             setActiveTab('explore');
+                            logEvent(analytics, 'select_content', { content_type: 'category', item_id: cat });
                           }}
                           className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:border-orange-200 hover:bg-orange-50"
                         >
                           <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                            {cat === 'religion' && <Landmark size={20} />}
-                            {cat === 'historical' && <MapIcon size={20} />}
-                            {cat === 'cultural' && <Compass size={20} />}
-                            {cat === 'natural' && <Compass size={20} />}
-                            {cat === 'hotels' && <Home size={20} />}
-                            {cat === 'restaurants' && <Menu size={20} />}
+                            {getCategoryIcon(cat)}
                           </div>
-                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{t[cat][lang]}</span>
+                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">
+                            {categoryConfig[cat]?.[lang] || cat}
+                          </span>
                         </button>
                       ))}
                     </div>
@@ -336,50 +364,56 @@ const App: React.FC = () => {
                 </>
               )}
 
-              {activeTab === 'explore' && (
-                <div className="flex justify-center mb-6">
-                  <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[200px]">
-                    <button 
-                      onClick={() => setExploreMode('list')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
-                    >
-                      <List size={16} />
-                      {t.list[lang]}
-                    </button>
-                    <button 
-                      onClick={() => setExploreMode('map')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
-                    >
-                      <MapIcon size={16} />
-                      {t.map[lang]}
-                    </button>
+              {/* Enhanced Category Filtering Bar - Visible on Explore or when searching */}
+              {(activeTab === 'explore' || searchQuery !== '') && (
+                <div className="sticky top-0 bg-slate-50/95 backdrop-blur-sm z-20 -mx-4 px-4 pb-4">
+                  {activeTab === 'explore' && (
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[240px]">
+                        <button 
+                          onClick={() => setExploreMode('list')}
+                          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
+                        >
+                          <List size={16} />
+                          {t.list[lang]}
+                        </button>
+                        <button 
+                          onClick={() => setExploreMode('map')}
+                          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}
+                        >
+                          <MapIcon size={16} />
+                          {t.map[lang]}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {dynamicCategories.map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${
+                          selectedCategory === cat 
+                            ? 'bg-orange-500 text-white border-orange-500 shadow-lg shadow-orange-500/30' 
+                            : 'bg-white text-slate-500 border-slate-200 hover:border-orange-200'
+                        }`}
+                      >
+                        {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {(activeTab !== 'home' || searchQuery !== '') && (
-                <div className="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide">
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-bold transition-all ${
-                        selectedCategory === cat 
-                          ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                          : 'bg-white text-slate-500 border border-slate-200'
-                      }`}
-                    >
-                      {t[cat][lang]}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <section>
+              <section className="mt-2">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-slate-900">
                     {activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}
                   </h2>
+                  {activeTab === 'favorites' && filteredPlaces.length > 0 && (
+                    <span className="text-xs font-bold text-slate-400">{filteredPlaces.length} {t.explore[lang]}</span>
+                  )}
                 </div>
 
                 {activeTab === 'explore' && exploreMode === 'map' ? (
@@ -399,8 +433,14 @@ const App: React.FC = () => {
                       ))
                     ) : (
                       <div className="py-20 text-center text-slate-400">
-                        <Compass size={40} className="mx-auto mb-2 opacity-20" />
-                        <p>{t.noPlacesFound[lang]}</p>
+                        <Compass size={40} className="mx-auto mb-4 opacity-20" />
+                        <p className="font-medium">{t.noPlacesFound[lang]}</p>
+                        <button 
+                          onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
+                          className="mt-4 text-orange-500 text-sm font-bold uppercase tracking-widest"
+                        >
+                          {lang === 'ar' ? 'إعادة تعيين' : 'Reset Filters'}
+                        </button>
                       </div>
                     )}
                   </div>
@@ -439,7 +479,14 @@ const App: React.FC = () => {
         </div>
       </nav>
 
-      {selectedPlace && <DetailsView place={selectedPlace} lang={lang} onClose={() => setSelectedPlace(null)} />}
+      {selectedPlace && (
+        <DetailsView 
+          place={selectedPlace} 
+          lang={lang} 
+          categoryConfig={categoryConfig}
+          onClose={() => setSelectedPlace(null)} 
+        />
+      )}
       {isBioOpen && <CityBio lang={lang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => setIsArticleOpen(true)} />}
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
     </div>
