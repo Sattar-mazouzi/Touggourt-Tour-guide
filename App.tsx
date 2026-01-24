@@ -97,6 +97,7 @@ const AppContent: React.FC = () => {
             category: normalizedCategory as Category,
             rating: Number(data.rating) || 0,
             ratingCount: Number(data.ratingCount) || 0,
+            favoritesCount: Number(data.favoritesCount) || 0,
             imageUrl: imgObj,
             featured: !!data.featured,
             location: { lat: Number(lat), lng: Number(lng) },

@@ -8,6 +8,7 @@ export interface Place {
   category: Category;
   rating: number;
   ratingCount?: number;
+  favoritesCount?: number;
   imageUrl: {
     cover: string;
     img1?: string;

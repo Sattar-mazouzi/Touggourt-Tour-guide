@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Place, Language, CategoryConfig } from '../types';
-import { X, MapPin, Star, Navigation, Share2, Info, Maximize2 } from 'lucide-react';
+import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
 import ReviewSection from './ReviewSection';
@@ -99,13 +99,19 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
 
         <div className="bg-white -mt-8 rounded-t-[40px] p-8 shadow-2xl relative z-10 min-h-[60vh]">
           <div className="flex justify-between items-center mb-8">
-            <div className="flex items-center gap-2 text-slate-500 max-w-[70%]">
+            <div className="flex items-center gap-2 text-slate-500 max-w-[50%]">
               <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center flex-shrink-0"><MapPin size={20} className="text-orange-500" /></div>
-              <span className="text-sm font-bold leading-tight">{place.address?.[lang] || ''}</span>
+              <span className="text-sm font-bold leading-tight truncate">{place.address?.[lang] || ''}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-yellow-50 px-4 py-2 rounded-2xl border border-yellow-200">
-              <Star size={16} className="text-yellow-500 fill-yellow-500" />
-              <span className="text-sm font-black text-yellow-700">{place.rating}</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-2 rounded-2xl border border-yellow-200">
+                <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                <span className="text-xs font-black text-yellow-700">{place.rating}</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-red-50 px-3 py-2 rounded-2xl border border-red-100">
+                <Heart size={14} className="text-red-500 fill-red-500" />
+                <span className="text-xs font-black text-red-700">{place.favoritesCount || 0}</span>
+              </div>
             </div>
           </div>
 

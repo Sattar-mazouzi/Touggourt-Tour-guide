@@ -20,7 +20,8 @@ import {
   updateDoc,
   query,
   where,
-  getDocs
+  getDocs,
+  increment
 } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../firebase';
 import { UserProfile } from '../types';
@@ -175,10 +176,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     try {
       const favRef = doc(db, 'users', user.uid, 'favorites', placeId);
+      const placeRef = doc(db, 'places', placeId);
+      
       if (favorites.includes(placeId)) {
         await deleteDoc(favRef);
+        await updateDoc(placeRef, { favoritesCount: increment(-1) });
       } else {
         await setDoc(favRef, { timestamp: Date.now() });
+        await updateDoc(placeRef, { favoritesCount: increment(1) });
       }
     } catch (err) {
       console.error("Toggle favorite failed:", err);
@@ -199,7 +204,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       // 2. Fetch ALL reviews for this place to recalculate the sum and average
-      // This satisfies the request to calculate by "summing all the user ratings"
       const q = query(collection(db, 'reviews'), where('placeId', '==', placeId));
       const querySnapshot = await getDocs(q);
       
@@ -211,13 +215,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         totalRatingSum += (Number(reviewData.rating) || 0);
       });
 
-      // 3. Calculate the new average (rounded to 1 decimal place)
+      // 3. Calculate the new average
       const calculatedAverage = totalCount > 0 
         ? Math.round((totalRatingSum / totalCount) * 10) / 10 
         : 0;
 
-      // 4. Update the place document with the new aggregated data
-      // Only updates 'rating' and 'ratingCount' to satisfy security rules
+      // 4. Update the place document
       const placeRef = doc(db, 'places', placeId);
       await updateDoc(placeRef, {
         rating: calculatedAverage,
