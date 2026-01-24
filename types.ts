@@ -23,6 +23,25 @@ export interface Place {
   featured?: boolean;
 }
 
+export interface UserProfile {
+  uid: string;
+  fullName: string;
+  email: string;
+  role: 'visitor' | 'admin' | 'content manager';
+  age?: number;
+  createdAt: number;
+}
+
+export interface Review {
+  id?: string;
+  userId: string;
+  userName: string;
+  placeId: string;
+  rating: number;
+  comment: string;
+  timestamp: number;
+}
+
 export interface HeritageData {
   industries: { en: string; ar: string; fr: string };
   clothing: { en: string; ar: string; fr: string };

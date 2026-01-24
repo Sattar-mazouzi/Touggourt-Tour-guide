@@ -1,9 +1,9 @@
 
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getAnalytics } from "firebase/analytics";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAw7HKjC_T9j77JC-oPL8Id6P9Z7SGbBhQ",
   authDomain: "touggourtmemory.firebaseapp.com",
@@ -20,18 +20,20 @@ const app = initializeApp(firebaseConfig);
 // Initialize Analytics
 export const analytics = getAnalytics(app);
 
-// Initialize Firestore with settings to improve connectivity on restrictive networks
+// Initialize Auth
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+
+// Initialize Firestore
 export const db = initializeFirestore(app, {
   experimentalAutoDetectLongPolling: true,
 });
 
-// Enable offline persistence for a better mobile experience
+// Enable offline persistence
 enableIndexedDbPersistence(db).catch((err) => {
     if (err.code === 'failed-precondition') {
-        // Multiple tabs open, persistence can only be enabled in one tab at a time.
         console.warn('Firestore persistence failed: Multiple tabs open');
     } else if (err.code === 'unimplemented') {
-        // The current browser does not support all of the features required to enable persistence
         console.warn('Firestore persistence failed: Browser not supported');
     }
 });
