@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Users, CloudSun, Sparkles, Loader2, BookOpen } from 'lucide-react';
+import { X, Users, CloudSun, Sparkles, Loader2, BookOpen, Eye } from 'lucide-react';
 import { Language, CityBioData } from '../types';
 import { translations } from '../i18n';
 
@@ -33,7 +33,7 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
     { url: data.gallery.architecture, title: { en: "Architecture", ar: "العمارة", fr: "Architecture" } },
     { url: data.gallery.camel, title: { en: "Camels", ar: "الجمال", fr: "Chameaux" } },
     { url: data.gallery.dunes, title: { en: "Dunes", ar: "الكثبان", fr: "Dunes" } },
-    { url: data.gallery.oasis, title: { en: "Oasis", ar: "الواحات", fr: "Oasis" } },
+    { url: data.gallery.oasis, title: { en: "الواحات", ar: "الواحات", fr: "Oasis" } },
     { url: data.gallery.culture, title: { en: "Culture", ar: "الثقافة", fr: "Culture" } },
   ];
 
@@ -58,9 +58,17 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
           </button>
 
           <div className={`absolute bottom-8 ${lang === 'ar' ? 'right-8' : 'left-8'} right-8`}>
-            <span className="inline-block px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg shadow-orange-500/30">
-              {t.wadiRigh[lang]}
-            </span>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-block px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-orange-500/30">
+                {t.wadiRigh[lang]}
+              </span>
+              {data.readingCount && (
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-white/10 backdrop-blur-xl text-white text-[10px] font-black rounded-full border border-white/20">
+                  <Eye size={12} />
+                  {data.readingCount}
+                </div>
+              )}
+            </div>
             <h2 className="text-4xl font-black text-slate-900 drop-shadow-sm leading-tight">
               {t.cityBioTitle[lang]}
             </h2>

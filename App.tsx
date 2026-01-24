@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon } from 'lucide-react';
 import { db, analytics } from './firebase.ts';
 import { logEvent } from 'firebase/analytics';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import { Place, Language, Category, CityBioData, CategoryConfig } from './types.ts';
 import { translations } from './i18n.ts';
 import PlaceCard from './components/PlaceCard.tsx';
@@ -39,6 +39,7 @@ const AppContent: React.FC = () => {
   
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
+  const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -112,7 +113,12 @@ const AppContent: React.FC = () => {
       try {
         const bioSnapshot = await getDocs(collection(db, "aboutCity"));
         let mergedBioData: any = {};
-        bioSnapshot.forEach(doc => { mergedBioData = { ...mergedBioData, ...doc.data() }; });
+        const ids: string[] = [];
+        bioSnapshot.forEach(doc => { 
+          ids.push(doc.id);
+          mergedBioData = { ...mergedBioData, ...doc.data() }; 
+        });
+        setCityBioDocIds(ids);
 
         if (Object.keys(mergedBioData).length > 0) {
           const fieldsToNormalize = ['geography', 'climate', 'climateandTopography', 'bio', 'extendedBio', 'histBio', 'extendedHistBio'];
@@ -141,6 +147,23 @@ const AppContent: React.FC = () => {
       setIsLoading(false);
     }
   }, []);
+
+  const handleIncrementReadingCount = async () => {
+    if (cityBioDocIds.length === 0) return;
+    try {
+      // Increment reading count for the first doc (assuming it's the main one)
+      // If there are multiple, we typically only need one tracking document
+      const mainDocId = cityBioDocIds[0];
+      const docRef = doc(db, "aboutCity", mainDocId);
+      await updateDoc(docRef, {
+        readingCount: increment(1)
+      });
+      // Optionally update local state for immediate feedback
+      setCityBio(prev => prev ? { ...prev, readingCount: (prev.readingCount || 0) + 1 } : null);
+    } catch (err) {
+      console.error("Failed to increment reading count:", err);
+    }
+  };
 
   useEffect(() => {
     const bioSeen = sessionStorage.getItem('touggourt_bio_seen');
@@ -333,7 +356,7 @@ const AppContent: React.FC = () => {
       </nav>
 
       {selectedPlace && <DetailsView place={selectedPlace} lang={lang} categoryConfig={categoryConfig} onClose={() => setSelectedPlace(null)} />}
-      {isBioOpen && <CityBio lang={lang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => setIsArticleOpen(true)} />}
+      {isBioOpen && <CityBio lang={lang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => { handleIncrementReadingCount(); setIsArticleOpen(true); }} />}
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}
       {isProfileOpen && <ProfileView lang={lang} onClose={() => setIsProfileOpen(false)} />}

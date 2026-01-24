@@ -64,6 +64,7 @@ export interface CityBioData {
   climateandTopography?: { en: string; ar: string; fr: string };
   heritage?: HeritageData;
   population: string | number;
+  readingCount?: number;
   location: string;
   cover: string;
   gallery: {
