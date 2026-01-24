@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, Menu, List, Sparkles, Landmark, Loader2, Key, Bed, Utensils, History, Leaf, LogOut } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon } from 'lucide-react';
 import { db, analytics } from './firebase.ts';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
@@ -13,6 +14,7 @@ import CityBio from './components/CityBio.tsx';
 import CityArticle from './components/CityArticle.tsx';
 import { AuthProvider, useAuth } from './contexts/AuthContext.tsx';
 import AuthModal from './components/AuthModal.tsx';
+import ProfileView from './components/ProfileView.tsx';
 
 const DEFAULT_CATEGORIES: CategoryConfig = {
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
@@ -33,14 +35,14 @@ const AppContent: React.FC = () => {
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [isArticleOpen, setIsArticleOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasApiKey, setHasApiKey] = useState(!!process.env.API_KEY);
 
-  const { user, favorites, toggleFavorite, logout } = useAuth();
+  const { user, favorites, toggleFavorite, profile } = useAuth();
   const t = translations;
 
   useEffect(() => {
@@ -49,27 +51,6 @@ const AppContent: React.FC = () => {
       firebase_screen_class: 'App'
     });
   }, [activeTab]);
-
-  const checkKey = useCallback(async () => {
-    if ((window as any).aistudio) {
-      const hasKey = await (window as any).aistudio.hasSelectedApiKey();
-      setHasApiKey(hasKey || !!process.env.API_KEY);
-      return hasKey;
-    }
-    return !!process.env.API_KEY;
-  }, []);
-
-  useEffect(() => {
-    checkKey();
-  }, [checkKey]);
-
-  const handleSelectKey = async () => {
-    if ((window as any).aistudio) {
-      await (window as any).aistudio.openSelectKey();
-      setHasApiKey(true);
-      logEvent(analytics, 'api_key_selected');
-    }
-  };
 
   const getCategoryIcon = (catKey: string) => {
     const key = catKey.toLowerCase();
@@ -86,7 +67,6 @@ const AppContent: React.FC = () => {
     try {
       setIsLoading(true);
       
-      // Fetch Categories
       try {
         const catDocRef = doc(db, "appConfig", "categories");
         const catSnap = await getDoc(catDocRef);
@@ -98,7 +78,6 @@ const AppContent: React.FC = () => {
         console.warn("Category fetch failed. Using defaults.", err);
       }
 
-      // Fetch Places
       try {
         const placesSnapshot = await getDocs(collection(db, "places"));
         const fetchedPlaces = placesSnapshot.docs.map(doc => {
@@ -125,12 +104,9 @@ const AppContent: React.FC = () => {
         }) as Place[];
         setPlaces(fetchedPlaces);
       } catch (err: any) {
-        if (err.code === 'permission-denied') {
-          console.warn("Firestore Places fetch: Permission denied. Check Security Rules for 'places' collection.");
-        }
+        console.error("Places fetch error", err);
       }
 
-      // Fetch Bio
       try {
         const bioSnapshot = await getDocs(collection(db, "aboutCity"));
         let mergedBioData: any = {};
@@ -198,10 +174,6 @@ const AppContent: React.FC = () => {
         const plc = pc.toLowerCase();
         if (sc === 'all') return true;
         if (sc === plc) return true;
-        if (sc === 'religion' && plc === 'religious') return true;
-        if (sc === 'religious' && plc === 'religion') return true;
-        if (sc === 'historical' && plc === 'history') return true;
-        if (sc === 'history' && plc === 'historical') return true;
         return false;
       };
       const matchesCategory = catMatches(selectedCategory, p.category);
@@ -218,6 +190,8 @@ const AppContent: React.FC = () => {
     return t.welcome[lang];
   }, [cityBio, lang, t]);
 
+  const userInitial = profile?.fullName ? profile.fullName[0].toUpperCase() : null;
+
   return (
     <div className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl font-arabic' : 'ltr'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] relative z-50">
@@ -231,7 +205,12 @@ const AppContent: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             {user ? (
-               <button onClick={logout} className="p-2 bg-slate-100 text-slate-400 rounded-xl"><LogOut size={20} /></button>
+               <button 
+                onClick={() => setIsProfileOpen(true)} 
+                className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-black shadow-lg shadow-slate-900/10 active:scale-95 transition-all"
+               >
+                 {userInitial || <UserIcon size={18} />}
+               </button>
             ) : (
                <button onClick={() => setIsAuthModalOpen(true)} className="p-2 bg-orange-50 text-orange-600 rounded-xl"><Sparkles size={20} /></button>
             )}
@@ -327,7 +306,6 @@ const AppContent: React.FC = () => {
                   <div className="space-y-4">
                     {filteredPlaces.length > 0 ? (
                       filteredPlaces.map(place => (
-                        // Fix: Corrected the variable name from 'p' to 'place' to match the map scope.
                         <PlaceCard key={place.id} place={place} lang={lang} onSelect={handlePlaceSelect} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
                       ))
                     ) : (
@@ -356,6 +334,7 @@ const AppContent: React.FC = () => {
       {isBioOpen && <CityBio lang={lang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => setIsArticleOpen(true)} />}
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}
+      {isProfileOpen && <ProfileView lang={lang} onClose={() => setIsProfileOpen(false)} />}
     </div>
   );
 };

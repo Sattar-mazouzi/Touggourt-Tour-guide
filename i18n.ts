@@ -76,4 +76,9 @@ export const translations: TranslationDict = {
   heritageFestivals: { en: 'Festivals', ar: 'المهرجانات', fr: 'Festivals' },
   heritageGames: { en: 'Traditional Games', ar: 'الألعاب التقليدية', fr: 'Jeux traditionnels' },
   interactiveMap: { en: 'Interactive Map', ar: 'خريطة تفاعلية', fr: 'Carte interactive' },
+  profile: { en: 'Profile', ar: 'الملف الشخصي', fr: 'Profil' },
+  personalInfo: { en: 'Personal Info', ar: 'المعلومات الشخصية', fr: 'Infos personnelles' },
+  editProfile: { en: 'Edit Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' },
+  saveChanges: { en: 'Save Changes', ar: 'حفظ التغييرات', fr: 'Enregistrer' },
+  cancel: { en: 'Cancel', ar: 'إلغاء', fr: 'Annuler' },
 };

@@ -16,7 +16,8 @@ import {
   onSnapshot, 
   collection, 
   deleteDoc, 
-  addDoc 
+  addDoc,
+  updateDoc
 } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../firebase';
 import { UserProfile } from '../types';
@@ -32,6 +33,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   toggleFavorite: (placeId: string) => Promise<void>;
   submitReview: (placeId: string, rating: number, comment: string) => Promise<void>;
+  updateProfileInfo: (data: Partial<UserProfile>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,11 +55,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
-      cleanupListeners(); // Stop previous listeners immediately on any auth change
+      cleanupListeners(); 
       
       if (u) {
         setUser(u);
-        // 1. Fetch User Profile
         getDoc(doc(db, 'users', u.uid)).then((profDoc) => {
           if (profDoc.exists()) {
             setProfile(profDoc.data() as UserProfile);
@@ -68,16 +69,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         });
 
-        // 2. Setup Favorites Listener with explicit error handling
         favUnsubscribeRef.current = onSnapshot(
           collection(db, 'users', u.uid, 'favorites'), 
           (snap) => {
             setFavorites(snap.docs.map(doc => doc.id));
           },
           (error) => {
-            // Silently handle permission errors during transitions (e.g. logging out)
             if (error.code === 'permission-denied') {
-              console.warn("Favorites access denied. Usually occurs during logout transition.");
+              console.warn("Favorites access denied.");
             } else {
               console.error("Favorites listener error:", error);
             }
@@ -106,15 +105,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updatedAt: Date.now()
       };
 
-      // Security rules REQUIRE role: 'visitor' for creation (isNew)
       if (isNew) {
         profileData.role = 'visitor';
         profileData.createdAt = Date.now();
       }
 
       await setDoc(doc(db, 'users', uid), profileData, { merge: true });
+      // Update local profile state if it matches the current user
+      if (user?.uid === uid) {
+        const fullProfile = await getDoc(doc(db, 'users', uid));
+        if (fullProfile.exists()) setProfile(fullProfile.data() as UserProfile);
+      }
     } catch (err) {
       console.error("Failed to save user profile:", err);
+    }
+  };
+
+  const updateProfileInfo = async (data: Partial<UserProfile>) => {
+    if (!user) return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { ...data, updatedAt: Date.now() });
+      
+      // Update firebase auth profile if name changed
+      if (data.fullName) {
+        await updateProfile(user, { displayName: data.fullName });
+      }
+
+      // Refresh local state
+      setProfile(prev => prev ? { ...prev, ...data } : null);
+    } catch (err) {
+      console.error("Update profile info failed:", err);
+      throw err;
     }
   };
 
@@ -122,7 +144,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const isNew = result.user.metadata.creationTime === result.user.metadata.lastSignInTime;
-      // Always ensure profile exists for the rules to allow subcollection reads
       await saveUserProfile(result.user.uid, {
         fullName: result.user.displayName || 'Traveler',
         email: result.user.email || '',
@@ -140,7 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       fullName: name,
       email,
       age
-    }, true); // isNew = true
+    }, true);
   };
 
   const loginEmail = async (email: string, pass: string) => {
@@ -148,7 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    cleanupListeners(); // Kill listeners BEFORE signing out to avoid 403s
+    cleanupListeners();
     await signOut(auth);
   };
 
@@ -187,7 +208,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider value={{ 
       user, profile, loading, favorites, 
       signInWithGoogle, signUpEmail, loginEmail, logout, 
-      toggleFavorite, submitReview 
+      toggleFavorite, submitReview, updateProfileInfo
     }}>
       {children}
     </AuthContext.Provider>
