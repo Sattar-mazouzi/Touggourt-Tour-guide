@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { translations } from '../i18n';
 import { Language, Review } from '../types';
 import { db } from '../firebase';
-import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 
 interface Props {
   placeId: string;
@@ -22,17 +22,30 @@ const ReviewSection: React.FC<Props> = ({ placeId, lang }) => {
 
   const fetchReviews = async () => {
     try {
+      // Simplied query to avoid requiring a composite index in Firestore.
+      // Firestore single-field indexes are automatic.
       const q = query(
         collection(db, 'reviews'),
         where('placeId', '==', placeId),
-        orderBy('timestamp', 'desc'),
-        limit(5)
+        limit(50) // Fetch a reasonable number to sort in-memory
       );
+      
       const snap = await getDocs(q);
-      setReviews(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Review)));
+      const allReviews = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Review));
+      
+      // Sort newest first and take the top 5 in-memory.
+      // This is performant for small-to-medium review sets and bypasses index errors.
+      const sorted = allReviews
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+        .slice(0, 5);
+        
+      setReviews(sorted);
     } catch (error: any) {
       if (error.code === 'permission-denied') {
         console.warn("Firestore Reviews Fetch: Permission denied. Check Security Rules for 'reviews' collection.");
+      } else if (error.code === 'failed-precondition') {
+        // This is where index errors are usually reported.
+        console.warn("Firestore Reviews Fetch: Precondition failed (possibly index required). Falling back to empty state.");
       } else {
         console.error("Firestore Reviews Error:", error);
       }

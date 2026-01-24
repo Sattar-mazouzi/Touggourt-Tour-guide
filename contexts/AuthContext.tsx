@@ -42,7 +42,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Ref to hold the favorites listener unsubscribe function
   const favUnsubscribeRef = useRef<(() => void) | null>(null);
 
   const cleanupListeners = () => {
@@ -53,31 +52,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // onAuthStateChanged is a listener itself
     const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      cleanupListeners(); // Cleanup any existing listeners before starting new ones or on logout
-
+      cleanupListeners(); // Stop previous listeners immediately on any auth change
+      
       if (u) {
-        // Fetch User Profile
+        setUser(u);
+        // 1. Fetch User Profile
         getDoc(doc(db, 'users', u.uid)).then((profDoc) => {
           if (profDoc.exists()) {
             setProfile(profDoc.data() as UserProfile);
           }
-        }).catch(err => console.error("Profile fetch error:", err));
+        }).catch(err => {
+          if (err.code !== 'permission-denied') {
+            console.error("Profile fetch error:", err);
+          }
+        });
 
-        // Setup Favorites Listener
+        // 2. Setup Favorites Listener with explicit error handling
         favUnsubscribeRef.current = onSnapshot(
           collection(db, 'users', u.uid, 'favorites'), 
           (snap) => {
             setFavorites(snap.docs.map(doc => doc.id));
           },
           (error) => {
-            console.warn("Firestore Favorites Sync: Permission denied. Check Security Rules.", error);
+            // Silently handle permission errors during transitions (e.g. logging out)
+            if (error.code === 'permission-denied') {
+              console.warn("Favorites access denied. Usually occurs during logout transition.");
+            } else {
+              console.error("Favorites listener error:", error);
+            }
             setFavorites([]);
           }
         );
       } else {
+        setUser(null);
         setProfile(null);
         setFavorites([]);
       }
@@ -90,15 +98,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const saveUserProfile = async (uid: string, data: Partial<UserProfile>) => {
+  const saveUserProfile = async (uid: string, data: Partial<UserProfile>, isNew: boolean = false) => {
     try {
-      // Security rules REQUIRE role: 'visitor' for creation
-      await setDoc(doc(db, 'users', uid), {
+      const profileData: any = {
         uid,
         ...data,
-        role: 'visitor', 
-        createdAt: Date.now()
-      }, { merge: true });
+        updatedAt: Date.now()
+      };
+
+      // Security rules REQUIRE role: 'visitor' for creation (isNew)
+      if (isNew) {
+        profileData.role = 'visitor';
+        profileData.createdAt = Date.now();
+      }
+
+      await setDoc(doc(db, 'users', uid), profileData, { merge: true });
     } catch (err) {
       console.error("Failed to save user profile:", err);
     }
@@ -108,12 +122,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const isNew = result.user.metadata.creationTime === result.user.metadata.lastSignInTime;
-      if (isNew) {
-        await saveUserProfile(result.user.uid, {
-          fullName: result.user.displayName || 'Traveler',
-          email: result.user.email || '',
-        });
-      }
+      // Always ensure profile exists for the rules to allow subcollection reads
+      await saveUserProfile(result.user.uid, {
+        fullName: result.user.displayName || 'Traveler',
+        email: result.user.email || '',
+      }, isNew);
     } catch (error) {
       console.error("Google Sign-in Error:", error);
       throw error;
@@ -127,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       fullName: name,
       email,
       age
-    });
+    }, true); // isNew = true
   };
 
   const loginEmail = async (email: string, pass: string) => {
@@ -135,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    cleanupListeners();
+    cleanupListeners(); // Kill listeners BEFORE signing out to avoid 403s
     await signOut(auth);
   };
 
@@ -149,7 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await setDoc(favRef, { timestamp: Date.now() });
       }
     } catch (err) {
-      console.error("Failed to toggle favorite:", err);
+      console.error("Toggle favorite failed:", err);
     }
   };
 
@@ -165,7 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         timestamp: Date.now()
       });
     } catch (err) {
-      console.error("Failed to submit review:", err);
+      console.error("Submit review failed:", err);
       throw err;
     }
   };
