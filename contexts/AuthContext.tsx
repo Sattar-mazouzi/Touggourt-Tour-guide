@@ -17,7 +17,10 @@ import {
   collection, 
   deleteDoc, 
   addDoc,
-  updateDoc
+  updateDoc,
+  query,
+  where,
+  getDocs
 } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../firebase';
 import { UserProfile } from '../types';
@@ -111,7 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       await setDoc(doc(db, 'users', uid), profileData, { merge: true });
-      // Update local profile state if it matches the current user
       if (user?.uid === uid) {
         const fullProfile = await getDoc(doc(db, 'users', uid));
         if (fullProfile.exists()) setProfile(fullProfile.data() as UserProfile);
@@ -126,13 +128,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, { ...data, updatedAt: Date.now() });
-      
-      // Update firebase auth profile if name changed
       if (data.fullName) {
         await updateProfile(user, { displayName: data.fullName });
       }
-
-      // Refresh local state
       setProfile(prev => prev ? { ...prev, ...data } : null);
     } catch (err) {
       console.error("Update profile info failed:", err);
@@ -190,6 +188,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const submitReview = async (placeId: string, rating: number, comment: string) => {
     if (!user) return;
     try {
+      // 1. Add the new review to the reviews collection
       await addDoc(collection(db, 'reviews'), {
         userId: user.uid,
         userName: user.displayName || 'Anonymous',
@@ -198,8 +197,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         comment,
         timestamp: Date.now()
       });
+
+      // 2. Fetch ALL reviews for this place to recalculate the sum and average
+      // This satisfies the request to calculate by "summing all the user ratings"
+      const q = query(collection(db, 'reviews'), where('placeId', '==', placeId));
+      const querySnapshot = await getDocs(q);
+      
+      let totalRatingSum = 0;
+      const totalCount = querySnapshot.size;
+      
+      querySnapshot.forEach((doc) => {
+        const reviewData = doc.data();
+        totalRatingSum += (Number(reviewData.rating) || 0);
+      });
+
+      // 3. Calculate the new average (rounded to 1 decimal place)
+      const calculatedAverage = totalCount > 0 
+        ? Math.round((totalRatingSum / totalCount) * 10) / 10 
+        : 0;
+
+      // 4. Update the place document with the new aggregated data
+      // Only updates 'rating' and 'ratingCount' to satisfy security rules
+      const placeRef = doc(db, 'places', placeId);
+      await updateDoc(placeRef, {
+        rating: calculatedAverage,
+        ratingCount: totalCount
+      });
+
     } catch (err) {
-      console.error("Submit review failed:", err);
+      console.error("Submit review and rating recalculation failed:", err);
       throw err;
     }
   };

@@ -7,6 +7,7 @@ export interface Place {
   description: { en: string; ar: string; fr: string };
   category: Category;
   rating: number;
+  ratingCount?: number;
   imageUrl: {
     cover: string;
     img1?: string;
