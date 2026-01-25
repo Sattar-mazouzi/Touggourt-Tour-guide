@@ -15,6 +15,7 @@ import CityArticle from './components/CityArticle.tsx';
 import { AuthProvider, useAuth } from './contexts/AuthContext.tsx';
 import AuthModal from './components/AuthModal.tsx';
 import ProfileView from './components/ProfileView.tsx';
+import { trackVisitorSession } from './services/visitor.ts';
 
 const DEFAULT_CATEGORIES: CategoryConfig = {
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
@@ -45,6 +46,11 @@ const AppContent: React.FC = () => {
 
   const { user, favorites, toggleFavorite, profile } = useAuth();
   const t = translations;
+
+  // Track session on mount
+  useEffect(() => {
+    trackVisitorSession();
+  }, []);
 
   useEffect(() => {
     logEvent(analytics, 'screen_view', {
@@ -151,14 +157,11 @@ const AppContent: React.FC = () => {
   const handleIncrementReadingCount = async () => {
     if (cityBioDocIds.length === 0) return;
     try {
-      // Increment reading count for the first doc (assuming it's the main one)
-      // If there are multiple, we typically only need one tracking document
       const mainDocId = cityBioDocIds[0];
       const docRef = doc(db, "aboutCity", mainDocId);
       await updateDoc(docRef, {
         readingCount: increment(1)
       });
-      // Optionally update local state for immediate feedback
       setCityBio(prev => prev ? { ...prev, readingCount: (prev.readingCount || 0) + 1 } : null);
     } catch (err) {
       console.error("Failed to increment reading count:", err);
