@@ -1,6 +1,10 @@
 
 import { initializeApp } from 'firebase/app';
-import { initializeFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager 
+} from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
 
@@ -24,16 +28,14 @@ export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-// Initialize Firestore
+/**
+ * Initialize Firestore with modern persistent cache settings.
+ * This replaces the deprecated enableIndexedDbPersistence() method.
+ * tabManager: persistentMultipleTabManager() allows synchronization across multiple tabs.
+ */
 export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager()
+  }),
   experimentalAutoDetectLongPolling: true,
-});
-
-// Enable offline persistence
-enableIndexedDbPersistence(db).catch((err) => {
-    if (err.code === 'failed-precondition') {
-        console.warn('Firestore persistence failed: Multiple tabs open');
-    } else if (err.code === 'unimplemented') {
-        console.warn('Firestore persistence failed: Browser not supported');
-    }
 });

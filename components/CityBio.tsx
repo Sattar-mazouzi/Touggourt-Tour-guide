@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { X, Users, CloudSun, Sparkles, Loader2, BookOpen, Eye } from 'lucide-react';
+import { X, Users, CloudSun, Sparkles, Loader2, BookOpen, Eye, Globe } from 'lucide-react';
 import { Language, CityBioData } from '../types';
 import { translations } from '../i18n';
 
 interface Props {
   lang: Language;
+  onChangeLang: (lang: Language) => void;
   data: CityBioData | null;
   onClose: () => void;
   onOpenArticle: () => void;
@@ -13,8 +14,14 @@ interface Props {
 
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
-const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
+const CityBio: React.FC<Props> = ({ lang, onChangeLang, data, onClose, onOpenArticle }) => {
   const t = translations;
+
+  const languages: { code: Language; label: string }[] = [
+    { code: 'ar', label: 'عربي' },
+    { code: 'fr', label: 'FR' },
+    { code: 'en', label: 'EN' },
+  ];
 
   if (!data) {
     return (
@@ -76,8 +83,31 @@ const CityBio: React.FC<Props> = ({ lang, data, onClose, onOpenArticle }) => {
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide space-y-8">
+        <div className="flex-1 overflow-y-auto px-8 pb-8 pt-6 scrollbar-hide space-y-8">
           
+          {/* Language Selection Row */}
+          <div className="flex flex-col items-center gap-3">
+             <div className="flex items-center gap-2 text-slate-400">
+                <Globe size={14} />
+                <span className="text-[10px] font-black uppercase tracking-[0.1em]">{lang === 'ar' ? 'اختر اللغة' : (lang === 'fr' ? 'Choisir la langue' : 'Choose Language')}</span>
+             </div>
+             <div className="flex gap-2 bg-slate-100 p-1.5 rounded-[20px] w-fit">
+                {languages.map((l) => (
+                   <button
+                    key={l.code}
+                    onClick={() => onChangeLang(l.code)}
+                    className={`px-5 py-2 rounded-2xl text-xs font-black transition-all ${
+                      lang === l.code 
+                        ? 'bg-white text-orange-600 shadow-md scale-105' 
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                   >
+                     {l.label}
+                   </button>
+                ))}
+             </div>
+          </div>
+
           {/* Brief Description */}
           <div className="relative pt-4">
              <div className={`absolute ${lang === 'ar' ? '-right-2' : '-left-2'} top-4 bottom-0 w-1 bg-orange-500 rounded-full opacity-20`}></div>
