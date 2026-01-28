@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
-import { Place, Language, Category, CityBioData, CategoryConfig } from './types';
+import { Place, Language, Category, CityBioData, CategoryConfig, GISMapConfig } from './types';
 import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
 import DetailsView from './components/DetailsView';
@@ -16,6 +16,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import ProfileView from './components/ProfileView';
 import { trackVisitorSession } from './services/visitor';
+import GISMapViewer from './components/GISMapViewer';
 
 const DEFAULT_CATEGORIES: CategoryConfig = {
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
@@ -37,11 +38,13 @@ const AppContent: React.FC = () => {
   const [isArticleOpen, setIsArticleOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isGISOpen, setIsGISOpen] = useState(false);
   
   const [places, setPlaces] = useState<Place[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
+  const [gisConfig, setGisConfig] = useState<GISMapConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { user, favorites, toggleFavorite, profile } = useAuth();
@@ -84,6 +87,17 @@ const AppContent: React.FC = () => {
         }
       } catch (err) {
         console.warn("Category fetch failed. Using defaults.", err);
+      }
+
+      // Fetch GIS Maps configuration
+      try {
+        const gisDocRef = doc(db, "appConfig", "gisMaps");
+        const gisSnap = await getDoc(gisDocRef);
+        if (gisSnap.exists()) {
+          setGisConfig(gisSnap.data() as GISMapConfig);
+        }
+      } catch (err) {
+        console.warn("GIS Maps config fetch failed.", err);
       }
 
       try {
@@ -351,6 +365,17 @@ const AppContent: React.FC = () => {
         </div>
       </main>
 
+      {/* Floating GIS Button in Explore */}
+      {activeTab === 'explore' && gisConfig && (
+        <button 
+          onClick={() => setIsGISOpen(true)}
+          className={`fixed bottom-24 ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}
+        >
+          <Layers size={20} className="text-orange-500" />
+          <span className="text-[10px] font-black uppercase tracking-widest">{t.openGISViewer[lang]}</span>
+        </button>
+      )}
+
       <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[env(safe-area-inset-bottom)] z-40">
         <div className="max-w-xl mx-auto flex justify-around p-3">
           <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span></button>
@@ -364,6 +389,15 @@ const AppContent: React.FC = () => {
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}
       {isProfileOpen && <ProfileView lang={lang} onClose={() => setIsProfileOpen(false)} />}
+      {isGISOpen && gisConfig && (
+        <GISMapViewer 
+          lang={lang} 
+          config={gisConfig} 
+          activeCategory={selectedCategory}
+          categoryLabel={selectedCategory !== 'all' ? (categoryConfig[selectedCategory]?.[lang] || selectedCategory) : undefined}
+          onClose={() => setIsGISOpen(false)} 
+        />
+      )}
     </div>
   );
 };

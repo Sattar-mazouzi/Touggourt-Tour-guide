@@ -25,6 +25,11 @@ export interface Place {
   featured?: boolean;
 }
 
+export interface GISMapConfig {
+  mainMap: string;
+  [key: string]: string;
+}
+
 export interface UserProfile {
   uid: string;
   fullName: string;
