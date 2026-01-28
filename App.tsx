@@ -1,21 +1,21 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon } from 'lucide-react';
-import { db, analytics } from './firebase.ts';
+import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
-import { Place, Language, Category, CityBioData, CategoryConfig } from './types.ts';
-import { translations } from './i18n.ts';
-import PlaceCard from './components/PlaceCard.tsx';
-import DetailsView from './components/DetailsView.tsx';
-import LanguageSwitcher from './components/LanguageSwitcher.tsx';
-import MapView from './components/MapView.tsx';
-import CityBio from './components/CityBio.tsx';
-import CityArticle from './components/CityArticle.tsx';
-import { AuthProvider, useAuth } from './contexts/AuthContext.tsx';
-import AuthModal from './components/AuthModal.tsx';
-import ProfileView from './components/ProfileView.tsx';
-import { trackVisitorSession } from './services/visitor.ts';
+import { Place, Language, Category, CityBioData, CategoryConfig } from './types';
+import { translations } from './i18n';
+import PlaceCard from './components/PlaceCard';
+import DetailsView from './components/DetailsView';
+import LanguageSwitcher from './components/LanguageSwitcher';
+import MapView from './components/MapView';
+import CityBio from './components/CityBio';
+import CityArticle from './components/CityArticle';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import AuthModal from './components/AuthModal';
+import ProfileView from './components/ProfileView';
+import { trackVisitorSession } from './services/visitor';
 
 const DEFAULT_CATEGORIES: CategoryConfig = {
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
@@ -53,6 +53,7 @@ const AppContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Correct usage of logEvent from firebase/analytics
     logEvent(analytics, 'screen_view', {
       firebase_screen: activeTab,
       firebase_screen_class: 'App'
@@ -315,7 +316,7 @@ const AppContent: React.FC = () => {
                         <button onClick={() => setExploreMode('map')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><MapIcon size={16} />{t.map[lang]}</button>
                       </div>
                     </div>
-                  )}
+                      )}
                   <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     {dynamicCategories.map(cat => (
                       <button key={cat} onClick={() => setSelectedCategory(cat)} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>

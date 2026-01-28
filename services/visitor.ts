@@ -3,45 +3,65 @@ import { db } from '../firebase';
 import { doc, writeBatch, increment } from 'firebase/firestore';
 
 /**
- * Tracks a visitor session exactly once per app load/session.
- * Increments global total and daily snapshots atomically.
+ * IMPORTANT: FIRESTORE SECURITY RULES REQUIREMENT
+ * 
+ * Your rules are strict. This service now only sends 'count', 'date', 'lastUpdated' 
+ * for dailyStats and 'totalSessions', 'lastUpdated' for appStats/global to match 
+ * your 'hasOnly' or implicit field checks.
  */
+
+const TRACKING_KEY = 'touggourt_session_tracked';
+let isTrackingInProgress = false;
+
 export const trackVisitorSession = async () => {
-  // 1. Session Protection: check if already tracked
-  const TRACKING_KEY = 'touggourt_session_tracked';
+  // 1. Session Protection
   if (sessionStorage.getItem(TRACKING_KEY)) {
     return;
   }
 
-  // CRITICAL: Set the guard immediately before any async calls (like batch.commit)
-  // to prevent race conditions during React StrictMode or fast re-renders.
-  sessionStorage.setItem(TRACKING_KEY, 'true');
+  // 2. Prevent concurrent execution
+  if (isTrackingInProgress) {
+    return;
+  }
+
+  isTrackingInProgress = true;
 
   try {
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`; 
+
     const batch = writeBatch(db);
 
-    // 2. Global Total Increment
+    // Global Total Increment
+    // We only send exactly what the rules expect to validate
     const globalRef = doc(db, 'appStats', 'global');
     batch.set(globalRef, { 
       totalSessions: increment(1),
       lastUpdated: Date.now()
     }, { merge: true });
 
-    // 3. Daily Snapshot Increment
+    // Daily Snapshot Increment
     const dailyRef = doc(db, 'dailyStats', today);
     batch.set(dailyRef, { 
       count: increment(1),
-      date: today
+      date: today,
+      lastUpdated: Date.now()
     }, { merge: true });
 
-    // 4. Atomic Commit
     await batch.commit();
     
-    console.log(`Session tracked successfully for ${today}`);
-  } catch (error) {
-    // If it fails, we've already set the session storage key to prevent retries 
-    // that might cause messy data, but we log the error for monitoring.
-    console.error("Visitor tracking error:", error);
+    sessionStorage.setItem(TRACKING_KEY, 'true');
+    console.log(`[VisitorTracker] Success: Recorded session for ${today}`);
+  } catch (error: any) {
+    if (error.code === 'permission-denied') {
+      console.warn("[VisitorTracker] Permission Denied. Ensure your Firestore rules allow 'create' for the first hit and permit 'lastUpdated' field.");
+    } else {
+      console.error("[VisitorTracker] Error recording session:", error);
+    }
+  } finally {
+    isTrackingInProgress = false;
   }
 };

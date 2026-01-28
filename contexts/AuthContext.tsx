@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { 
   onAuthStateChanged, 
-  User, 
+  type User, 
   signInWithPopup, 
   signOut, 
   createUserWithEmailAndPassword, 
