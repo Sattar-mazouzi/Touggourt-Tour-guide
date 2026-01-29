@@ -19,7 +19,7 @@ export const translations: TranslationDict = {
   hotels: { en: 'Hotels', ar: 'فنادق', fr: 'Hôtels' },
   restaurants: { en: 'Restaurants', ar: 'مطاعم', fr: 'Restaurants' },
   noFavorites: { en: 'No favorites yet', ar: 'لا توجد مفضلات بعد', fr: 'Pas encore de favoris' },
-  noPlacesFound: { en: 'No places found', ar: 'لم يتم العثور على أماكن', fr: 'Aucun lieu trouvé' },
+  noPlacesFound: { en: 'No places found', ar: 'لم يتم العور على أماكن', fr: 'Aucun lieu trouvé' },
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات', fr: 'Itinéraire' },
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
   welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت', fr: 'Bienvenue à Touggourt' },
@@ -84,4 +84,5 @@ export const translations: TranslationDict = {
   gisMainMap: { en: 'Main City Map', ar: 'خريطة المدينة الرئيسية', fr: 'Carte de Ville' },
   gisCategoryMap: { en: 'Category Map', ar: 'خريطة الفئة', fr: 'Carte de Catégorie' },
   resetZoom: { en: 'Reset Zoom', ar: 'إعادة ضبط التكبير', fr: 'Réinitialiser' },
+  videos: { en: 'Videos', ar: 'الفيديوهات', fr: 'Vidéos' },
 };

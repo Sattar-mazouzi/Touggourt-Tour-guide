@@ -121,6 +121,7 @@ const AppContent: React.FC = () => {
             ratingCount: Number(data.ratingCount) || 0,
             favoritesCount: Number(data.favoritesCount) || 0,
             imageUrl: imgObj,
+            videoUrls: data.videoUrls || {},
             featured: !!data.featured,
             location: { lat: Number(lat), lng: Number(lng) },
             address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' }

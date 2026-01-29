@@ -17,6 +17,11 @@ export interface Place {
     img4?: string;
     img5?: string;
   };
+  videoUrls?: {
+    video1?: string;
+    video2?: string;
+    video3?: string;
+  };
   location: {
     lat: number;
     lng: number;

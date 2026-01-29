@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Place, Language, CategoryConfig } from '../types';
-import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart } from 'lucide-react';
+import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
 import ReviewSection from './ReviewSection';
@@ -12,6 +12,61 @@ interface Props {
   categoryConfig?: CategoryConfig;
   onClose: () => void;
 }
+
+const getYouTubeId = (url: string) => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+};
+
+const VideoCard: React.FC<{ url: string; lang: Language }> = ({ url, lang }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoId = getYouTubeId(url);
+
+  if (!videoId) return null;
+
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+  if (isPlaying) {
+    // Constructing a more robust embed URL to prevent "Configuration Error" and "Error 153"
+    // - using youtube-nocookie.com for better privacy compliance and fewer blockages
+    // - adding origin parameter for security and cross-origin communication
+    // - adding enablejsapi=1 for better player control integration
+    const currentOrigin = window.location.origin;
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}`;
+
+    return (
+      <div className="w-full aspect-video rounded-3xl overflow-hidden bg-black shadow-lg">
+        <iframe
+          src={embedUrl}
+          className="w-full h-full border-none"
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-100 group cursor-pointer shadow-md"
+      onClick={() => setIsPlaying(true)}
+    >
+      <img src={thumbnailUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="YouTube Preview" />
+      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+        <div className="w-14 h-14 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-orange-600 shadow-2xl group-hover:scale-110 transition-transform">
+          <Play size={28} className="fill-current ml-1" />
+        </div>
+      </div>
+      <div className="absolute top-4 left-4 p-2 bg-black/40 backdrop-blur text-white rounded-full">
+        <Youtube size={16} />
+      </div>
+    </div>
+  );
+};
 
 const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) => {
   const t = translations;
@@ -27,6 +82,12 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
     place.imageUrl.img3,
     place.imageUrl.img4,
     place.imageUrl.img5,
+  ].filter(Boolean) as string[];
+
+  const videos = [
+    place.videoUrls?.video1,
+    place.videoUrls?.video2,
+    place.videoUrls?.video3,
   ].filter(Boolean) as string[];
 
   const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
@@ -123,6 +184,18 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
               </h3>
               <p className="text-slate-600 leading-relaxed text-lg font-medium">{place.description[lang]}</p>
             </section>
+
+            {videos.length > 0 && (
+              <section>
+                <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center"><Youtube size={16} className="text-red-500" /></div>
+                  {t.videos[lang]}
+                </h3>
+                <div className="space-y-6">
+                  {videos.map((v, i) => <VideoCard key={i} url={v} lang={lang} />)}
+                </div>
+              </section>
+            )}
 
             <section>
               <div className="flex justify-between items-center mb-6">

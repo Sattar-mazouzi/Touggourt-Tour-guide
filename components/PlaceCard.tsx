@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Place, Language } from '../types';
-import { Star, MapPin, Heart } from 'lucide-react';
+import { Star, MapPin, Heart, Video } from 'lucide-react';
 
 interface Props {
   place: Place;
@@ -14,6 +14,7 @@ interface Props {
 const PlaceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onToggleFavorite }) => {
   // Use the cover image from the new object structure
   const displayImage = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
+  const hasVideos = place.videoUrls && (place.videoUrls.video1 || place.videoUrls.video2 || place.videoUrls.video3);
 
   return (
     <div 
@@ -39,9 +40,17 @@ const PlaceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onToggl
             <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
           </button>
         </div>
-        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-          <Star size={14} className="text-yellow-500 fill-yellow-500" />
-          <span className="text-xs font-bold text-slate-800">{place.rating}</span>
+        
+        <div className="absolute top-3 left-3 flex gap-1.5">
+           {hasVideos && (
+             <div className="bg-orange-600 text-white p-2 rounded-full shadow-lg flex items-center justify-center">
+               <Video size={14} />
+             </div>
+           )}
+           <div className="bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+             <Star size={14} className="text-yellow-500 fill-yellow-500" />
+             <span className="text-xs font-bold text-slate-800">{place.rating}</span>
+           </div>
         </div>
       </div>
       <div className="p-4">
