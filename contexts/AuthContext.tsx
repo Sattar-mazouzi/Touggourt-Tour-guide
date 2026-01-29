@@ -3,7 +3,6 @@ import React, { createContext, useContext, useEffect, useState, useRef } from 'r
 import { 
   onAuthStateChanged, 
   type User, 
-  signInWithPopup, 
   signOut, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
@@ -23,7 +22,7 @@ import {
   getDocs,
   increment
 } from 'firebase/firestore';
-import { auth, googleProvider, db } from '../firebase';
+import { auth, db } from '../firebase';
 import { UserProfile } from '../types';
 
 interface AuthContextType {
@@ -31,7 +30,6 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   favorites: string[];
-  signInWithGoogle: () => Promise<void>;
   signUpEmail: (email: string, pass: string, name: string, age: number) => Promise<void>;
   loginEmail: (email: string, pass: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -139,20 +137,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const isNew = result.user.metadata.creationTime === result.user.metadata.lastSignInTime;
-      await saveUserProfile(result.user.uid, {
-        fullName: result.user.displayName || 'Traveler',
-        email: result.user.email || '',
-      }, isNew);
-    } catch (error) {
-      console.error("Google Sign-in Error:", error);
-      throw error;
-    }
-  };
-
   const signUpEmail = async (email: string, pass: string, name: string, age: number) => {
     const result = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(result.user, { displayName: name });
@@ -236,7 +220,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider value={{ 
       user, profile, loading, favorites, 
-      signInWithGoogle, signUpEmail, loginEmail, logout, 
+      signUpEmail, loginEmail, logout, 
       toggleFavorite, submitReview, updateProfileInfo
     }}>
       {children}

@@ -19,7 +19,7 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { signInWithGoogle, signUpEmail, loginEmail } = useAuth();
+  const { signUpEmail, loginEmail } = useAuth();
   const t = translations;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,13 +38,6 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogle = async () => {
-    try {
-      await signInWithGoogle();
-      onClose();
-    } catch (err) {}
   };
 
   return (
@@ -126,20 +119,6 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
               {mode === 'login' ? t.signIn[lang] : t.signUp[lang]}
             </button>
           </form>
-
-          <div className="my-6 flex items-center gap-4 text-slate-300 text-xs font-bold uppercase tracking-widest">
-            <div className="h-px bg-slate-100 flex-1" />
-            <span>OR</span>
-            <div className="h-px bg-slate-100 flex-1" />
-          </div>
-
-          <button
-            onClick={handleGoogle}
-            className="w-full py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold flex items-center justify-center gap-3 active:scale-95 transition-all"
-          >
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" className="w-5 h-5" alt="Google" />
-            {t.googleSignIn[lang]}
-          </button>
 
           <button
             onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}

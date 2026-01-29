@@ -43,7 +43,6 @@ export const translations: TranslationDict = {
   loginToFavorite: { en: 'Login to save your favorite places.', ar: 'سجل دخولك لحفظ أماكنك المفضلة.', fr: 'Connectez-vous pour enregistrer vos lieux favoris.' },
   signIn: { en: 'Sign In', ar: 'تسجيل الدخول', fr: 'Se connecter' },
   signUp: { en: 'Sign Up', ar: 'إنشاء حساب', fr: 'S\'inscrire' },
-  googleSignIn: { en: 'Continue with Google', ar: 'المتابعة عبر جوجل', fr: 'Continuer avec Google' },
   fullName: { en: 'Full Name', ar: 'الاسم الكامل', fr: 'Nom complet' },
   age: { en: 'Age', ar: 'العمر', fr: 'Âge' },
   email: { en: 'Email', ar: 'البريد الإلكتروني', fr: 'E-mail' },
