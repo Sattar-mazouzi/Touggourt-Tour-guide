@@ -50,13 +50,11 @@ const AppContent: React.FC = () => {
   const { user, favorites, toggleFavorite, profile } = useAuth();
   const t = translations;
 
-  // Track session on mount
   useEffect(() => {
     trackVisitorSession();
   }, []);
 
   useEffect(() => {
-    // Correct usage of logEvent from firebase/analytics
     logEvent(analytics, 'screen_view', {
       firebase_screen: activeTab,
       firebase_screen_class: 'App'
@@ -89,7 +87,6 @@ const AppContent: React.FC = () => {
         console.warn("Category fetch failed. Using defaults.", err);
       }
 
-      // Fetch GIS Maps configuration
       try {
         const gisDocRef = doc(db, "appConfig", "gisMaps");
         const gisSnap = await getDoc(gisDocRef);
@@ -238,7 +235,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl font-arabic' : 'ltr'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] relative z-50">
+      {/* Header respecting Safe Area Top */}
+      <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] px-[calc(1rem+env(safe-area-inset-right))] pl-[calc(1rem+env(safe-area-inset-left))] relative z-50">
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
@@ -263,6 +261,7 @@ const AppContent: React.FC = () => {
         </div>
       </header>
 
+      {/* Main content with controlled scrolling */}
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
           {isLoading ? (
@@ -366,17 +365,18 @@ const AppContent: React.FC = () => {
         </div>
       </main>
 
-      {/* Floating GIS Button in Explore */}
+      {/* Floating GIS Button respecting Safe Area */}
       {activeTab === 'explore' && gisConfig && (
         <button 
           onClick={() => setIsGISOpen(true)}
-          className={`fixed bottom-24 ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}
+          className={`fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}
         >
           <Layers size={20} className="text-orange-500" />
           <span className="text-[10px] font-black uppercase tracking-widest">{t.openGISViewer[lang]}</span>
         </button>
       )}
 
+      {/* Navigation respecting Safe Area Bottom */}
       <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[env(safe-area-inset-bottom)] z-40">
         <div className="max-w-xl mx-auto flex justify-around p-3">
           <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span></button>
