@@ -67,7 +67,7 @@ export const translations: TranslationDict = {
   algeriaLocation: { en: 'Algeria Location', ar: 'موقعها في الجزائر', fr: 'Localisation en Algérie' },
   history: { en: 'History', ar: 'التاريخ', fr: 'Histoire' },
   climateAndTopography: { en: 'Climate & Topography', ar: 'المناخ والتضاريس', fr: 'Climat et Topographie' },
-  heritageTitle: { en: 'Heritage & Traditions', ar: 'التراث والتقاليد', fr: 'Patrimoine et Traditions' },
+  heritageTitle: { en: 'Material and Non-Material Heritage', ar: 'التراث المادي واللامادي', fr: 'Patrimoine Matériel et Immatériel' },
   heritageIndustries: { en: 'Industries', ar: 'الصناعات والمهن', fr: 'Industries' },
   heritageClothing: { en: 'Traditional Clothing', ar: 'اللباس التقليدي', fr: 'Vêtements traditionnels' },
   heritageCulinary: { en: 'Culinary Arts', ar: 'فنون الطبخ', fr: 'Arts culinaires' },
