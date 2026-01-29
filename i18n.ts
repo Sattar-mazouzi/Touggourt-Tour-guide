@@ -80,7 +80,7 @@ export const translations: TranslationDict = {
   editProfile: { en: 'Edit Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' },
   saveChanges: { en: 'Save Changes', ar: 'حفظ التغييرات', fr: 'Enregistrer' },
   cancel: { en: 'Cancel', ar: 'إلغاء', fr: 'Annuler' },
-  openGISViewer: { en: 'Open GIS Map', ar: 'فتح الخريطة العلمية', fr: 'Ouvrir la Carte GIS' },
+  openGISViewer: { en: 'Open GIS Map', ar: 'فتح الخريطة الجغرافية', fr: 'Ouvrir la Carte GIS' },
   gisMainMap: { en: 'Main City Map', ar: 'خريطة المدينة الرئيسية', fr: 'Carte de Ville' },
   gisCategoryMap: { en: 'Category Map', ar: 'خريطة الفئة', fr: 'Carte de Catégorie' },
   resetZoom: { en: 'Reset Zoom', ar: 'إعادة ضبط التكبير', fr: 'Réinitialiser' },
