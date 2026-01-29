@@ -5,6 +5,7 @@ export const translations: TranslationDict = {
   appName: { en: 'Memory of Touggourt', ar: 'ذاكرة توقرت', fr: 'Mémoire de Touggourt' },
   home: { en: 'Home', ar: 'الرئيسية', fr: 'Accueil' },
   explore: { en: 'Explore', ar: 'استكشف', fr: 'Explorer' },
+  gallery: { en: 'Gallery', ar: 'المعرض', fr: 'Galerie' },
   favorites: { en: 'Favorites', ar: 'المفضلة', fr: 'Favoris' },
   map: { en: 'Map', ar: 'الخريطة', fr: 'Carte' },
   list: { en: 'List', ar: 'قائمة', fr: 'Liste' },

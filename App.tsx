@@ -1,13 +1,15 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
-import { Place, Language, Category, CityBioData, CategoryConfig, GISMapConfig } from './types';
+import { Place, GalleryItem, Language, Category, CityBioData, CategoryConfig, GISMapConfig } from './types';
 import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
+import GalleryCard from './components/GalleryCard';
 import DetailsView from './components/DetailsView';
+import GalleryDetailsView from './components/GalleryDetailsView';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import MapView from './components/MapView';
 import CityBio from './components/CityBio';
@@ -29,11 +31,12 @@ const DEFAULT_CATEGORIES: CategoryConfig = {
 
 const AppContent: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
-  const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'favorites'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'gallery' | 'favorites'>('home');
   const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [isArticleOpen, setIsArticleOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -41,6 +44,7 @@ const AppContent: React.FC = () => {
   const [isGISOpen, setIsGISOpen] = useState(false);
   
   const [places, setPlaces] = useState<Place[]>([]);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
@@ -76,6 +80,7 @@ const AppContent: React.FC = () => {
     try {
       setIsLoading(true);
       
+      // Fetch Config
       try {
         const catDocRef = doc(db, "appConfig", "categories");
         const catSnap = await getDoc(catDocRef);
@@ -83,52 +88,55 @@ const AppContent: React.FC = () => {
           const data = catSnap.data() as CategoryConfig;
           if (Object.keys(data).length > 0) setCategoryConfig(data);
         }
-      } catch (err) {
-        console.warn("Category fetch failed. Using defaults.", err);
-      }
-
-      try {
         const gisDocRef = doc(db, "appConfig", "gisMaps");
         const gisSnap = await getDoc(gisDocRef);
-        if (gisSnap.exists()) {
-          setGisConfig(gisSnap.data() as GISMapConfig);
-        }
-      } catch (err) {
-        console.warn("GIS Maps config fetch failed.", err);
-      }
+        if (gisSnap.exists()) setGisConfig(gisSnap.data() as GISMapConfig);
+      } catch (err) { console.warn("Config fetch failed", err); }
 
+      // Fetch Places
       try {
         const placesSnapshot = await getDocs(collection(db, "places"));
         const fetchedPlaces = placesSnapshot.docs.map(doc => {
           const data = doc.data();
-          let normalizedCategory = (data.category || 'all').toLowerCase();
           let imgObj: any = { cover: 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop' };
           if (typeof data.imageUrl === 'string') imgObj.cover = data.imageUrl;
           else if (data.imageUrl && typeof data.imageUrl === 'object') imgObj = { ...data.imageUrl };
-
-          const lat = data.location?.latitude ?? data.location?.lat ?? 33.1064;
-          const lng = data.location?.longitude ?? data.location?.lng ?? 6.0628;
-
           return {
             id: doc.id,
             name: data.name || { en: 'Unnamed', ar: 'غير مسمى', fr: 'Sans nom' },
             description: data.description || { en: '', ar: '', fr: '' },
-            category: normalizedCategory as Category,
+            category: (data.category || 'all').toLowerCase() as Category,
             rating: Number(data.rating) || 0,
-            ratingCount: Number(data.ratingCount) || 0,
-            favoritesCount: Number(data.favoritesCount) || 0,
             imageUrl: imgObj,
+            address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' },
+            location: { 
+              lat: Number(data.location?.lat || data.location?.latitude || 33.1064), 
+              lng: Number(data.location?.lng || data.location?.longitude || 6.0628) 
+            },
             videoUrls: data.videoUrls || {},
             featured: !!data.featured,
-            location: { lat: Number(lat), lng: Number(lng) },
-            address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' }
+            favoritesCount: Number(data.favoritesCount) || 0,
           };
         }) as Place[];
         setPlaces(fetchedPlaces);
-      } catch (err: any) {
-        console.error("Places fetch error", err);
-      }
+      } catch (err) { console.error("Places fetch error", err); }
 
+      // Fetch Gallery
+      try {
+        const gallerySnapshot = await getDocs(collection(db, "gallery"));
+        const fetchedGallery = gallerySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title || { en: 'Visual', ar: 'مشهد', fr: 'Visuel' },
+            images: data.images || {},
+            videos: data.videos || {},
+          };
+        }) as GalleryItem[];
+        setGalleryItems(fetchedGallery);
+      } catch (err) { console.warn("Gallery fetch failed", err); }
+
+      // Fetch City Bio
       try {
         const bioSnapshot = await getDocs(collection(db, "aboutCity"));
         let mergedBioData: any = {};
@@ -138,27 +146,8 @@ const AppContent: React.FC = () => {
           mergedBioData = { ...mergedBioData, ...doc.data() }; 
         });
         setCityBioDocIds(ids);
-
-        if (Object.keys(mergedBioData).length > 0) {
-          const fieldsToNormalize = ['geography', 'climate', 'climateandTopography', 'bio', 'extendedBio', 'histBio', 'extendedHistBio'];
-          fieldsToNormalize.forEach(key => {
-            if (mergedBioData[key] && typeof mergedBioData[key] === 'string') {
-              mergedBioData[key] = { ar: mergedBioData[key], en: mergedBioData[key], fr: mergedBioData[key] };
-            }
-          });
-          if (mergedBioData.heritage) {
-            const hKeys = ['industries', 'clothing', 'culinaryArts', 'folklore', 'festivals', 'games'];
-            hKeys.forEach(key => {
-              if (mergedBioData.heritage[key] && typeof mergedBioData.heritage[key] === 'string') {
-                mergedBioData.heritage[key] = { ar: mergedBioData.heritage[key], en: mergedBioData.heritage[key], fr: mergedBioData.heritage[key] };
-              }
-            });
-          }
-          setCityBio(mergedBioData as CityBioData);
-        }
-      } catch (err) {
-        console.warn("City Bio fetch failed.", err);
-      }
+        if (Object.keys(mergedBioData).length > 0) setCityBio(mergedBioData as CityBioData);
+      } catch (err) { console.warn("City Bio fetch failed.", err); }
       
     } catch (error) {
       console.error("Firestore loading error:", error);
@@ -170,15 +159,10 @@ const AppContent: React.FC = () => {
   const handleIncrementReadingCount = async () => {
     if (cityBioDocIds.length === 0) return;
     try {
-      const mainDocId = cityBioDocIds[0];
-      const docRef = doc(db, "aboutCity", mainDocId);
-      await updateDoc(docRef, {
-        readingCount: increment(1)
-      });
+      const docRef = doc(db, "aboutCity", cityBioDocIds[0]);
+      await updateDoc(docRef, { readingCount: increment(1) });
       setCityBio(prev => prev ? { ...prev, readingCount: (prev.readingCount || 0) + 1 } : null);
-    } catch (err) {
-      console.error("Failed to increment reading count:", err);
-    }
+    } catch (err) { console.error("Failed to increment reading count:", err); }
   };
 
   useEffect(() => {
@@ -191,37 +175,25 @@ const AppContent: React.FC = () => {
   }, [fetchData]);
 
   const handleToggleFavorite = (id: string) => {
-    if (!user) {
-      setIsAuthModalOpen(true);
-      return;
-    }
+    if (!user) { setIsAuthModalOpen(true); return; }
     toggleFavorite(id);
-    logEvent(analytics, favorites.includes(id) ? 'remove_from_wishlist' : 'add_to_wishlist', { item_id: id });
-  };
-
-  const handlePlaceSelect = (place: Place) => {
-    setSelectedPlace(place);
-    logEvent(analytics, 'view_item', { item_id: place.id, item_name: place.name.en, item_category: place.category });
   };
 
   const filteredPlaces = useMemo(() => {
     const queryStr = searchQuery.toLowerCase();
     return places.filter(p => {
-      const nameInLang = p.name[lang] || '';
-      const descInLang = p.description[lang] || '';
-      const matchesSearch = nameInLang.toLowerCase().includes(queryStr) || descInLang.toLowerCase().includes(queryStr);
-      const catMatches = (s: string, pc: string) => {
-        const sc = s.toLowerCase();
-        const plc = pc.toLowerCase();
-        if (sc === 'all') return true;
-        if (sc === plc) return true;
-        return false;
-      };
-      const matchesCategory = catMatches(selectedCategory, p.category);
+      const matchesSearch = (p.name[lang] || '').toLowerCase().includes(queryStr) || (p.description[lang] || '').toLowerCase().includes(queryStr);
+      const matchesCategory = selectedCategory === 'all' || p.category.toLowerCase() === selectedCategory.toLowerCase();
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
     });
   }, [searchQuery, selectedCategory, activeTab, favorites, places, lang]);
+
+  const filteredGallery = useMemo(() => {
+    if (activeTab !== 'gallery') return [];
+    const queryStr = searchQuery.toLowerCase();
+    return galleryItems.filter(item => (item.title[lang] || '').toLowerCase().includes(queryStr));
+  }, [galleryItems, searchQuery, activeTab, lang]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
   const dynamicCategories = useMemo(() => ['all', ...Object.keys(categoryConfig)], [categoryConfig]);
@@ -235,7 +207,6 @@ const AppContent: React.FC = () => {
 
   return (
     <div className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl font-arabic' : 'ltr'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* Header respecting Safe Area Top */}
       <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] px-[calc(1rem+env(safe-area-inset-right))] pl-[calc(1rem+env(safe-area-inset-left))] relative z-50">
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -247,10 +218,7 @@ const AppContent: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             {user ? (
-               <button 
-                onClick={() => setIsProfileOpen(true)} 
-                className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-black shadow-lg shadow-slate-900/10 active:scale-95 transition-all"
-               >
+               <button onClick={() => setIsProfileOpen(true)} className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-black shadow-lg shadow-slate-900/10 active:scale-95 transition-all">
                  {userInitial || <UserIcon size={18} />}
                </button>
             ) : (
@@ -261,7 +229,6 @@ const AppContent: React.FC = () => {
         </div>
       </header>
 
-      {/* Main content with controlled scrolling */}
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
           {isLoading ? (
@@ -285,7 +252,7 @@ const AppContent: React.FC = () => {
 
               <div className="relative mb-6 group z-10">
                 <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={20} />
-                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t.searchPlaceholder[lang]} className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 shadow-sm font-medium`} />
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={activeTab === 'gallery' ? (lang === 'ar' ? 'ابحث في المعرض...' : 'Search gallery...') : t.searchPlaceholder[lang]} className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 shadow-sm font-medium`} />
               </div>
 
               {activeTab === 'home' && searchQuery === '' && (
@@ -295,7 +262,7 @@ const AppContent: React.FC = () => {
                       <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Compass size={24} className="text-orange-500" />{t.featured[lang]}</h2>
                       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
                         {featuredPlaces.map(place => (
-                          <div key={place.id} onClick={() => handlePlaceSelect(place)} className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md">
+                          <div key={place.id} onClick={() => setSelectedPlace(place)} className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md">
                             <img src={place.imageUrl.cover} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                             <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
@@ -321,71 +288,85 @@ const AppContent: React.FC = () => {
                 </>
               )}
 
-              {(activeTab === 'explore' || searchQuery !== '') && (
-                <div className="sticky top-0 bg-slate-50/95 backdrop-blur-sm z-20 -mx-4 px-4 pb-4">
-                  {activeTab === 'explore' && (
-                    <div className="flex justify-center mb-4">
-                      <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[240px]">
-                        <button onClick={() => setExploreMode('list')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><List size={16} />{t.list[lang]}</button>
-                        <button onClick={() => setExploreMode('map')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><MapIcon size={16} />{t.map[lang]}</button>
+              {activeTab === 'gallery' ? (
+                <section>
+                  <h2 className="text-xl font-bold text-slate-900 mb-4">{t.gallery[lang]}</h2>
+                  {filteredGallery.length > 0 ? (
+                    filteredGallery.map(item => (
+                      <GalleryCard key={item.id} item={item} lang={lang} onClick={setSelectedGalleryItem} />
+                    ))
+                  ) : (
+                    <div className="py-20 text-center text-slate-400">
+                      <ImageIcon size={40} className="mx-auto mb-4 opacity-20" />
+                      <p className="font-medium">{t.noPlacesFound[lang]}</p>
+                    </div>
+                  )}
+                </section>
+              ) : (
+                <>
+                  {(activeTab === 'explore' || searchQuery !== '') && (
+                    <div className="sticky top-0 bg-slate-50/95 backdrop-blur-sm z-20 -mx-4 px-4 pb-4">
+                      {activeTab === 'explore' && (
+                        <div className="flex justify-center mb-4">
+                          <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[240px]">
+                            <button onClick={() => setExploreMode('list')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><List size={16} />{t.list[lang]}</button>
+                            <button onClick={() => setExploreMode('map')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><MapIcon size={16} />{t.map[lang]}</button>
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        {dynamicCategories.map(cat => (
+                          <button key={cat} onClick={() => setSelectedCategory(cat)} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
+                            {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                      )}
-                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                    {dynamicCategories.map(cat => (
-                      <button key={cat} onClick={() => setSelectedCategory(cat)} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
-                        {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <section className="mt-2">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
-                {activeTab === 'explore' && exploreMode === 'map' ? (
-                  <MapView places={filteredPlaces} lang={lang} onSelectPlace={handlePlaceSelect} />
-                ) : (
-                  <div className="space-y-4">
-                    {filteredPlaces.length > 0 ? (
-                      filteredPlaces.map(place => (
-                        <PlaceCard key={place.id} place={place} lang={lang} onSelect={handlePlaceSelect} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
-                      ))
+                  )}
+                  <section className="mt-2">
+                    <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
+                    {activeTab === 'explore' && exploreMode === 'map' ? (
+                      <MapView places={filteredPlaces} lang={lang} onSelectPlace={setSelectedPlace} />
                     ) : (
-                      <div className="py-20 text-center text-slate-400">
-                        <Compass size={40} className="mx-auto mb-4 opacity-20" />
-                        <p className="font-medium">{activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}</p>
+                      <div className="space-y-4">
+                        {filteredPlaces.length > 0 ? (
+                          filteredPlaces.map(place => (
+                            <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
+                          ))
+                        ) : (
+                          <div className="py-20 text-center text-slate-400">
+                            <Compass size={40} className="mx-auto mb-4 opacity-20" />
+                            <p className="font-medium">{activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}</p>
+                          </div>
+                        )}
                       </div>
                     )}
-                  </div>
-                )}
-              </section>
+                  </section>
+                </>
+              )}
             </>
           )}
         </div>
       </main>
 
-      {/* Floating GIS Button respecting Safe Area */}
       {activeTab === 'explore' && gisConfig && (
-        <button 
-          onClick={() => setIsGISOpen(true)}
-          className={`fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}
-        >
+        <button onClick={() => setIsGISOpen(true)} className={`fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}>
           <Layers size={20} className="text-orange-500" />
           <span className="text-[10px] font-black uppercase tracking-widest">{t.openGISViewer[lang]}</span>
         </button>
       )}
 
-      {/* Navigation respecting Safe Area Bottom */}
       <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[env(safe-area-inset-bottom)] z-40">
         <div className="max-w-xl mx-auto flex justify-around p-3">
           <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span></button>
           <button onClick={() => { setActiveTab('explore'); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'explore' ? 'text-orange-500' : 'text-slate-400'}`}><Compass size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.explore[lang]}</span></button>
+          <button onClick={() => { setActiveTab('gallery'); setSearchQuery(''); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'gallery' ? 'text-orange-500' : 'text-slate-400'}`}><ImageIcon size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.gallery[lang]}</span></button>
           <button onClick={() => { if(!user) setIsAuthModalOpen(true); else setActiveTab('favorites'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'favorites' ? 'text-orange-500' : 'text-slate-400'}`}><Heart size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.favorites[lang]}</span></button>
         </div>
       </nav>
 
       {selectedPlace && <DetailsView place={selectedPlace} lang={lang} categoryConfig={categoryConfig} onClose={() => setSelectedPlace(null)} />}
+      {selectedGalleryItem && <GalleryDetailsView item={selectedGalleryItem} lang={lang} onClose={() => setSelectedGalleryItem(null)} />}
       {isBioOpen && <CityBio lang={lang} onChangeLang={setLang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => { handleIncrementReadingCount(); setIsArticleOpen(true); }} />}
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}

@@ -30,6 +30,23 @@ export interface Place {
   featured?: boolean;
 }
 
+export interface GalleryItem {
+  id: string;
+  title: { en: string; ar: string; fr: string };
+  images: {
+    img1: string;
+    img2?: string;
+    img3?: string;
+    img4?: string;
+    img5?: string;
+  };
+  videos?: {
+    video1?: string;
+    video2?: string;
+    video3?: string;
+  };
+}
+
 export interface GISMapConfig {
   mainMap: string;
   [key: string]: string;
