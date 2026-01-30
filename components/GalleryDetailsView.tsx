@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GalleryItem, Language } from '../types';
-import { X, Play, Youtube, Image as ImageIcon, Share2, Info } from 'lucide-react';
+import { X, Play, Youtube, Image as ImageIcon, Share2, Info, Maximize2 } from 'lucide-react';
 import { translations } from '../i18n';
 
 interface Props {
@@ -64,7 +64,9 @@ const VideoCard: React.FC<{ url: string }> = ({ url }) => {
 const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
   const t = translations;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const fullScreenScrollRef = useRef<HTMLDivElement>(null);
 
   const images = [
     item.images.img1,
@@ -80,13 +82,23 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
     item.videos?.video3,
   ].filter(Boolean) as string[];
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
+  const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
+    if (ref.current) {
+      const { scrollLeft, clientWidth } = ref.current;
       const index = Math.round(scrollLeft / clientWidth);
-      setActiveImageIndex(index);
+      setter(index);
     }
   };
+
+  useEffect(() => {
+    if (isFullScreen && fullScreenScrollRef.current) {
+      const width = fullScreenScrollRef.current.clientWidth;
+      fullScreenScrollRef.current.scrollLeft = activeImageIndex * width;
+    } else if (!isFullScreen && scrollRef.current) {
+      const width = scrollRef.current.clientWidth;
+      scrollRef.current.scrollLeft = activeImageIndex * width;
+    }
+  }, [isFullScreen, activeImageIndex]);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -101,16 +113,17 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[1000] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
+      <div className="flex-1 overflow-y-auto scrollbar-hide pb-32">
         {/* Visual Hero Area */}
         <div className="relative h-[50vh] flex-shrink-0 bg-slate-900">
           <div 
             ref={scrollRef} 
-            onScroll={handleScroll} 
+            onScroll={() => handleScroll(scrollRef, setActiveImageIndex)} 
             className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+            onClick={() => setIsFullScreen(true)}
           >
             {images.map((img, idx) => (
-              <div key={idx} className="w-full h-full flex-shrink-0 snap-center">
+              <div key={idx} className="w-full h-full flex-shrink-0 snap-center cursor-zoom-in">
                 <img src={img} alt={`${item.title[lang]} ${idx + 1}`} className="w-full h-full object-cover" />
               </div>
             ))}
@@ -130,6 +143,13 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
               ))}
             </div>
           )}
+
+          {/* Maximize Button Overlay */}
+          <div className="absolute bottom-12 right-6 z-20">
+            <button onClick={() => setIsFullScreen(true)} className="p-2 bg-black/30 backdrop-blur-md rounded-xl text-white border border-white/10">
+              <Maximize2 size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Content Area */}
@@ -184,11 +204,12 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
                       key={i} 
                       src={img} 
                       onClick={() => {
+                        setActiveImageIndex(i);
                         if (scrollRef.current) {
                           scrollRef.current.scrollLeft = i * scrollRef.current.clientWidth;
                         }
                       }}
-                      className="w-full h-32 object-cover rounded-2xl shadow-sm cursor-pointer border border-slate-100" 
+                      className={`w-full h-32 object-cover rounded-2xl shadow-sm cursor-pointer transition-all border-2 ${activeImageIndex === i ? 'border-orange-500 scale-[1.02]' : 'border-slate-100 hover:border-orange-200'}`} 
                       alt="gallery thumb" 
                     />
                   ))}
@@ -198,6 +219,37 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* Full Screen Image Viewer */}
+      {isFullScreen && (
+        <div className="fixed inset-0 z-[1100] bg-black flex flex-col animate-in fade-in duration-200">
+          <div className="absolute top-0 left-0 w-full p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-between items-center z-[1110]">
+             <div className="text-white/60 text-xs font-bold px-4 py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/10">
+                {activeImageIndex + 1} / {images.length}
+             </div>
+             <button onClick={() => setIsFullScreen(false)} className="p-3 bg-white/10 backdrop-blur-xl text-white rounded-full border border-white/20">
+               <X size={24} />
+             </button>
+          </div>
+          <div 
+            ref={fullScreenScrollRef} 
+            onScroll={() => handleScroll(fullScreenScrollRef, setActiveImageIndex)} 
+            className="flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+          >
+            {images.map((img, idx) => (
+              <div key={idx} className="w-full h-full flex-shrink-0 flex items-center justify-center snap-center p-2">
+                <img src={img} alt="full" className="max-w-full max-h-full object-contain" />
+              </div>
+            ))}
+          </div>
+          {/* Swipe indicator at bottom */}
+          <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-1 pointer-events-none">
+             {images.map((_, idx) => (
+               <div key={idx} className={`h-1 rounded-full transition-all duration-300 ${activeImageIndex === idx ? 'w-8 bg-orange-500' : 'w-2 bg-white/20'}`} />
+             ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
