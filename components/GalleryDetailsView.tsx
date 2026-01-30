@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GalleryItem, Language } from '../types';
-import { X, Play, Youtube, Image as ImageIcon, Share2 } from 'lucide-react';
+import { X, Play, Youtube, Image as ImageIcon, Share2, Info } from 'lucide-react';
 import { translations } from '../i18n';
 
 interface Props {
@@ -139,6 +139,21 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
           </h2>
 
           <div className="space-y-10">
+            {/* Description Section */}
+            {item.description?.[lang] && (
+              <section>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
+                    <Info size={16} />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900">{t.overview[lang]}</h3>
+                </div>
+                <p className="text-slate-600 leading-relaxed text-lg font-medium">
+                  {item.description[lang]}
+                </p>
+              </section>
+            )}
+
             {/* Videos Section */}
             {videos.length > 0 && (
               <section>

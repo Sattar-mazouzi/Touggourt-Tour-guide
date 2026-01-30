@@ -45,6 +45,11 @@ const GalleryCard: React.FC<Props> = ({ item, lang, onClick }) => {
           </h3>
         </div>
       </div>
+      <div className="p-5">
+        <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed font-medium">
+          {item.description?.[lang] || ''}
+        </p>
+      </div>
     </div>
   );
 };

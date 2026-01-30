@@ -129,6 +129,7 @@ const AppContent: React.FC = () => {
           return {
             id: doc.id,
             title: data.title || { en: 'Visual', ar: 'مشهد', fr: 'Visuel' },
+            description: data.description || { en: '', ar: '', fr: '' },
             images: data.images || {},
             videos: data.videos || {},
           };
@@ -192,7 +193,10 @@ const AppContent: React.FC = () => {
   const filteredGallery = useMemo(() => {
     if (activeTab !== 'gallery') return [];
     const queryStr = searchQuery.toLowerCase();
-    return galleryItems.filter(item => (item.title[lang] || '').toLowerCase().includes(queryStr));
+    return galleryItems.filter(item => 
+      (item.title[lang] || '').toLowerCase().includes(queryStr) || 
+      (item.description[lang] || '').toLowerCase().includes(queryStr)
+    );
   }, [galleryItems, searchQuery, activeTab, lang]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);

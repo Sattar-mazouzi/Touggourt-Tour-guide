@@ -33,6 +33,7 @@ export interface Place {
 export interface GalleryItem {
   id: string;
   title: { en: string; ar: string; fr: string };
+  description: { en: string; ar: string; fr: string };
   images: {
     img1: string;
     img2?: string;
