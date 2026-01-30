@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { GalleryItem, Language } from '../types';
-import { Image as ImageIcon, Video } from 'lucide-react';
+import { Image as ImageIcon, Video, Calendar } from 'lucide-react';
 
 interface Props {
   item: GalleryItem;
@@ -13,6 +13,11 @@ const GalleryCard: React.FC<Props> = ({ item, lang, onClick }) => {
   const displayImage = item.images.img1 || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
   const hasVideos = item.videos && (item.videos.video1 || item.videos.video2 || item.videos.video3);
   const imageCount = Object.values(item.images).filter(Boolean).length;
+
+  const formattedDate = new Date(item.createdAt).toLocaleDateString(
+    lang === 'ar' ? 'ar-DZ' : (lang === 'fr' ? 'fr-FR' : 'en-US'),
+    { day: 'numeric', month: 'short', year: 'numeric' }
+  );
 
   return (
     <div 
@@ -46,9 +51,13 @@ const GalleryCard: React.FC<Props> = ({ item, lang, onClick }) => {
         </div>
       </div>
       <div className="p-5">
-        <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed font-medium">
+        <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed font-medium mb-3">
           {item.description?.[lang] || ''}
         </p>
+        <div className="flex items-center gap-2 text-slate-400">
+          <Calendar size={12} />
+          <span className="text-[10px] font-bold uppercase tracking-wider">{formattedDate}</span>
+        </div>
       </div>
     </div>
   );

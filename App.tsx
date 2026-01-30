@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
@@ -42,6 +42,7 @@ const AppContent: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGISOpen, setIsGISOpen] = useState(false);
+  const [gallerySortOrder, setGallerySortOrder] = useState<'asc' | 'desc'>('desc');
   
   const [places, setPlaces] = useState<Place[]>([]);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
@@ -126,10 +127,23 @@ const AppContent: React.FC = () => {
         const gallerySnapshot = await getDocs(collection(db, "gallery"));
         const fetchedGallery = gallerySnapshot.docs.map(doc => {
           const data = doc.data();
+          // Handle Firestore Timestamp or number/string for createdAt
+          let createdAtValue = Date.now();
+          if (data.createdAt) {
+            if (typeof data.createdAt.toMillis === 'function') {
+              createdAtValue = data.createdAt.toMillis();
+            } else if (typeof data.createdAt === 'number') {
+              createdAtValue = data.createdAt;
+            } else {
+              createdAtValue = new Date(data.createdAt).getTime() || Date.now();
+            }
+          }
+
           return {
             id: doc.id,
             title: data.title || { en: 'Visual', ar: 'مشهد', fr: 'Visuel' },
             description: data.description || { en: '', ar: '', fr: '' },
+            createdAt: createdAtValue,
             images: data.images || {},
             videos: data.videos || {},
           };
@@ -193,11 +207,18 @@ const AppContent: React.FC = () => {
   const filteredGallery = useMemo(() => {
     if (activeTab !== 'gallery') return [];
     const queryStr = searchQuery.toLowerCase();
-    return galleryItems.filter(item => 
+    const filtered = galleryItems.filter(item => 
       (item.title[lang] || '').toLowerCase().includes(queryStr) || 
       (item.description[lang] || '').toLowerCase().includes(queryStr)
     );
-  }, [galleryItems, searchQuery, activeTab, lang]);
+
+    return [...filtered].sort((a, b) => {
+      if (gallerySortOrder === 'desc') {
+        return b.createdAt - a.createdAt;
+      }
+      return a.createdAt - b.createdAt;
+    });
+  }, [galleryItems, searchQuery, activeTab, lang, gallerySortOrder]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
   const dynamicCategories = useMemo(() => ['all', ...Object.keys(categoryConfig)], [categoryConfig]);
@@ -294,7 +315,16 @@ const AppContent: React.FC = () => {
 
               {activeTab === 'gallery' ? (
                 <section>
-                  <h2 className="text-xl font-bold text-slate-900 mb-4">{t.gallery[lang]}</h2>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-slate-900">{t.gallery[lang]}</h2>
+                    <button 
+                      onClick={() => setGallerySortOrder(gallerySortOrder === 'desc' ? 'asc' : 'desc')}
+                      className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 active:scale-95 transition-all shadow-sm"
+                    >
+                      {gallerySortOrder === 'desc' ? <SortDesc size={14} /> : <SortAsc size={14} />}
+                      {gallerySortOrder === 'desc' ? t.sortNewest[lang] : t.sortOldest[lang]}
+                    </button>
+                  </div>
                   {filteredGallery.length > 0 ? (
                     filteredGallery.map(item => (
                       <GalleryCard key={item.id} item={item} lang={lang} onClick={setSelectedGalleryItem} />
