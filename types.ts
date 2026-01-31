@@ -97,11 +97,11 @@ export interface CityBioData {
   location: string;
   cover: string;
   gallery: {
-    architecture: string;
-    camel: string;
-    dunes: string;
-    oasis: string;
-    culture: string;
+    item1?: string;
+    item2?: string;
+    item3?: string;
+    item4?: string;
+    item5?: string;
   };
 }
 

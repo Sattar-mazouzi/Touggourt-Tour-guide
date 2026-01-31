@@ -1,20 +1,21 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { X, Users, CloudSun, Sparkles, Loader2, BookOpen, Eye, Globe } from 'lucide-react';
-import { Language, CityBioData } from '../types';
+import { Language, CityBioData, GalleryItem } from '../types';
 import { translations } from '../i18n';
 
 interface Props {
   lang: Language;
   onChangeLang: (lang: Language) => void;
   data: CityBioData | null;
+  allGalleryItems: GalleryItem[];
   onClose: () => void;
   onOpenArticle: () => void;
 }
 
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1200&auto=format&fit=crop";
 
-const CityBio: React.FC<Props> = ({ lang, onChangeLang, data, onClose, onOpenArticle }) => {
+const CityBio: React.FC<Props> = ({ lang, onChangeLang, data, allGalleryItems, onClose, onOpenArticle }) => {
   const t = translations;
 
   const languages: { code: Language; label: string }[] = [
@@ -22,6 +23,19 @@ const CityBio: React.FC<Props> = ({ lang, onChangeLang, data, onClose, onOpenArt
     { code: 'fr', label: 'FR' },
     { code: 'en', label: 'EN' },
   ];
+
+  const resolvedGalleryItems = useMemo(() => {
+    if (!data?.gallery) return [];
+    const ids = [
+      data.gallery.item1,
+      data.gallery.item2,
+      data.gallery.item3,
+      data.gallery.item4,
+      data.gallery.item5
+    ].filter(Boolean);
+    
+    return ids.map(id => allGalleryItems.find(item => item.id === id)).filter(Boolean) as GalleryItem[];
+  }, [data, allGalleryItems]);
 
   if (!data) {
     return (
@@ -35,14 +49,6 @@ const CityBio: React.FC<Props> = ({ lang, onChangeLang, data, onClose, onOpenArt
       </div>
     );
   }
-
-  const galleryItems = [
-    { url: data.gallery.architecture, title: { en: "Architecture", ar: "العمارة", fr: "Architecture" } },
-    { url: data.gallery.camel, title: { en: "Camels", ar: "الجمال", fr: "Chameaux" } },
-    { url: data.gallery.dunes, title: { en: "Dunes", ar: "الكثبان", fr: "Dunes" } },
-    { url: data.gallery.oasis, title: { en: "الواحات", ar: "الواحات", fr: "Oasis" } },
-    { url: data.gallery.culture, title: { en: "Culture", ar: "الثقافة", fr: "Culture" } },
-  ];
 
   return (
     <div className="fixed inset-0 z-[1200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
@@ -129,23 +135,29 @@ const CityBio: React.FC<Props> = ({ lang, onChangeLang, data, onClose, onOpenArt
           </div>
 
           {/* Curiosity Gallery Section */}
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles size={20} className="text-orange-500" />
-              <h4 className="font-black text-slate-900 text-lg uppercase tracking-tight">{t.exploreGallery[lang]}</h4>
-            </div>
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2 snap-x">
-              {galleryItems.map((img, i) => (
-                <div key={i} className="min-w-[160px] h-32 rounded-2xl overflow-hidden relative group/item snap-center shadow-md">
-                  <img src={img.url} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" alt={img.title[lang] || ''} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <span className="absolute bottom-2 left-3 right-3 text-[10px] font-bold text-white truncate">
-                    {img.title[lang] || ''}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
+          {resolvedGalleryItems.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles size={20} className="text-orange-500" />
+                <h4 className="font-black text-slate-900 text-lg uppercase tracking-tight">{t.exploreGallery[lang]}</h4>
+              </div>
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2 snap-x">
+                {resolvedGalleryItems.map((item, i) => (
+                  <div key={item.id} className="min-w-[160px] h-32 rounded-2xl overflow-hidden relative group/item snap-center shadow-md">
+                    <img 
+                      src={item.images.img1 || DEFAULT_COVER} 
+                      className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" 
+                      alt={item.title[lang]} 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <span className="absolute bottom-2 left-3 right-3 text-[10px] font-bold text-white truncate">
+                      {item.title[lang]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Quick Info Grid */}
           <div className="grid grid-cols-2 gap-3">

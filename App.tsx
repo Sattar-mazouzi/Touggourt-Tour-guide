@@ -401,8 +401,8 @@ const AppContent: React.FC = () => {
 
       {selectedPlace && <DetailsView place={selectedPlace} lang={lang} categoryConfig={categoryConfig} onClose={() => setSelectedPlace(null)} />}
       {selectedGalleryItem && <GalleryDetailsView item={selectedGalleryItem} lang={lang} onClose={() => setSelectedGalleryItem(null)} />}
-      {isBioOpen && <CityBio lang={lang} onChangeLang={setLang} data={cityBio} onClose={() => setIsBioOpen(false)} onOpenArticle={() => { handleIncrementReadingCount(); setIsArticleOpen(true); }} />}
-      {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} onClose={() => setIsArticleOpen(false)} />}
+      {isBioOpen && <CityBio lang={lang} onChangeLang={setLang} data={cityBio} allGalleryItems={galleryItems} onClose={() => setIsBioOpen(false)} onOpenArticle={() => { handleIncrementReadingCount(); setIsArticleOpen(true); }} />}
+      {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} allGalleryItems={galleryItems} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}
       {isProfileOpen && <ProfileView lang={lang} onClose={() => setIsProfileOpen(false)} />}
       {isGISOpen && gisConfig && (

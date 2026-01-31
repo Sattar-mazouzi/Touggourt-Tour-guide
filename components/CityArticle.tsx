@@ -1,15 +1,16 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
   ChevronLeft, History, MapPin, Share2, CloudSun, Wind, 
   Palette, Shirt, UtensilsCrossed, Music4, CalendarDays, Dices, Layers, Globe
 } from 'lucide-react';
-import { Language, CityBioData } from '../types';
+import { Language, CityBioData, GalleryItem } from '../types';
 import { translations } from '../i18n';
 
 interface Props {
   lang: Language;
   data: CityBioData;
+  allGalleryItems: GalleryItem[];
   onClose: () => void;
 }
 
@@ -32,8 +33,21 @@ const HeritageItem: React.FC<{
   </div>
 );
 
-const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
+const CityArticle: React.FC<Props> = ({ lang, data, allGalleryItems, onClose }) => {
   const t = translations;
+
+  const resolvedGalleryItems = useMemo(() => {
+    if (!data?.gallery) return [];
+    const ids = [
+      data.gallery.item1,
+      data.gallery.item2,
+      data.gallery.item3,
+      data.gallery.item4,
+      data.gallery.item5
+    ].filter(Boolean);
+    
+    return ids.map(id => allGalleryItems.find(item => item.id === id)).filter(Boolean) as GalleryItem[];
+  }, [data, allGalleryItems]);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -208,19 +222,35 @@ const CityArticle: React.FC<Props> = ({ lang, data, onClose }) => {
           </section>
 
           {/* 6. Curiosity Gallery Section */}
-          <section>
-             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-600/20">
-                <Globe size={24} />
+          {resolvedGalleryItems.length > 0 && (
+            <section>
+               <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-600/20">
+                  <Globe size={24} />
+                </div>
+                <h2 className="text-2xl font-black text-slate-900">{t.exploreGallery[lang]}</h2>
               </div>
-              <h2 className="text-2xl font-black text-slate-900">{t.exploreGallery[lang]}</h2>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-               <img src={data.gallery.architecture} className="w-full h-48 object-cover rounded-[32px] shadow-md" alt="Arch" />
-               <img src={data.gallery.oasis} className="w-full h-48 object-cover rounded-[32px] shadow-md" alt="Oasis" />
-               <img src={data.gallery.dunes} className="w-full col-span-2 h-64 object-cover rounded-[32px] shadow-md" alt="Dunes" />
-            </div>
-          </section>
+              <div className="grid grid-cols-2 gap-4">
+                 {resolvedGalleryItems.map((item, idx) => {
+                   // Alternate layout: some items span 2 columns for visual interest
+                   const isWide = (idx % 3 === 2) || (resolvedGalleryItems.length === 1);
+                   return (
+                     <div key={item.id} className={`relative overflow-hidden rounded-[32px] shadow-lg group ${isWide ? 'col-span-2 h-64' : 'h-48'}`}>
+                        <img 
+                          src={item.images.img1} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                          alt={item.title[lang]} 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        <div className="absolute bottom-4 left-4 right-4">
+                           <h4 className="text-white font-black text-sm drop-shadow-sm">{item.title[lang]}</h4>
+                        </div>
+                     </div>
+                   );
+                 })}
+              </div>
+            </section>
+          )}
 
           {/* Footer Text */}
           <footer className="pt-8 border-t border-slate-100 text-center">
