@@ -51,7 +51,8 @@ export interface GalleryItem {
 
 export interface GISMapConfig {
   mainMap: string;
-  [key: string]: string;
+  show?: boolean;
+  [key: string]: any;
 }
 
 export interface UserProfile {

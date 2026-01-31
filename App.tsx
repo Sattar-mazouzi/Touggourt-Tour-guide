@@ -91,7 +91,10 @@ const AppContent: React.FC = () => {
         }
         const gisDocRef = doc(db, "appConfig", "gisMaps");
         const gisSnap = await getDoc(gisDocRef);
-        if (gisSnap.exists()) setGisConfig(gisSnap.data() as GISMapConfig);
+        if (gisSnap.exists()) {
+          const data = gisSnap.data() as GISMapConfig;
+          setGisConfig(data);
+        }
       } catch (err) { console.warn("Config fetch failed", err); }
 
       // Fetch Places
@@ -383,7 +386,7 @@ const AppContent: React.FC = () => {
         </div>
       </main>
 
-      {activeTab === 'explore' && gisConfig && (
+      {activeTab === 'explore' && gisConfig && gisConfig.show && (
         <button onClick={() => setIsGISOpen(true)} className={`fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}>
           <Layers size={20} className="text-orange-500" />
           <span className="text-[10px] font-black uppercase tracking-widest">{t.openGISViewer[lang]}</span>
@@ -405,7 +408,7 @@ const AppContent: React.FC = () => {
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} allGalleryItems={galleryItems} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}
       {isProfileOpen && <ProfileView lang={lang} onClose={() => setIsProfileOpen(false)} />}
-      {isGISOpen && gisConfig && (
+      {isGISOpen && gisConfig && gisConfig.show && (
         <GISMapViewer 
           lang={lang} 
           config={gisConfig} 
