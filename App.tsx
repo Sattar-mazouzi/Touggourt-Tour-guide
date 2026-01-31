@@ -50,6 +50,7 @@ const AppContent: React.FC = () => {
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
   const [gisConfig, setGisConfig] = useState<GISMapConfig | null>(null);
+  const [appLogo, setAppLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { user, favorites, toggleFavorite, profile } = useAuth();
@@ -94,6 +95,11 @@ const AppContent: React.FC = () => {
         if (gisSnap.exists()) {
           const data = gisSnap.data() as GISMapConfig;
           setGisConfig(data);
+        }
+        const logoDocRef = doc(db, "appConfig", "logo");
+        const logoSnap = await getDoc(logoDocRef);
+        if (logoSnap.exists()) {
+          setAppLogo(logoSnap.data().mainLogo);
         }
       } catch (err) { console.warn("Config fetch failed", err); }
 
@@ -238,7 +244,11 @@ const AppContent: React.FC = () => {
       <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] px-[calc(1rem+env(safe-area-inset-right))] pl-[calc(1rem+env(safe-area-inset-left))] relative z-50">
         <div className="max-w-xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
+            {appLogo ? (
+              <img src={appLogo} alt="Logo" className="w-10 h-10 object-contain rounded-xl" />
+            ) : (
+              <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-xl">T</div>
+            )}
             <div>
               <h1 className="text-xl font-black text-slate-900 leading-tight">{t.appName[lang]}</h1>
               <p className="text-[10px] uppercase tracking-widest text-orange-600 font-bold">{lang === 'ar' ? 'الجزائر' : (lang === 'fr' ? 'Algérie' : 'Algeria')}</p>
@@ -291,7 +301,7 @@ const AppContent: React.FC = () => {
                       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
                         {featuredPlaces.map(place => (
                           <div key={place.id} onClick={() => setSelectedPlace(place)} className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md">
-                            <img src={place.imageUrl.cover} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={place.name[lang]} />
+                            <img src={place.imageUrl.cover} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={place.name[lang]} />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                             <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
                               <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
