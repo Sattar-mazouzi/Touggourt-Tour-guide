@@ -40,11 +40,28 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
     }
   };
 
+  const getDescription = () => {
+    const loginText = {
+      en: "Please log in to your account, or if you don't have one, create an account below.",
+      ar: "يرجى تسجيل الدخول إلى حسابك، أو إذا لم يكن لديك حساب، فقم بإنشاء حساب أدناه.",
+      fr: "Veuillez vous connecter à votre compte, ou si vous n'en avez pas, créez-en un ci-dessous."
+    };
+    const signupText = {
+      en: "Create a new account to join our community and save your favorites.",
+      ar: "أنشئ حساباً جديداً للانضمام إلى مجتمعنا وحفظ مفضلاتك.",
+      fr: "Créez un nouveau compte pour rejoindre notre communauté et enregistrer vos favoris."
+    };
+    return mode === 'login' ? loginText[lang] : signupText[lang];
+  };
+
   return (
     <div className="fixed inset-0 z-[2000] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 p-4">
       <div className="bg-white w-full max-w-md rounded-t-[40px] sm:rounded-[40px] overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-500">
         <div className="relative p-8">
-          <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full text-slate-400">
+          <button 
+            onClick={onClose} 
+            className={`absolute top-6 ${lang === 'ar' ? 'left-6' : 'right-6'} p-2 bg-slate-100 rounded-full text-slate-400 active:scale-90 transition-transform`}
+          >
             <X size={20} />
           </button>
 
@@ -55,30 +72,32 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
             <h2 className="text-2xl font-black text-slate-900">
               {mode === 'login' ? t.signIn[lang] : t.signUp[lang]}
             </h2>
-            <p className="text-slate-500 text-sm mt-1">{t.discoverPrompt[lang]}</p>
+            <p className="text-slate-500 text-sm mt-3 leading-relaxed px-2 font-medium">
+              {getDescription()}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'signup' && (
               <>
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <User className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
                   <input
                     required
                     type="text"
                     placeholder={t.fullName[lang]}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium`}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="relative">
-                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <Calendar className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
                   <input
                     required
                     type="number"
                     placeholder={t.age[lang]}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium`}
                     value={age}
                     onChange={(e) => setAge(Number(e.target.value))}
                   />
@@ -86,23 +105,23 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
               </>
             )}
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <Mail className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
               <input
                 required
                 type="email"
                 placeholder={t.email[lang]}
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20"
+                className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <Lock className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
               <input
                 required
                 type="password"
                 placeholder={t.password[lang]}
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20"
+                className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium`}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -121,8 +140,11 @@ const AuthModal: React.FC<Props> = ({ lang, onClose }) => {
           </form>
 
           <button
-            onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-            className="w-full mt-6 text-slate-400 text-sm font-bold"
+            onClick={() => {
+              setMode(mode === 'login' ? 'signup' : 'login');
+              setError('');
+            }}
+            className="w-full mt-6 text-slate-400 text-sm font-bold hover:text-orange-600 transition-colors"
           >
             {mode === 'login' ? t.signUp[lang] : t.signIn[lang]}
           </button>
