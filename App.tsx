@@ -29,6 +29,29 @@ const DEFAULT_CATEGORIES: CategoryConfig = {
   restaurants: { en: 'Restaurants', ar: 'مطاعم', fr: 'Restaurants' },
 };
 
+const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
+  culture: {
+    en: "The cultural tourism route of Touggourt province",
+    fr: "La route du tourisme culturel de la province de Touggourt",
+    ar: "المسار السياحي الثقافي لولاية توقرت"
+  },
+  nature: {
+    en: "The tourist-natural route of Touggourt province",
+    fr: "La route touristique et naturelle de la province de Touggourt",
+    ar: "المسار السياحي الطبيعي لولاية توقرت"
+  },
+  religion: {
+    en: "The religious-tourist route of Touggourt province",
+    fr: "La route touristique religieuse de la province de Touggourt",
+    ar: "المسار السياحي الديني لولاية توقرت"
+  },
+  services: {
+    en: "Tourist route for the services of Touggourt province",
+    fr: "La route touristique des services de la province de Touggourt",
+    ar: "المسار السياحي للخدمات لولاية توقرت"
+  }
+};
+
 const AppContent: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'gallery' | 'favorites'>('home');
@@ -445,7 +468,9 @@ const AppContent: React.FC = () => {
               <X size={24} />
               <span className="font-bold text-sm">{t.back[lang]}</span>
             </button>
-            <h2 className="text-lg font-black text-slate-900">{t.map[lang]}</h2>
+            <h2 className="text-sm md:text-lg font-black text-slate-900 text-center flex-1 px-2 leading-tight">
+              {ROUTE_TITLES[selectedCategory]?.[lang] || t.map[lang]}
+            </h2>
             <div className="w-10"></div>
           </header>
           <div className="flex-1 relative">
