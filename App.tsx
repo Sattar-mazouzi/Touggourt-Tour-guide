@@ -455,6 +455,7 @@ const AppContent: React.FC = () => {
                onSelectPlace={(p) => { setSelectedPlace(p); setIsMapFullScreen(false); }} 
                height="h-full" 
                initialZoom={14}
+               showPreviews={true}
              />
           </div>
         </div>
