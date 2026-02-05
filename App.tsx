@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
@@ -42,6 +42,7 @@ const AppContent: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGISOpen, setIsGISOpen] = useState(false);
+  const [isMapFullScreen, setIsMapFullScreen] = useState(false);
   const [gallerySortOrder, setGallerySortOrder] = useState<'asc' | 'desc'>('desc');
   
   const [places, setPlaces] = useState<Place[]>([]);
@@ -373,7 +374,16 @@ const AppContent: React.FC = () => {
                   <section className="mt-2">
                     <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
                     {activeTab === 'explore' && exploreMode === 'map' ? (
-                      <MapView places={filteredPlaces} lang={lang} onSelectPlace={setSelectedPlace} />
+                      <div className="relative">
+                        <MapView places={filteredPlaces} lang={lang} onSelectPlace={setSelectedPlace} />
+                        <button 
+                          onClick={() => setIsMapFullScreen(true)}
+                          className={`absolute bottom-4 ${lang === 'ar' ? 'left-4' : 'right-4'} z-10 p-3 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/50 text-slate-900 active:scale-90 transition-transform flex items-center gap-2`}
+                        >
+                          <Maximize size={20} className="text-orange-600" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">{lang === 'ar' ? 'تكبير الخريطة' : 'Full Screen'}</span>
+                        </button>
+                      </div>
                     ) : (
                       <div className="space-y-4">
                         {filteredPlaces.length > 0 ? (
@@ -426,6 +436,28 @@ const AppContent: React.FC = () => {
           categoryLabel={selectedCategory !== 'all' ? (categoryConfig[selectedCategory]?.[lang] || selectedCategory) : undefined}
           onClose={() => setIsGISOpen(false)} 
         />
+      )}
+
+      {isMapFullScreen && (
+        <div className="fixed inset-0 z-[2500] bg-white flex flex-col h-[100dvh] animate-in fade-in duration-300">
+          <header className="flex-shrink-0 bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex items-center justify-between z-10">
+            <button onClick={() => setIsMapFullScreen(false)} className="p-2 -ml-2 text-slate-900 hover:bg-slate-50 rounded-full transition-colors flex items-center gap-1">
+              <X size={24} />
+              <span className="font-bold text-sm">{t.back[lang]}</span>
+            </button>
+            <h2 className="text-lg font-black text-slate-900">{t.map[lang]}</h2>
+            <div className="w-10"></div>
+          </header>
+          <div className="flex-1 relative">
+             <MapView 
+               places={filteredPlaces} 
+               lang={lang} 
+               onSelectPlace={(p) => { setSelectedPlace(p); setIsMapFullScreen(false); }} 
+               height="h-full" 
+               initialZoom={14}
+             />
+          </div>
+        </div>
       )}
     </div>
   );
