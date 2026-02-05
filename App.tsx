@@ -20,15 +20,6 @@ import ProfileView from './components/ProfileView';
 import { trackVisitorSession } from './services/visitor';
 import GISMapViewer from './components/GISMapViewer';
 
-const DEFAULT_CATEGORIES: CategoryConfig = {
-  historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
-  religion: { en: 'Religious', ar: 'ديني', fr: 'Religieux' },
-  cultural: { en: 'Cultural', ar: 'ثقافي', fr: 'Culturel' },
-  natural: { en: 'Natural', ar: 'طبيعي', fr: 'Naturel' },
-  hotels: { en: 'Hotels', ar: 'فنادق', fr: 'Hôtels' },
-  restaurants: { en: 'Restaurants', ar: 'مطاعم', fr: 'Restaurants' },
-};
-
 const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
   all: {
     en: "Tourist route of Touggourt province",
@@ -77,7 +68,7 @@ const AppContent: React.FC = () => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
-  const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>(DEFAULT_CATEGORIES);
+  const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>({});
   const [gisConfig, setGisConfig] = useState<GISMapConfig | null>(null);
   const [appLogo, setAppLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -165,7 +156,6 @@ const AppContent: React.FC = () => {
         const gallerySnapshot = await getDocs(collection(db, "gallery"));
         const fetchedGallery = gallerySnapshot.docs.map(doc => {
           const data = doc.data();
-          // Handle Firestore Timestamp or number/string for createdAt
           let createdAtValue = Date.now();
           if (data.createdAt) {
             if (typeof data.createdAt.toMillis === 'function') {
@@ -341,17 +331,19 @@ const AppContent: React.FC = () => {
                       </div>
                     </section>
                   )}
-                  <section className="mb-8">
-                    <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
-                    <div className="grid grid-cols-3 gap-3">
-                      {dynamicCategories.filter(c => c !== 'all').map(cat => (
-                        <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
-                          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">{getCategoryIcon(cat)}</div>
-                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || cat}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </section>
+                  {Object.keys(categoryConfig).length > 0 && (
+                    <section className="mb-8">
+                      <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
+                      <div className="grid grid-cols-3 gap-3">
+                        {dynamicCategories.filter(c => c !== 'all').map(cat => (
+                          <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
+                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">{getCategoryIcon(cat)}</div>
+                            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || cat}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  )}
                 </>
               )}
 
