@@ -30,6 +30,11 @@ const DEFAULT_CATEGORIES: CategoryConfig = {
 };
 
 const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
+  all: {
+    en: "Tourist route of Touggourt province",
+    fr: "Route touristique de la province de Touggourt",
+    ar: "المسار السياحي لولاية توقرت"
+  },
   culture: {
     en: "The cultural tourism route of Touggourt province",
     fr: "La route du tourisme culturel de la province de Touggourt",
