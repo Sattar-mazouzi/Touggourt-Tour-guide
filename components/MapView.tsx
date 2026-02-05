@@ -27,6 +27,7 @@ const MapView: React.FC<Props> = ({
   const mapRef = useRef<any>(null);
   const popupOverlayRef = useRef<any>(null);
   const markerOverlaysRef = useRef<any[]>([]);
+  const routeLayerRef = useRef<any>(null);
   const t = translations;
 
   const cityCenter = [6.0628, 33.1064]; // [lng, lat] for OpenLayers
@@ -38,7 +39,6 @@ const MapView: React.FC<Props> = ({
     // Create a container for the popup
     const popupElement = document.createElement('div');
     popupElement.className = 'ol-popup';
-    // Force LTR on the positioning container to prevent RTL coordinate flipping
     popupElement.dir = 'ltr'; 
     document.body.appendChild(popupElement);
 
@@ -52,13 +52,29 @@ const MapView: React.FC<Props> = ({
     });
     popupOverlayRef.current = popupOverlay;
 
+    // Initialize Route Layer
+    const routeSource = new ol.source.Vector();
+    const routeLayer = new ol.layer.Vector({
+      source: routeSource,
+      style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: '#ea580c',
+          width: 6,
+          lineCap: 'round',
+          lineJoin: 'round',
+        }),
+      }),
+    });
+    routeLayerRef.current = routeLayer;
+
     // Create the map
     mapRef.current = new ol.Map({
       target: mapContainerRef.current,
       layers: [
         new ol.layer.Tile({
-          source: new ol.source.OSM(), // Standard OpenStreetMap source
+          source: new ol.source.OSM(),
         }),
+        routeLayer,
       ],
       overlays: [popupOverlay],
       view: new ol.View({
@@ -66,16 +82,14 @@ const MapView: React.FC<Props> = ({
         zoom: initialZoom,
         multiWorld: false,
       }),
-      controls: [], // We manage our own UI
+      controls: [],
       interactions: interactive ? ol.interaction.defaults.defaults() : [],
     });
 
-    // Close popup on map click
     mapRef.current.on('click', () => {
       popupOverlay.setPosition(undefined);
     });
 
-    // Handle container resizing
     const resizeObserver = new ResizeObserver(() => {
       if (mapRef.current) {
         mapRef.current.updateSize();
@@ -95,13 +109,15 @@ const MapView: React.FC<Props> = ({
     };
   }, []);
 
-  // Update Markers and Viewport
+  // Update Markers and Route
   useEffect(() => {
-    if (!mapRef.current || !popupOverlayRef.current || typeof ol === 'undefined') return;
+    if (!mapRef.current || !popupOverlayRef.current || !routeLayerRef.current || typeof ol === 'undefined') return;
 
     const map = mapRef.current;
+    const routeSource = routeLayerRef.current.getSource();
     
-    // Clear previous marker overlays
+    // Clear previous state
+    routeSource.clear();
     markerOverlaysRef.current.forEach(overlay => map.removeOverlay(overlay));
     markerOverlaysRef.current = [];
 
@@ -109,12 +125,15 @@ const MapView: React.FC<Props> = ({
 
     const coordCounts: Record<string, number> = {};
     const points: any[] = [];
+    const routingCoords: string[] = [];
 
     places.forEach((place) => {
       const lat = parseFloat(place.location?.lat as any);
       const lng = parseFloat(place.location?.lng as any);
 
       if (isNaN(lat) || isNaN(lng)) return;
+
+      routingCoords.push(`${lng},${lat}`);
 
       const key = `${lat.toFixed(5)},${lng.toFixed(5)}`;
       const count = coordCounts[key] || 0;
@@ -133,10 +152,8 @@ const MapView: React.FC<Props> = ({
       const coordinate = ol.proj.fromLonLat([markerLng, markerLat]);
       points.push(coordinate);
 
-      // Create Marker DOM element
       const markerEl = document.createElement('div');
       markerEl.className = 'marker-container group cursor-pointer';
-      // Force LTR on marker container to ensure 'center-center' positioning is accurate
       markerEl.dir = 'ltr'; 
       
       markerEl.innerHTML = `
@@ -150,10 +167,7 @@ const MapView: React.FC<Props> = ({
 
       markerEl.onclick = (e) => {
         e.stopPropagation();
-        
         const coverImg = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
-        
-        // Use current language direction for text content INSIDE the LTR-positioned popup
         const contentDir = lang === 'ar' ? 'rtl' : 'ltr';
         const popupContent = `
           <div class="p-0 overflow-hidden cursor-pointer" id="popup-inner-${place.id}" dir="${contentDir}">
@@ -197,6 +211,45 @@ const MapView: React.FC<Props> = ({
       markerOverlaysRef.current.push(overlay);
     });
 
+    // Draw Road-Following Path
+    const drawRoute = async () => {
+      if (routingCoords.length < 2) return;
+
+      try {
+        const url = `https://router.project-osrm.org/route/v1/driving/${routingCoords.join(';')}?overview=full&geometries=polyline`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.code === 'Ok' && data.routes?.[0]?.geometry) {
+          const polyline = data.routes[0].geometry;
+          const routeFeature = new ol.Feature({
+            geometry: new ol.format.Polyline().readGeometry(polyline, {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:3857',
+            }),
+          });
+          routeSource.addFeature(routeFeature);
+        } else {
+          throw new Error('OSRM routing failed');
+        }
+      } catch (error) {
+        console.warn('Road-following routing failed, falling back to straight lines:', error);
+        // Fallback: Dashed straight line
+        const lineGeom = new ol.geom.LineString(points);
+        const fallbackFeature = new ol.Feature({ geometry: lineGeom });
+        fallbackFeature.setStyle(new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: '#ea580c',
+            width: 4,
+            lineDash: [10, 10],
+          }),
+        }));
+        routeSource.addFeature(fallbackFeature);
+      }
+    };
+
+    drawRoute();
+
     if (points.length > 0) {
       const extent = ol.extent.boundingExtent(points);
       map.getView().fit(extent, {
@@ -209,13 +262,8 @@ const MapView: React.FC<Props> = ({
 
   return (
     <div className={`w-full ${height} rounded-[40px] overflow-hidden shadow-2xl border border-white relative bg-slate-100 group animate-in zoom-in-95 duration-700`}>
-      {/* 
-          CRITICAL: dir="ltr" on map container prevents RTL logic from breaking 
-          coordinate-to-pixel mapping in OpenLayers. 
-      */}
       <div ref={mapContainerRef} className="w-full h-full z-0" dir="ltr" />
       
-      {/* Interactive Controls Overlay */}
       <div className={`absolute top-4 ${lang === 'ar' ? 'right-4' : 'left-4'} z-10 flex flex-col gap-2`}>
         <div className="bg-white/90 backdrop-blur-xl px-4 py-2.5 rounded-2xl shadow-xl border border-white/50 flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-orange-600 rounded-full animate-pulse shadow-[0_0_8px_rgba(234,88,12,0.5)]"></div>
@@ -225,7 +273,6 @@ const MapView: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Places Count Label & Reset View */}
       {places.length > 0 && (
          <div className={`absolute bottom-4 ${lang === 'ar' ? 'left-4' : 'right-4'} z-10`}>
             <button 
