@@ -1,12 +1,11 @@
 
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { 
   initializeFirestore, 
   persistentLocalCache, 
   persistentMultipleTabManager 
 } from 'firebase/firestore';
-// Fix: Ensuring getAuth is correctly imported from the modular auth package
-import { getAuth } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
@@ -26,7 +25,9 @@ const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 
 // Initialize Auth
-export const auth = getAuth(app);
+// We use a distinct name for the instance before exporting to resolve potential resolution conflicts
+const authInstance = getAuth(app);
+export { authInstance as auth };
 
 /**
  * Initialize Firestore with modern persistent cache settings.

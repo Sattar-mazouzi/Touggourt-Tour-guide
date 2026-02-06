@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
-// Fix: Consolidated function imports from firebase/auth and moved User to a separate type-only import
+// Consolidated imports from firebase/auth to ensure all modular functions are correctly resolved
 import { 
   onAuthStateChanged, 
   signOut, 
@@ -8,7 +8,9 @@ import {
   signInWithEmailAndPassword,
   updateProfile
 } from 'firebase/auth';
+// Import User as a type explicitly to resolve "no exported member" errors in strict environments
 import type { User } from 'firebase/auth';
+
 import { 
   doc, 
   setDoc, 

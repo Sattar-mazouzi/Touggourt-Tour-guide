@@ -14,7 +14,7 @@ export const translations: TranslationDict = {
   searchPlaceholder: { en: 'Search places in Touggourt...', ar: 'ابحث عن أماكن في تقرت...', fr: 'Rechercher à Touggourt...' },
   all: { en: 'All', ar: 'الكل', fr: 'Tous' },
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
-  religion: { en: 'Religious', ar: 'ديني', fr: 'Religieux' },
+  religion: { en: 'Religious', ar: 'ديني', fr: 'المدار الديني' },
   cultural: { en: 'Cultural', ar: 'ثقافي', fr: 'Culturel' },
   natural: { en: 'Natural', ar: 'طبيعي', fr: 'Naturel' },
   hotels: { en: 'Hotels', ar: 'فنادق', fr: 'Hôtels' },
@@ -41,7 +41,7 @@ export const translations: TranslationDict = {
     fr: 'Touggourt, surnommée la "Ville aux mille coupoles", est une ville oasis historique du sud-est de l\'Algérie. Elle est la porte d\'entrée du grand Sahara et le cœur de l\'Oued Righ.'
   },
   loginRequired: { en: 'Login Required', ar: 'يجب تسجيل الدخول', fr: 'Connexion requise' },
-  loginToFavorite: { en: 'Login to save your favorite places.', ar: 'سجل دخولك لحفظ أماكنك المفضلة.', fr: 'Connectez-vous pour enregistrer vos lieux favoris.' },
+  loginToFavorite: { en: 'Login to save your favorite places.', ar: 'سجل دخولك لحفظ أماكنك مفضلة.', fr: 'Connectez-vous pour enregistrer vos lieux favoris.' },
   signIn: { en: 'Sign In', ar: 'تيسجيل الدخول', fr: 'Se connecter' },
   signUp: { en: 'Sign Up', ar: 'إنشاء حساب', fr: 'S\'inscrire' },
   fullName: { en: 'Full Name', ar: 'الاسم الكامل', fr: 'Nom complet' },
@@ -72,7 +72,7 @@ export const translations: TranslationDict = {
   heritageIndustries: { en: 'Industries', ar: 'الصناعات والمهن', fr: 'Industries' },
   heritageClothing: { en: 'Traditional Clothing', ar: 'اللباس التقليدي', fr: 'Vêtements traditionnels' },
   heritageCulinary: { en: 'Culinary Arts', ar: 'فنون الطبخ', fr: 'Arts culinaires' },
-  heritageFolklore: { en: 'Folklore', ar: 'الفلكلور', fr: 'Folklore' },
+  heritageFolklore: { en: 'Folklore', ar: 'الفلكلور', fr: 'الفلكلور' },
   heritageFestivals: { en: 'Festivals', ar: 'المهرجانات', fr: 'Festivals' },
   heritageGames: { en: 'Traditional Games', ar: 'الألعاب التقليدية', fr: 'Jeux traditionnels' },
   interactiveMap: { en: 'Interactive Map', ar: 'خريطة تفاعلية', fr: 'Carte interactive' },
@@ -88,4 +88,6 @@ export const translations: TranslationDict = {
   videos: { en: 'Videos', ar: 'الفيديوهات', fr: 'Vidéos' },
   sortNewest: { en: 'Newest First', ar: 'الأحدث أولاً', fr: 'Plus récent' },
   sortOldest: { en: 'Oldest First', ar: 'الأقدم أولاً', fr: 'Plus ancien' },
+  startPoint: { en: 'Start Point', ar: 'نقطة البداية', fr: 'Point de départ' },
+  endPoint: { en: 'End Point', ar: 'نقطة النهاية', fr: 'Point d\'arrivée' },
 };

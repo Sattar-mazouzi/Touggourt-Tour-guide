@@ -148,6 +148,15 @@ const MapView: React.FC<Props> = ({
 
     if (places.length === 0) return;
 
+    // Identify start (most southern) and end (most northern) points
+    const validPlaces = places.filter(p => !isNaN(parseFloat(p.location?.lat as any)) && !isNaN(parseFloat(p.location?.lng as any)));
+    if (validPlaces.length === 0) return;
+
+    const sortedByLat = [...validPlaces].sort((a, b) => parseFloat(a.location.lat as any) - parseFloat(b.location.lat as any));
+    const southernmostPlaceId = sortedByLat[0].id;
+    const northernmostPlaceId = sortedByLat[sortedByLat.length - 1].id;
+    const isSinglePlace = southernmostPlaceId === northernmostPlaceId;
+
     const coordCounts: Record<string, number> = {};
     const points: any[] = [];
     const routingCoords: string[] = [];
@@ -180,11 +189,21 @@ const MapView: React.FC<Props> = ({
       const markerEl = document.createElement('div');
       markerEl.className = 'marker-container group cursor-pointer';
       markerEl.dir = 'ltr'; 
+
+      const isStart = place.id === southernmostPlaceId && !isSinglePlace;
+      const isEnd = place.id === northernmostPlaceId && !isSinglePlace;
       
+      const badgeHtml = isStart 
+        ? `<div class="absolute top-full mt-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest shadow-lg whitespace-nowrap z-50 animate-bounce">${t.startPoint[lang]}</div>`
+        : isEnd 
+          ? `<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-600 text-white px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest shadow-lg whitespace-nowrap z-50 animate-bounce">${t.endPoint[lang]}</div>`
+          : '';
+
       if (showPreviews) {
         const coverImg = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
         markerEl.innerHTML = `
-          <div class="flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
+          <div class="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
+            ${badgeHtml}
             <div class="w-14 h-14 rounded-2xl overflow-hidden border-4 border-white shadow-2xl relative">
               <img src="${coverImg}" class="w-full h-full object-cover" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
@@ -196,11 +215,14 @@ const MapView: React.FC<Props> = ({
         `;
       } else {
         markerEl.innerHTML = `
-          <div class="w-10 h-10 bg-orange-600 rounded-full border-2 border-white shadow-xl flex items-center justify-center text-white ring-4 ring-orange-500/10 transform transition-all group-hover:scale-110 active:scale-95">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
+          <div class="relative">
+            ${badgeHtml}
+            <div class="w-10 h-10 bg-orange-600 rounded-full border-2 border-white shadow-xl flex items-center justify-center text-white ring-4 ring-orange-500/10 transform transition-all group-hover:scale-110 active:scale-95">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
           </div>
         `;
       }
