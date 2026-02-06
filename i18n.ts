@@ -10,7 +10,7 @@ export const translations: TranslationDict = {
   map: { en: 'Map', ar: 'الخريطة', fr: 'Carte' },
   list: { en: 'List', ar: 'قائمة', fr: 'Liste' },
   featured: { en: 'Featured Places', ar: 'أماكن مميزة', fr: 'Lieux Incontournables' },
-  categories: { en: 'Categories', ar: 'الفئات', fr: 'Catégories' },
+  categories: { en: 'Tourist and historical routes', ar: 'المسارات السياحية والتاريخية', fr: 'itinéraires touristiques et historiques' },
   searchPlaceholder: { en: 'Search places in Touggourt...', ar: 'ابحث عن أماكن في تقرت...', fr: 'Rechercher à Touggourt...' },
   all: { en: 'All', ar: 'الكل', fr: 'Tous' },
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
