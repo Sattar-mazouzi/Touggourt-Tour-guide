@@ -17,6 +17,13 @@ interface Props {
   activeCategory?: string;
 }
 
+const HQ_COORD = [6.057474151150524, 33.100272790822586]; // [lng, lat]
+const HQ_NAME = {
+  en: 'State headquarters',
+  ar: 'مقر الولاية',
+  fr: "Siège de l'État"
+};
+
 const getRouteColor = (category: string = 'all') => {
   const cat = category.toLowerCase();
   if (cat === 'religion' || cat === 'religious') return '#eab308'; // Yellow
@@ -145,6 +152,53 @@ const MapView: React.FC<Props> = ({
     routeSource.clear();
     markerOverlaysRef.current.forEach(overlay => map.removeOverlay(overlay));
     markerOverlaysRef.current = [];
+
+    // --- ADD STATE HEADQUARTERS REFERENCE POINT ---
+    const hqCoord = ol.proj.fromLonLat(HQ_COORD);
+    const hqMarkerEl = document.createElement('div');
+    hqMarkerEl.className = 'marker-container group cursor-pointer';
+    hqMarkerEl.dir = 'ltr';
+    hqMarkerEl.innerHTML = `
+      <div class="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
+        <div class="w-10 h-10 bg-slate-900 rounded-xl border-2 border-white shadow-2xl flex items-center justify-center text-white ring-4 ring-slate-900/10 transform transition-all group-hover:scale-110">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7M4 21V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v17"/>
+          </svg>
+        </div>
+        <div class="bg-slate-900/95 backdrop-blur-md px-2 py-1 rounded-lg shadow-xl border border-white/20 -mt-1 relative z-10">
+          <p class="text-[7px] font-black text-white truncate text-center uppercase tracking-tighter">${HQ_NAME[lang]}</p>
+        </div>
+      </div>
+    `;
+
+    hqMarkerEl.onclick = (e) => {
+      e.stopPropagation();
+      const contentDir = lang === 'ar' ? 'rtl' : 'ltr';
+      const popupContent = `
+        <div class="p-3 bg-white" dir="${contentDir}">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center text-slate-900">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7M4 21V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v17"/></svg>
+            </div>
+            <h4 class="font-black text-xs text-slate-900 leading-tight">${HQ_NAME[lang]}</h4>
+          </div>
+          <p class="text-[9px] text-slate-500 font-bold">${lang === 'ar' ? 'نقطة مرجعية رسمية' : (lang === 'fr' ? 'Point de référence officiel' : 'Official reference point')}</p>
+        </div>
+      `;
+      const popupOverlay = popupOverlayRef.current;
+      popupOverlay.getElement().innerHTML = popupContent;
+      popupOverlay.setPosition(hqCoord);
+    };
+
+    const hqOverlay = new ol.Overlay({
+      position: hqCoord,
+      positioning: 'center-center',
+      element: hqMarkerEl,
+      stopEvent: true,
+    });
+    map.addOverlay(hqOverlay);
+    markerOverlaysRef.current.push(hqOverlay);
+    // ----------------------------------------------
 
     if (places.length === 0) return;
 
@@ -318,7 +372,9 @@ const MapView: React.FC<Props> = ({
     drawRoute();
 
     if (points.length > 0) {
-      const extent = ol.extent.boundingExtent(points);
+      // Include the HQ point in the extent fit if necessary
+      const fitPoints = [...points, hqCoord];
+      const extent = ol.extent.boundingExtent(fitPoints);
       map.getView().fit(extent, {
         padding: [80, 80, 80, 80],
         maxZoom: 16,
