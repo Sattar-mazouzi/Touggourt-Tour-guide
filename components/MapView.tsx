@@ -14,7 +14,17 @@ interface Props {
   initialZoom?: number;
   interactive?: boolean;
   showPreviews?: boolean;
+  activeCategory?: string;
 }
+
+const getRouteColor = (category: string = 'all') => {
+  const cat = category.toLowerCase();
+  if (cat === 'religion' || cat === 'religious') return '#eab308'; // Yellow
+  if (cat === 'culture' || cat === 'cultural') return '#ef4444'; // Red
+  if (cat === 'nature' || cat === 'natural') return '#22c55e'; // Green
+  if (cat === 'services' || cat === 'hotels' || cat === 'restaurants') return '#3b82f6'; // Blue
+  return '#ea580c'; // Orange (Default / All)
+};
 
 const MapView: React.FC<Props> = ({ 
   places, 
@@ -23,7 +33,8 @@ const MapView: React.FC<Props> = ({
   height = "h-[calc(100dvh-320px)]",
   initialZoom = 13,
   interactive = true,
-  showPreviews = false
+  showPreviews = false,
+  activeCategory = 'all'
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
@@ -60,7 +71,7 @@ const MapView: React.FC<Props> = ({
       source: routeSource,
       style: new ol.style.Style({
         stroke: new ol.style.Stroke({
-          color: '#ea580c',
+          color: getRouteColor(activeCategory),
           width: 6,
           lineCap: 'round',
           lineJoin: 'round',
@@ -116,7 +127,19 @@ const MapView: React.FC<Props> = ({
     if (!mapRef.current || !popupOverlayRef.current || !routeLayerRef.current || typeof ol === 'undefined') return;
 
     const map = mapRef.current;
-    const routeSource = routeLayerRef.current.getSource();
+    const routeLayer = routeLayerRef.current;
+    const routeSource = routeLayer.getSource();
+    const color = getRouteColor(activeCategory);
+
+    // Update Layer Style Color
+    routeLayer.setStyle(new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: color,
+        width: 6,
+        lineCap: 'round',
+        lineJoin: 'round',
+      }),
+    }));
     
     // Clear previous state
     routeSource.clear();
@@ -261,7 +284,7 @@ const MapView: React.FC<Props> = ({
         const fallbackFeature = new ol.Feature({ geometry: lineGeom });
         fallbackFeature.setStyle(new ol.style.Style({
           stroke: new ol.style.Stroke({
-            color: '#ea580c',
+            color: color,
             width: 4,
             lineDash: [10, 10],
           }),
@@ -280,7 +303,7 @@ const MapView: React.FC<Props> = ({
         duration: 500
       });
     }
-  }, [places, lang, onSelectPlace, showPreviews]);
+  }, [places, lang, onSelectPlace, showPreviews, activeCategory]);
 
   return (
     <div className={`w-full ${height} rounded-[40px] overflow-hidden shadow-2xl border border-white relative bg-slate-100 group animate-in zoom-in-95 duration-700`}>

@@ -395,7 +395,12 @@ const AppContent: React.FC = () => {
                     <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
                     {activeTab === 'explore' && exploreMode === 'map' ? (
                       <div className="relative">
-                        <MapView places={filteredPlaces} lang={lang} onSelectPlace={setSelectedPlace} />
+                        <MapView 
+                          places={filteredPlaces} 
+                          lang={lang} 
+                          onSelectPlace={setSelectedPlace} 
+                          activeCategory={selectedCategory}
+                        />
                         <button 
                           onClick={() => setIsMapFullScreen(true)}
                           className={`absolute bottom-4 ${lang === 'ar' ? 'left-4' : 'right-4'} z-10 p-3 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/50 text-slate-900 active:scale-90 transition-transform flex items-center gap-2`}
@@ -478,6 +483,7 @@ const AppContent: React.FC = () => {
                height="h-full" 
                initialZoom={14}
                showPreviews={true}
+               activeCategory={selectedCategory}
              />
           </div>
         </div>
