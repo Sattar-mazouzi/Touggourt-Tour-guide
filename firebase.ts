@@ -5,6 +5,7 @@ import {
   persistentLocalCache, 
   persistentMultipleTabManager 
 } from 'firebase/firestore';
+// Fix: Ensuring getAuth is correctly imported from the modular auth package
 import { getAuth } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
 

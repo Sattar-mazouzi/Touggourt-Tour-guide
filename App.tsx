@@ -378,7 +378,7 @@ const AppContent: React.FC = () => {
                         <div className="flex justify-center mb-4">
                           <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[240px]">
                             <button onClick={() => setExploreMode('list')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><List size={16} />{t.list[lang]}</button>
-                            <button onClick={() => setExploreMode('map')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'map' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><MapIcon size={16} />{t.map[lang]}</button>
+                            <button onClick={() => setIsMapFullScreen(true)} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-orange-600`}><MapIcon size={16} />{t.map[lang]}</button>
                           </div>
                         </div>
                       )}
@@ -393,36 +393,18 @@ const AppContent: React.FC = () => {
                   )}
                   <section className="mt-2">
                     <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
-                    {activeTab === 'explore' && exploreMode === 'map' ? (
-                      <div className="relative">
-                        <MapView 
-                          places={filteredPlaces} 
-                          lang={lang} 
-                          onSelectPlace={setSelectedPlace} 
-                          activeCategory={selectedCategory}
-                        />
-                        <button 
-                          onClick={() => setIsMapFullScreen(true)}
-                          className={`absolute bottom-4 ${lang === 'ar' ? 'left-4' : 'right-4'} z-10 p-3 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/50 text-slate-900 active:scale-90 transition-transform flex items-center gap-2`}
-                        >
-                          <Maximize size={20} className="text-orange-600" />
-                          <span className="text-[10px] font-black uppercase tracking-widest">{lang === 'ar' ? 'تكبير الخريطة' : 'Full Screen'}</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {filteredPlaces.length > 0 ? (
-                          filteredPlaces.map(place => (
-                            <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
-                          ))
-                        ) : (
-                          <div className="py-20 text-center text-slate-400">
-                            <Compass size={40} className="mx-auto mb-4 opacity-20" />
-                            <p className="font-medium">{activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    <div className="space-y-4">
+                      {filteredPlaces.length > 0 ? (
+                        filteredPlaces.map(place => (
+                          <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
+                        ))
+                      ) : (
+                        <div className="py-20 text-center text-slate-400">
+                          <Compass size={40} className="mx-auto mb-4 opacity-20" />
+                          <p className="font-medium">{activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}</p>
+                        </div>
+                      )}
+                    </div>
                   </section>
                 </>
               )}

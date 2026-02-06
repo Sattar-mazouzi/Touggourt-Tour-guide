@@ -1,13 +1,14 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+// Fix: Consolidated function imports from firebase/auth and moved User to a separate type-only import
 import { 
   onAuthStateChanged, 
-  type User, 
   signOut, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
   updateProfile
 } from 'firebase/auth';
+import type { User } from 'firebase/auth';
 import { 
   doc, 
   setDoc, 
