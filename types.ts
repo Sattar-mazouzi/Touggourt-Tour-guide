@@ -49,12 +49,6 @@ export interface GalleryItem {
   };
 }
 
-export interface GISMapConfig {
-  mainMap: string;
-  show?: boolean;
-  [key: string]: any;
-}
-
 export interface UserProfile {
   uid: string;
   fullName: string;
@@ -122,4 +116,13 @@ export interface CategoryConfig {
     ar: string;
     fr: string;
   };
+}
+
+/**
+ * Configuration for the GIS Map Viewer component
+ * Maps category keys to static high-resolution image URLs
+ */
+export interface GISMapConfig {
+  mainMap: string;
+  [key: string]: string;
 }

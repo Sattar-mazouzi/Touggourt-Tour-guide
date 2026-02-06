@@ -4,7 +4,7 @@ import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark,
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
-import { Place, GalleryItem, Language, Category, CityBioData, CategoryConfig, GISMapConfig } from './types';
+import { Place, GalleryItem, Language, Category, CityBioData, CategoryConfig } from './types';
 import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
 import GalleryCard from './components/GalleryCard';
@@ -18,7 +18,6 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import ProfileView from './components/ProfileView';
 import { trackVisitorSession } from './services/visitor';
-import GISMapViewer from './components/GISMapViewer';
 
 const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
   all: {
@@ -33,7 +32,7 @@ const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
   },
   nature: {
     en: "The tourist-natural route of Touggourt province",
-    fr: "La route touristique et naturelle de la province de Touggourt",
+    fr: "The tourist-natural route of Touggourt province",
     ar: "المسار السياحي الطبيعي لولاية توقرت"
   },
   religion: {
@@ -60,7 +59,6 @@ const AppContent: React.FC = () => {
   const [isArticleOpen, setIsArticleOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isGISOpen, setIsGISOpen] = useState(false);
   const [isMapFullScreen, setIsMapFullScreen] = useState(false);
   const [gallerySortOrder, setGallerySortOrder] = useState<'asc' | 'desc'>('desc');
   
@@ -69,7 +67,6 @@ const AppContent: React.FC = () => {
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>({});
-  const [gisConfig, setGisConfig] = useState<GISMapConfig | null>(null);
   const [appLogo, setAppLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -109,12 +106,6 @@ const AppContent: React.FC = () => {
         if (catSnap.exists()) {
           const data = catSnap.data() as CategoryConfig;
           if (Object.keys(data).length > 0) setCategoryConfig(data);
-        }
-        const gisDocRef = doc(db, "appConfig", "gisMaps");
-        const gisSnap = await getDoc(gisDocRef);
-        if (gisSnap.exists()) {
-          const data = gisSnap.data() as GISMapConfig;
-          setGisConfig(data);
         }
         const logoDocRef = doc(db, "appConfig", "logo");
         const logoSnap = await getDoc(logoDocRef);
@@ -413,13 +404,6 @@ const AppContent: React.FC = () => {
         </div>
       </main>
 
-      {activeTab === 'explore' && gisConfig && gisConfig.show && (
-        <button onClick={() => setIsGISOpen(true)} className={`fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] ${lang === 'ar' ? 'left-6' : 'right-6'} z-30 p-4 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all border border-white/10`}>
-          <Layers size={20} className="text-orange-500" />
-          <span className="text-[10px] font-black uppercase tracking-widest">{t.openGISViewer[lang]}</span>
-        </button>
-      )}
-
       <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[env(safe-area-inset-bottom)] z-40">
         <div className="max-w-xl mx-auto flex justify-around p-3">
           <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span></button>
@@ -435,15 +419,6 @@ const AppContent: React.FC = () => {
       {isArticleOpen && cityBio && <CityArticle lang={lang} data={cityBio} allGalleryItems={galleryItems} onClose={() => setIsArticleOpen(false)} />}
       {isAuthModalOpen && <AuthModal lang={lang} onClose={() => setIsAuthModalOpen(false)} />}
       {isProfileOpen && <ProfileView lang={lang} onClose={() => setIsProfileOpen(false)} />}
-      {isGISOpen && gisConfig && gisConfig.show && (
-        <GISMapViewer 
-          lang={lang} 
-          config={gisConfig} 
-          activeCategory={selectedCategory}
-          categoryLabel={selectedCategory !== 'all' ? (categoryConfig[selectedCategory]?.[lang] || selectedCategory) : undefined}
-          onClose={() => setIsGISOpen(false)} 
-        />
-      )}
 
       {isMapFullScreen && (
         <div className="fixed inset-0 z-[2500] bg-white flex flex-col h-[100dvh] animate-in fade-in duration-300">
