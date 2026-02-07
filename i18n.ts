@@ -90,6 +90,6 @@ export const translations: TranslationDict = {
   endPoint: { en: 'End Point', ar: 'نقطة النهاية', fr: 'Point d\'arrivée' },
   gisMainMap: { en: 'Main Map', ar: 'الخريطة الرئيسية', fr: 'Carte principale' },
   gisCategoryMap: { en: 'Category Map', ar: 'خريطة المسار', fr: 'Carte de l\'itinéraire' },
-  contributorsTitle: { en: 'Contributors', ar: 'المساهمون', fr: 'Contributeurs' },
+  contributorsTitle: { en: 'Responsible authorities', ar: ' الجهات المسؤولة', fr: 'Autorités responsables' },
   contactInfo: { en: 'Contact Information', ar: 'معلومات الاتصال', fr: 'Coordonnées' },
 };
