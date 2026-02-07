@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Info, Mail, Facebook, Phone, Globe, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { Info, Mail, Facebook, Phone, Globe, ShieldCheck, X } from 'lucide-react';
 import { Language, AboutAppData, Contributor } from '../types';
 import { translations } from '../i18n';
 
@@ -64,6 +64,7 @@ const ContributorCard: React.FC<{ contributor: Contributor; lang: Language }> = 
 };
 
 const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
+  const [isLogoFullScreen, setIsLogoFullScreen] = useState(false);
   const t = translations;
 
   if (!data) return null;
@@ -79,7 +80,10 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
       {/* App Branding Hero */}
       <section className="text-center py-6">
-        <div className="w-24 h-24 bg-white rounded-[32px] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-slate-200 border border-slate-50 p-4">
+        <div 
+          onClick={() => appLogo && setIsLogoFullScreen(true)}
+          className={`w-24 h-24 bg-white rounded-[32px] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-slate-200 border border-slate-50 p-4 transition-transform active:scale-95 ${appLogo ? 'cursor-zoom-in' : ''}`}
+        >
           {appLogo ? (
             <img src={appLogo} alt="Logo" className="w-full h-full object-contain" />
           ) : (
@@ -131,6 +135,29 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
         </p>
         <p className="text-slate-300 font-medium text-[9px] mt-1">All rights reserved to the respective government agencies</p>
       </footer>
+
+      {/* Full Screen Logo Viewer */}
+      {isLogoFullScreen && appLogo && (
+        <div 
+          className="fixed inset-0 z-[3000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-8 animate-in fade-in duration-300"
+          onClick={() => setIsLogoFullScreen(false)}
+        >
+          <button 
+            className="absolute top-8 right-8 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors border border-white/10"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLogoFullScreen(false);
+            }}
+          >
+            <X size={24} />
+          </button>
+          <img 
+            src={appLogo} 
+            alt="Full Logo" 
+            className="max-w-full max-h-[80vh] object-contain animate-in zoom-in duration-300 shadow-2xl"
+          />
+        </div>
+      )}
     </div>
   );
 };
