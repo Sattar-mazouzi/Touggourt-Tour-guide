@@ -1,8 +1,8 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   ChevronLeft, History, MapPin, Share2, CloudSun, Wind, 
-  Palette, Shirt, UtensilsCrossed, Music4, CalendarDays, Dices, Layers, Globe
+  Palette, Shirt, UtensilsCrossed, Music4, CalendarDays, Dices, Layers, Globe, X
 } from 'lucide-react';
 import { Language, CityBioData, GalleryItem } from '../types';
 import { translations } from '../i18n';
@@ -34,6 +34,7 @@ const HeritageItem: React.FC<{
 );
 
 const CityArticle: React.FC<Props> = ({ lang, data, allGalleryItems, onClose }) => {
+  const [isCoverFullScreen, setIsCoverFullScreen] = useState(false);
   const t = translations;
 
   const resolvedGalleryItems = useMemo(() => {
@@ -90,7 +91,7 @@ const CityArticle: React.FC<Props> = ({ lang, data, allGalleryItems, onClose }) 
       {/* Main Content Area */}
       <article className="flex-1 overflow-y-auto scrollbar-hide">
         {/* Cover Hero */}
-        <div className="relative h-[40vh] w-full">
+        <div className="relative h-[40vh] w-full cursor-zoom-in" onClick={() => setIsCoverFullScreen(true)}>
           <img 
             src={data.cover} 
             alt={t.cityBioTitle[lang]} 
@@ -263,6 +264,29 @@ const CityArticle: React.FC<Props> = ({ lang, data, allGalleryItems, onClose }) 
           </footer>
         </div>
       </article>
+
+      {/* Full Screen Image Viewer */}
+      {isCoverFullScreen && (
+        <div 
+          className="fixed inset-0 z-[3000] bg-white flex items-center justify-center p-8 animate-in fade-in duration-300"
+          onClick={() => setIsCoverFullScreen(false)}
+        >
+          <button 
+            className="absolute top-8 right-8 p-3 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-full transition-colors border border-slate-200"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsCoverFullScreen(false);
+            }}
+          >
+            <X size={24} />
+          </button>
+          <img 
+            src={data.cover} 
+            alt="Full Cover" 
+            className="max-w-full max-h-[80vh] object-contain animate-in zoom-in duration-300 drop-shadow-2xl"
+          />
+        </div>
+      )}
     </div>
   );
 };
