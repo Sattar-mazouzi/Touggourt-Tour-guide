@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
-import { Place, GalleryItem, Language, Category, CityBioData, CategoryConfig } from './types';
+import { Place, GalleryItem, Language, Category, CityBioData, CategoryConfig, AboutAppData } from './types';
 import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
 import GalleryCard from './components/GalleryCard';
@@ -17,6 +17,7 @@ import CityArticle from './components/CityArticle';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import ProfileView from './components/ProfileView';
+import AboutView from './components/AboutView';
 import { trackVisitorSession } from './services/visitor';
 
 const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
@@ -49,7 +50,7 @@ const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
 
 const AppContent: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
-  const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'gallery' | 'favorites'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'gallery' | 'favorites' | 'about'>('home');
   const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
@@ -67,6 +68,7 @@ const AppContent: React.FC = () => {
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
   const [categoryConfig, setCategoryConfig] = useState<CategoryConfig>({});
+  const [aboutAppData, setAboutAppData] = useState<AboutAppData | null>(null);
   const [appLogo, setAppLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -107,10 +109,17 @@ const AppContent: React.FC = () => {
           const data = catSnap.data() as CategoryConfig;
           if (Object.keys(data).length > 0) setCategoryConfig(data);
         }
+        
         const logoDocRef = doc(db, "appConfig", "logo");
         const logoSnap = await getDoc(logoDocRef);
         if (logoSnap.exists()) {
           setAppLogo(logoSnap.data().mainLogo);
+        }
+
+        const aboutDocRef = doc(db, "appConfig", "aboutApp");
+        const aboutSnap = await getDoc(aboutDocRef);
+        if (aboutSnap.exists()) {
+          setAboutAppData(aboutSnap.data() as AboutAppData);
         }
       } catch (err) { console.warn("Config fetch failed", err); }
 
@@ -298,10 +307,12 @@ const AppContent: React.FC = () => {
                 </div>
               )}
 
-              <div className="relative mb-6 group z-10">
-                <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={20} />
-                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={activeTab === 'gallery' ? (lang === 'ar' ? 'ابحث في المعرض...' : 'Search gallery...') : t.searchPlaceholder[lang]} className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 shadow-sm font-medium`} />
-              </div>
+              {(activeTab !== 'about') && (
+                <div className="relative mb-6 group z-10">
+                  <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={20} />
+                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={activeTab === 'gallery' ? (lang === 'ar' ? 'ابحث في المعرض...' : 'Search gallery...') : t.searchPlaceholder[lang]} className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 shadow-sm font-medium`} />
+                </div>
+              )}
 
               {activeTab === 'home' && searchQuery === '' && (
                 <>
@@ -361,6 +372,8 @@ const AppContent: React.FC = () => {
                     </div>
                   )}
                 </section>
+              ) : activeTab === 'about' ? (
+                <AboutView lang={lang} data={aboutAppData} appLogo={appLogo} />
               ) : (
                 <>
                   {(activeTab === 'explore' || searchQuery !== '') && (
@@ -404,12 +417,13 @@ const AppContent: React.FC = () => {
         </div>
       </main>
 
-      <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[env(safe-area-inset-bottom)] z-40">
-        <div className="max-w-xl mx-auto flex justify-around p-3">
-          <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.home[lang]}</span></button>
-          <button onClick={() => { setActiveTab('explore'); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'explore' ? 'text-orange-500' : 'text-slate-400'}`}><Compass size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.explore[lang]}</span></button>
-          <button onClick={() => { setActiveTab('gallery'); setSearchQuery(''); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'gallery' ? 'text-orange-500' : 'text-slate-400'}`}><ImageIcon size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.gallery[lang]}</span></button>
-          <button onClick={() => { if(!user) setIsAuthModalOpen(true); else setActiveTab('favorites'); }} className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'favorites' ? 'text-orange-500' : 'text-slate-400'}`}><Heart size={24} /><span className="text-[10px] font-bold uppercase tracking-widest">{t.favorites[lang]}</span></button>
+      <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[calc(4px+env(safe-area-inset-bottom))] z-40">
+        <div className="max-w-xl mx-auto flex justify-around p-2">
+          <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.home[lang]}</span></button>
+          <button onClick={() => { setActiveTab('explore'); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'explore' ? 'text-orange-500' : 'text-slate-400'}`}><Compass size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.explore[lang]}</span></button>
+          <button onClick={() => { setActiveTab('gallery'); setSearchQuery(''); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'gallery' ? 'text-orange-500' : 'text-slate-400'}`}><ImageIcon size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.gallery[lang]}</span></button>
+          <button onClick={() => { if(!user) setIsAuthModalOpen(true); else setActiveTab('favorites'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'favorites' ? 'text-orange-500' : 'text-slate-400'}`}><Heart size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.favorites[lang]}</span></button>
+          <button onClick={() => { setActiveTab('about'); setSearchQuery(''); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'about' ? 'text-orange-500' : 'text-slate-400'}`}><Info size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.about[lang]}</span></button>
         </div>
       </nav>
 

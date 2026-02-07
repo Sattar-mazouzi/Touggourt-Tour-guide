@@ -7,6 +7,7 @@ export const translations: TranslationDict = {
   explore: { en: 'Explore', ar: 'استكشف', fr: 'Explorer' },
   gallery: { en: 'Gallery', ar: 'المعرض', fr: 'Galerie' },
   favorites: { en: 'Favorites', ar: 'المفضلة', fr: 'Favoris' },
+  about: { en: 'About', ar: 'عن التطبيق', fr: 'À propos' },
   map: { en: 'Map', ar: 'الخريطة', fr: 'Carte' },
   list: { en: 'List', ar: 'قائمة', fr: 'Liste' },
   featured: { en: 'Featured Places', ar: 'أماكن مميزة', fr: 'Lieux Incontournables' },
@@ -89,4 +90,6 @@ export const translations: TranslationDict = {
   endPoint: { en: 'End Point', ar: 'نقطة النهاية', fr: 'Point d\'arrivée' },
   gisMainMap: { en: 'Main Map', ar: 'الخريطة الرئيسية', fr: 'Carte principale' },
   gisCategoryMap: { en: 'Category Map', ar: 'خريطة المسار', fr: 'Carte de l\'itinéraire' },
+  contributorsTitle: { en: 'Contributors', ar: 'المساهمون', fr: 'Contributeurs' },
+  contactInfo: { en: 'Contact Information', ar: 'معلومات الاتصال', fr: 'Coordonnées' },
 };

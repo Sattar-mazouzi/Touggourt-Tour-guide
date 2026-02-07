@@ -118,6 +118,24 @@ export interface CategoryConfig {
   };
 }
 
+export interface Contributor {
+  name: { en: string; ar: string; fr: string };
+  email: string;
+  facebook: string;
+  phone_1: string;
+  phone_2: string;
+}
+
+export interface AboutAppData {
+  description: { en: string; ar: string; fr: string };
+  contributors: {
+    contributor_1?: Contributor;
+    contributor_2?: Contributor;
+    contributor_3?: Contributor;
+    contributor_4?: Contributor;
+  };
+}
+
 /**
  * Configuration for the GIS Map Viewer component
  * Maps category keys to static high-resolution image URLs
