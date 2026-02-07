@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Place, Language, CategoryConfig } from '../types';
-import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube } from 'lucide-react';
+import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
 import ReviewSection from './ReviewSection';
@@ -29,10 +29,6 @@ const VideoCard: React.FC<{ url: string; lang: Language }> = ({ url, lang }) => 
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
   if (isPlaying) {
-    // Constructing a more robust embed URL to prevent "Configuration Error" and "Error 153"
-    // - using youtube-nocookie.com for better privacy compliance and fewer blockages
-    // - adding origin parameter for security and cross-origin communication
-    // - adding enablejsapi=1 for better player control integration
     const currentOrigin = window.location.origin;
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}`;
 
@@ -72,6 +68,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const t = translations;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [is3DOpen, setIs3DOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fullScreenScrollRef = useRef<HTMLDivElement>(null);
 
@@ -89,6 +86,14 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
     place.videoUrls?.video2,
     place.videoUrls?.video3,
   ].filter(Boolean) as string[];
+
+  const threeDImage = place.imageUrl?.['3d_img'];
+
+  const t3D = {
+    en: 'See 3D visualization',
+    ar: 'رؤية التصور ثلاثي الأبعاد',
+    fr: 'Voir la visualisation 3D'
+  };
 
   const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
     if (ref.current) {
@@ -178,10 +183,21 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
 
           <div className="space-y-10">
             <section>
-              <h3 className="text-xl font-black text-slate-900 mb-4 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center"><Info size={16} className="text-blue-500" /></div>
-                {t.overview[lang]}
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center"><Info size={16} className="text-blue-500" /></div>
+                  {t.overview[lang]}
+                </h3>
+                {threeDImage && (
+                  <button 
+                    onClick={() => setIs3DOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-indigo-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <Box size={14} />
+                    {t3D[lang]}
+                  </button>
+                )}
+              </div>
               <p className="text-slate-600 leading-relaxed text-lg font-medium">{place.description[lang]}</p>
             </section>
 
@@ -219,6 +235,41 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
             {images.map((img, idx) => (
               <div key={idx} className="w-full h-full flex-shrink-0 flex items-center justify-center snap-center p-2"><img src={img} alt="full" className="max-w-full max-h-full object-contain" /></div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* 3D Visualizer Modal */}
+      {is3DOpen && threeDImage && (
+        <div 
+          className="fixed inset-0 z-[3000] bg-white flex flex-col animate-in fade-in duration-300"
+          onClick={() => setIs3DOpen(false)}
+        >
+          <div className="flex-shrink-0 p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-between items-center z-10 border-b border-slate-100">
+             <div className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                <Box size={14} />
+                3D Visualization
+             </div>
+             <button 
+              className="p-3 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-full transition-colors border border-slate-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIs3DOpen(false);
+              }}
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <div className="flex-1 w-full h-full flex items-center justify-center bg-slate-50 p-6 overflow-hidden">
+            <img 
+              src={threeDImage} 
+              alt="3D View" 
+              className="max-w-full max-h-[85vh] object-contain animate-in zoom-in duration-500 drop-shadow-2xl"
+            />
+          </div>
+          <div className="p-6 text-center bg-white border-t border-slate-50">
+            <h4 className="text-slate-900 font-black text-lg mb-1">{place.name[lang]}</h4>
+            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">{lang === 'ar' ? 'نموذج ثلاثي الأبعاد تم إنشاؤه' : 'Generated 3D Model'}</p>
           </div>
         </div>
       )}

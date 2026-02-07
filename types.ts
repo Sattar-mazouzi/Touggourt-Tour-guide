@@ -16,6 +16,7 @@ export interface Place {
     img3?: string;
     img4?: string;
     img5?: string;
+    '3d_img'?: string;
   };
   videoUrls?: {
     video1?: string;
