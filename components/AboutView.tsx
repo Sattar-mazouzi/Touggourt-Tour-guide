@@ -87,7 +87,7 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
           {appLogo ? (
             <img src={appLogo} alt="Logo" className="w-full h-full object-contain" />
           ) : (
-            <Info size={40} className="text-orange-500" />
+            <div className="w-full h-full bg-orange-500 rounded-2xl flex items-center justify-center text-white font-black text-4xl">T</div>
           )}
         </div>
         <h2 className="text-3xl font-black text-slate-900 mb-2">{t.appName[lang]}</h2>
@@ -139,11 +139,11 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
       {/* Full Screen Logo Viewer */}
       {isLogoFullScreen && appLogo && (
         <div 
-          className="fixed inset-0 z-[3000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-8 animate-in fade-in duration-300"
+          className="fixed inset-0 z-[3000] bg-white flex items-center justify-center p-8 animate-in fade-in duration-300"
           onClick={() => setIsLogoFullScreen(false)}
         >
           <button 
-            className="absolute top-8 right-8 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors border border-white/10"
+            className="absolute top-8 right-8 p-3 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-full transition-colors border border-slate-200"
             onClick={(e) => {
               e.stopPropagation();
               setIsLogoFullScreen(false);
@@ -154,7 +154,7 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
           <img 
             src={appLogo} 
             alt="Full Logo" 
-            className="max-w-full max-h-[80vh] object-contain animate-in zoom-in duration-300 shadow-2xl"
+            className="max-w-full max-h-[80vh] object-contain animate-in zoom-in duration-300 drop-shadow-2xl"
           />
         </div>
       )}
