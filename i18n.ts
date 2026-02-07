@@ -25,7 +25,7 @@ export const translations: TranslationDict = {
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات', fr: 'Itinéraire' },
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
   welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت', fr: 'Bienvenue à Touggourt' },
-  discoverPrompt: { en: 'Discover the hidden gems of the desert', ar: 'اكتشف الجواهر الخفية في قلب الصحراء', fr: 'Découvrez les trésors cachés du désért' },
+  discoverPrompt: { en: 'Discover the hidden gems in the heart of the Southeast', ar: ' اكتشف الجواهر الخفية في قلب الجنوب الشرقي', fr: 'Découvrez les joyaux cachés au cœur du Sud-Est' },
   cityBioTitle: { 
     en: 'Discover Our Joyous Touggourt', 
     ar: 'اكتشف ولايتنا توقرت البهجة', 
