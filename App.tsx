@@ -195,7 +195,10 @@ const AppContent: React.FC = () => {
     } catch (error) {
       console.error("Firestore loading error:", error);
     } finally {
-      setIsLoading(false);
+      // Small delay for better UX on the splash screen
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
     }
   }, []);
 
@@ -258,6 +261,42 @@ const AppContent: React.FC = () => {
 
   const userInitial = profile?.fullName ? profile.fullName[0].toUpperCase() : null;
 
+  // New Opening / Splash Screen
+  if (isLoading) {
+    return (
+      <div className={`fixed inset-0 z-[9999] bg-slate-50 flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700 ${lang === 'ar' ? 'font-arabic' : ''}`}>
+        <div className="flex flex-col items-center gap-8 animate-in zoom-in-95 slide-in-from-bottom-4 duration-1000">
+          {/* Splash Logo */}
+          <div className="w-24 h-24 bg-white rounded-[32px] flex items-center justify-center shadow-2xl shadow-orange-500/10 border border-slate-100 p-4">
+            {appLogo ? (
+              <img src={appLogo} alt="Logo" className="w-full h-full object-contain" />
+            ) : (
+              <div className="w-full h-full bg-orange-500 rounded-2xl flex items-center justify-center text-white font-black text-4xl">T</div>
+            )}
+          </div>
+          
+          {/* App Name */}
+          <div className="space-y-2">
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+              {t.appName[lang]}
+            </h1>
+            <div className="h-1 w-12 bg-orange-500 mx-auto rounded-full"></div>
+          </div>
+
+          {/* Loading Phrase */}
+          <div className="flex flex-col items-center gap-4 mt-4">
+            <div className="flex items-center gap-3">
+              <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
+              <p className="text-slate-400 font-bold text-sm uppercase tracking-widest animate-pulse">
+                {t.loadingCityInfo[lang]}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`h-[100dvh] flex flex-col overflow-hidden bg-slate-50 ${lang === 'ar' ? 'rtl font-arabic' : 'ltr'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <header className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 pt-[calc(1rem+env(safe-area-inset-top))] px-[calc(1rem+env(safe-area-inset-right))] pl-[calc(1rem+env(safe-area-inset-left))] relative z-50">
@@ -288,130 +327,121 @@ const AppContent: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto scrollbar-hide px-4 pt-4">
         <div className="max-w-xl mx-auto pb-24">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-4">
-              <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-              <p className="font-bold text-xs uppercase tracking-widest">{t.loading[lang]}</p>
+          {activeTab === 'home' && searchQuery === '' && (
+            <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
+              <button onClick={() => setIsBioOpen(true)} className="text-left w-full group">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-orange-500 group-hover:rotate-12 transition-transform"><Sparkles size={18} /></span>
+                  <h2 className="text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">{welcomeMessage}</h2>
+                </div>
+                <p className="text-slate-500 text-sm font-medium">{t.discoverPrompt[lang]}</p>
+              </button>
             </div>
+          )}
+
+          {(activeTab !== 'about') && (
+            <div className="relative mb-6 group z-10">
+              <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={20} />
+              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={activeTab === 'gallery' ? (lang === 'ar' ? 'ابحث في المعرض...' : 'Search gallery...') : t.searchPlaceholder[lang]} className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 shadow-sm font-medium`} />
+            </div>
+          )}
+
+          {activeTab === 'home' && searchQuery === '' && (
+            <>
+              {featuredPlaces.length > 0 && (
+                <section className="mb-8">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Compass size={24} className="text-orange-500" />{t.featured[lang]}</h2>
+                  <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
+                    {featuredPlaces.map(place => (
+                      <div key={place.id} onClick={() => setSelectedPlace(place)} className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md">
+                        <img src={place.imageUrl.cover} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={place.name[lang]} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
+                          <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
+                          <p className="text-white/80 text-xs mt-1 flex items-center gap-1"><MapIcon size={12} /> {place.address?.[lang] || ''}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+              {Object.keys(categoryConfig).length > 0 && (
+                <section className="mb-8">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
+                  <div className="grid grid-cols-3 gap-3">
+                    {dynamicCategories.filter(c => c !== 'all').map(cat => (
+                      <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
+                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">{getCategoryIcon(cat)}</div>
+                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || cat}</span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </>
+          )}
+
+          {activeTab === 'gallery' ? (
+            <section>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-slate-900">{t.gallery[lang]}</h2>
+                <button 
+                  onClick={() => setGallerySortOrder(gallerySortOrder === 'desc' ? 'asc' : 'desc')}
+                  className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 active:scale-95 transition-all shadow-sm"
+                >
+                  {gallerySortOrder === 'desc' ? <SortDesc size={14} /> : <SortAsc size={14} />}
+                  {gallerySortOrder === 'desc' ? t.sortNewest[lang] : t.sortOldest[lang]}
+                </button>
+              </div>
+              {filteredGallery.length > 0 ? (
+                filteredGallery.map(item => (
+                  <GalleryCard key={item.id} item={item} lang={lang} onClick={setSelectedGalleryItem} />
+                ))
+              ) : (
+                <div className="py-20 text-center text-slate-400">
+                  <ImageIcon size={40} className="mx-auto mb-4 opacity-20" />
+                  <p className="font-medium">{t.noPlacesFound[lang]}</p>
+                </div>
+              )}
+            </section>
+          ) : activeTab === 'about' ? (
+            <AboutView lang={lang} data={aboutAppData} appLogo={appLogo} />
           ) : (
             <>
-              {activeTab === 'home' && searchQuery === '' && (
-                <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-700">
-                  <button onClick={() => setIsBioOpen(true)} className="text-left w-full group">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-orange-500 group-hover:rotate-12 transition-transform"><Sparkles size={18} /></span>
-                      <h2 className="text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">{welcomeMessage}</h2>
+              {(activeTab === 'explore' || searchQuery !== '') && (
+                <div className="sticky top-0 bg-slate-50/95 backdrop-blur-sm z-20 -mx-4 px-4 pb-4">
+                  {activeTab === 'explore' && (
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[240px]">
+                        <button onClick={() => setExploreMode('list')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><List size={16} />{t.list[lang]}</button>
+                        <button onClick={() => setIsMapFullScreen(true)} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-orange-600`}><MapIcon size={16} />{t.map[lang]}</button>
+                      </div>
                     </div>
-                    <p className="text-slate-500 text-sm font-medium">{t.discoverPrompt[lang]}</p>
-                  </button>
-                </div>
-              )}
-
-              {(activeTab !== 'about') && (
-                <div className="relative mb-6 group z-10">
-                  <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={20} />
-                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={activeTab === 'gallery' ? (lang === 'ar' ? 'ابحث في المعرض...' : 'Search gallery...') : t.searchPlaceholder[lang]} className={`w-full ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4'} py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 shadow-sm font-medium`} />
-                </div>
-              )}
-
-              {activeTab === 'home' && searchQuery === '' && (
-                <>
-                  {featuredPlaces.length > 0 && (
-                    <section className="mb-8">
-                      <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Compass size={24} className="text-orange-500" />{t.featured[lang]}</h2>
-                      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                        {featuredPlaces.map(place => (
-                          <div key={place.id} onClick={() => setSelectedPlace(place)} className="min-w-[280px] h-48 relative rounded-3xl overflow-hidden snap-center group shadow-md">
-                            <img src={place.imageUrl.cover} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={place.name[lang]} />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                            <div className={`absolute bottom-4 ${lang === 'ar' ? 'right-4 left-4' : 'left-4 right-4'}`}>
-                              <p className="text-white font-bold text-lg leading-tight">{place.name[lang]}</p>
-                              <p className="text-white/80 text-xs mt-1 flex items-center gap-1"><MapIcon size={12} /> {place.address?.[lang] || ''}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </section>
                   )}
-                  {Object.keys(categoryConfig).length > 0 && (
-                    <section className="mb-8">
-                      <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
-                      <div className="grid grid-cols-3 gap-3">
-                        {dynamicCategories.filter(c => c !== 'all').map(cat => (
-                          <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
-                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">{getCategoryIcon(cat)}</div>
-                            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || cat}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </section>
-                  )}
-                </>
-              )}
-
-              {activeTab === 'gallery' ? (
-                <section>
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-slate-900">{t.gallery[lang]}</h2>
-                    <button 
-                      onClick={() => setGallerySortOrder(gallerySortOrder === 'desc' ? 'asc' : 'desc')}
-                      className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 active:scale-95 transition-all shadow-sm"
-                    >
-                      {gallerySortOrder === 'desc' ? <SortDesc size={14} /> : <SortAsc size={14} />}
-                      {gallerySortOrder === 'desc' ? t.sortNewest[lang] : t.sortOldest[lang]}
-                    </button>
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {dynamicCategories.map(cat => (
+                      <button key={cat} onClick={() => setSelectedCategory(cat)} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
+                        {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
+                      </button>
+                    ))}
                   </div>
-                  {filteredGallery.length > 0 ? (
-                    filteredGallery.map(item => (
-                      <GalleryCard key={item.id} item={item} lang={lang} onClick={setSelectedGalleryItem} />
+                </div>
+              )}
+              <section className="mt-2">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
+                <div className="space-y-4">
+                  {filteredPlaces.length > 0 ? (
+                    filteredPlaces.map(place => (
+                      <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
                     ))
                   ) : (
                     <div className="py-20 text-center text-slate-400">
-                      <ImageIcon size={40} className="mx-auto mb-4 opacity-20" />
-                      <p className="font-medium">{t.noPlacesFound[lang]}</p>
+                      <Compass size={40} className="mx-auto mb-4 opacity-20" />
+                      <p className="font-medium">{activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}</p>
                     </div>
                   )}
-                </section>
-              ) : activeTab === 'about' ? (
-                <AboutView lang={lang} data={aboutAppData} appLogo={appLogo} />
-              ) : (
-                <>
-                  {(activeTab === 'explore' || searchQuery !== '') && (
-                    <div className="sticky top-0 bg-slate-50/95 backdrop-blur-sm z-20 -mx-4 px-4 pb-4">
-                      {activeTab === 'explore' && (
-                        <div className="flex justify-center mb-4">
-                          <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 w-full max-w-[240px]">
-                            <button onClick={() => setExploreMode('list')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${exploreMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500'}`}><List size={16} />{t.list[lang]}</button>
-                            <button onClick={() => setIsMapFullScreen(true)} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-orange-600`}><MapIcon size={16} />{t.map[lang]}</button>
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                        {dynamicCategories.map(cat => (
-                          <button key={cat} onClick={() => setSelectedCategory(cat)} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
-                            {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <section className="mt-2">
-                    <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
-                    <div className="space-y-4">
-                      {filteredPlaces.length > 0 ? (
-                        filteredPlaces.map(place => (
-                          <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
-                        ))
-                      ) : (
-                        <div className="py-20 text-center text-slate-400">
-                          <Compass size={40} className="mx-auto mb-4 opacity-20" />
-                          <p className="font-medium">{activeTab === 'favorites' ? t.noFavorites[lang] : t.noPlacesFound[lang]}</p>
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                </>
-              )}
+                </div>
+              </section>
             </>
           )}
         </div>
