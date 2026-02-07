@@ -128,6 +128,13 @@ export interface Contributor {
 
 export interface AboutAppData {
   description: { en: string; ar: string; fr: string };
+  owner?: {
+    boi: { en: string; ar: string; fr: string };
+    contact: {
+      email?: string;
+      phone?: string;
+    };
+  };
   contributors: {
     contributor_1?: Contributor;
     contributor_2?: Contributor;

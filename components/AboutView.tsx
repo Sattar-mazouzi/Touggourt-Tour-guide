@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Info, Mail, Facebook, Phone, Globe, ShieldCheck, X } from 'lucide-react';
+import { Info, Mail, Facebook, Phone, Globe, ShieldCheck, X, User } from 'lucide-react';
 import { Language, AboutAppData, Contributor } from '../types';
 import { translations } from '../i18n';
 
@@ -112,10 +112,42 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
         </p>
       </section>
 
+      {/* Owner Information Section */}
+      {data.owner && (
+        <section className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm relative overflow-hidden">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg shadow-slate-900/20">
+              <User size={20} />
+            </div>
+            <h3 className="text-xl font-black text-slate-900">
+              {lang === 'ar' ? 'معلومات صاحب التطبيق' : (lang === 'fr' ? "Propriétaire de l'application" : "App Owner")}
+            </h3>
+          </div>
+          <p className="text-slate-600 text-lg leading-relaxed font-medium whitespace-pre-wrap mb-8">
+            {data.owner.boi[lang]}
+          </p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-6 border-t border-slate-50">
+            {data.owner.contact.email && (
+              <a href={`mailto:${data.owner.contact.email}`} className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl text-slate-600 hover:text-orange-600 transition-colors group">
+                <Mail size={18} className="text-slate-400 group-hover:text-orange-500" />
+                <span className="text-sm font-bold truncate">{data.owner.contact.email}</span>
+              </a>
+            )}
+            {data.owner.contact.phone && (
+              <a href={`tel:${data.owner.contact.phone}`} className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl text-slate-600 hover:text-orange-600 transition-colors group">
+                <Phone size={18} className="text-slate-400 group-hover:text-orange-500" />
+                <span className="text-sm font-bold">{data.owner.contact.phone}</span>
+              </a>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Contributors */}
       <section className="space-y-6">
         <div className="flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg shadow-slate-900/20">
+          <div className="w-10 h-10 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-600 shadow-lg shadow-orange-500/5">
             <ShieldCheck size={20} />
           </div>
           <h3 className="text-xl font-black text-slate-900">{t.contributorsTitle[lang]}</h3>
