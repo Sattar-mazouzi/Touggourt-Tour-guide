@@ -72,7 +72,8 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const scrollRef = useRef<HTMLDivElement>(null);
   const fullScreenScrollRef = useRef<HTMLDivElement>(null);
 
-  const isService = place.id.startsWith('osm-');
+  // Expanded check to include manually categorized services
+  const isService = place.id.startsWith('osm-') || place.category === 'services';
 
   const images = [
     place.imageUrl.cover,
@@ -206,10 +207,12 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
                 <Star size={14} className="text-yellow-500 fill-yellow-500" />
                 <span className="text-xs font-black text-yellow-700">{place.rating.toFixed(1)}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-red-50 px-3 py-2 rounded-2xl border border-red-100">
-                <Heart size={14} className="text-red-500 fill-red-500" />
-                <span className="text-xs font-black text-red-700">{place.favoritesCount || 0}</span>
-              </div>
+              {!isService && (
+                <div className="flex items-center gap-1.5 bg-red-50 px-3 py-2 rounded-2xl border border-red-100">
+                  <Heart size={14} className="text-red-500 fill-red-500" />
+                  <span className="text-xs font-black text-red-700">{place.favoritesCount || 0}</span>
+                </div>
+              )}
             </div>
           </div>
 

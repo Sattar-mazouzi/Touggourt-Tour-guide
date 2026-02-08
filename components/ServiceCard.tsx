@@ -2,20 +2,18 @@
 import React from 'react';
 import { Place, Language } from '../types';
 import { 
-  Star, MapPin, Heart, Landmark, Coffee, Bed, Store, 
+  Star, MapPin, Landmark, Coffee, Bed, Store, 
   PlusSquare, Building2, GraduationCap, Car, Fuel, 
-  Utensils, HelpCircle, ShoppingBag 
+  Utensils, HelpCircle
 } from 'lucide-react';
 
 interface Props {
   place: Place;
   lang: Language;
   onSelect: (place: Place) => void;
-  isFavorite: boolean;
-  onToggleFavorite: (id: string) => void;
 }
 
-const ServiceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onToggleFavorite }) => {
+const ServiceCard: React.FC<Props> = ({ place, lang, onSelect }) => {
   // Logic to determine icon and color based on service type
   const getServiceVisuals = () => {
     const sub = place.subCategory;
@@ -75,17 +73,6 @@ const ServiceCard: React.FC<Props> = ({ place, lang, onSelect, isFavorite, onTog
       </div>
 
       <div className="flex flex-col items-center gap-2">
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite(place.id);
-          }}
-          className={`p-2.5 rounded-xl transition-all ${
-            isFavorite ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-300 hover:text-red-400'
-          }`}
-        >
-          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-        </button>
         <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
           <Star size={10} className="text-yellow-500 fill-yellow-500" />
           <span className="text-[10px] font-black text-yellow-700">{place.rating.toFixed(1)}</span>

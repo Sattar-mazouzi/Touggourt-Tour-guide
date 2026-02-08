@@ -360,7 +360,6 @@ const AppContent: React.FC = () => {
     
     return sourceData.filter(p => {
       if (selectedCategory === 'services') {
-        if (!p.id.startsWith('osm-')) return false;
         if (selectedSubCategory !== 'all' && p.subCategory !== selectedSubCategory) return false;
       }
       
@@ -588,8 +587,8 @@ const AppContent: React.FC = () => {
                 <div className="space-y-4">
                   {filteredPlaces.length > 0 ? (
                     filteredPlaces.map(place => (
-                      place.id.startsWith('osm-') ? (
-                        <ServiceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
+                      (place.id.startsWith('osm-') || place.category === 'services') ? (
+                        <ServiceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} />
                       ) : (
                         <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
                       )
