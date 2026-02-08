@@ -6,6 +6,7 @@ export interface Place {
   name: { en: string; ar: string; fr: string };
   description: { en: string; ar: string; fr: string };
   category: Category;
+  subCategory?: string; // New field for sub-filtering
   rating: number;
   ratingCount?: number;
   favoritesCount?: number;

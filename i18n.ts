@@ -92,4 +92,14 @@ export const translations: TranslationDict = {
   gisCategoryMap: { en: 'Category Map', ar: 'خريطة المسار', fr: 'Carte de l\'itinéraire' },
   contributorsTitle: { en: 'Responsible authorities', ar: ' الجهات المسؤولة', fr: 'Autorités responsables' },
   contactInfo: { en: 'Contact Information', ar: 'معلومات الاتصال', fr: 'Coordonnées' },
+  // Subcategories
+  mosques: { en: 'Mosques', ar: 'مساجد', fr: 'Mosquées' },
+  coffee: { en: 'Coffee Shops', ar: 'مقاهي', fr: 'Cafés' },
+  banks: { en: 'Banks', ar: 'بنوك', fr: 'Banques' },
+  pharmacies: { en: 'Pharmacies', ar: 'صيدليات', fr: 'Pharmacies' },
+  hospitals: { en: 'Hospitals', ar: 'مستشفيات', fr: 'Hôpitaux' },
+  schools: { en: 'Schools', ar: 'مدارس', fr: 'Écoles' },
+  parking: { en: 'Parking', ar: 'مواقف', fr: 'Parkings' },
+  fuel: { en: 'Fuel', ar: 'وقود', fr: 'Stations' },
+  stores: { en: 'Stores', ar: 'متاجر', fr: 'Magasins' },
 };

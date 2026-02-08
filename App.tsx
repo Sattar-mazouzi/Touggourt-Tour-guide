@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import { Place, GalleryItem, Language, Category, CityBioData, CategoryConfig, AboutAppData } from './types';
 import { translations } from './i18n';
 import PlaceCard from './components/PlaceCard';
+import ServiceCard from './components/ServiceCard';
 import GalleryCard from './components/GalleryCard';
 import DetailsView from './components/DetailsView';
 import GalleryDetailsView from './components/GalleryDetailsView';
@@ -48,12 +49,17 @@ const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
   }
 };
 
+const SERVICE_SUBCATEGORIES = [
+  'all', 'hotels', 'restaurants', 'coffee', 'mosques', 'banks', 'stores', 'pharmacies', 'hospitals', 'schools', 'parking', 'fuel'
+];
+
 const AppContent: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'gallery' | 'favorites' | 'about'>('home');
   const [exploreMode, setExploreMode] = useState<'list' | 'map'>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('all');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isBioOpen, setIsBioOpen] = useState(false);
@@ -64,6 +70,8 @@ const AppContent: React.FC = () => {
   const [gallerySortOrder, setGallerySortOrder] = useState<'asc' | 'desc'>('desc');
   
   const [places, setPlaces] = useState<Place[]>([]);
+  const [dynamicServices, setDynamicServices] = useState<Place[]>([]);
+  const [isFetchingServices, setIsFetchingServices] = useState(false);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
@@ -94,14 +102,138 @@ const AppContent: React.FC = () => {
     if (key.includes('natural') || key.includes('nature')) return <Leaf size={20} />;
     if (key.includes('hotel')) return <Bed size={20} />;
     if (key.includes('restaurant')) return <Utensils size={20} />;
+    if (key.includes('bank') || key.includes('finance')) return <Building2 size={20} />;
+    if (key.includes('shop') || key.includes('store')) return <Store size={20} />;
+    if (key.includes('services')) return <Layers size={20} />;
+    if (key.includes('parking')) return <Car size={20} />;
+    if (key.includes('fuel')) return <Fuel size={20} />;
     return <Sparkles size={20} />;
   };
+
+  const getSubCategoryIcon = (sub: string) => {
+    switch (sub) {
+      case 'hotels': return <Bed size={14} />;
+      case 'restaurants': return <Utensils size={14} />;
+      case 'coffee': return <Coffee size={14} />;
+      case 'mosques': return <Landmark size={14} />;
+      case 'banks': return <Building2 size={14} />;
+      case 'stores': return <Store size={14} />;
+      case 'pharmacies': return <PlusSquare size={14} />;
+      case 'hospitals': return <PlusSquare size={14} />;
+      case 'schools': return <GraduationCap size={14} />;
+      case 'parking': return <Car size={14} />;
+      case 'fuel': return <Fuel size={14} />;
+      default: return <Sparkles size={14} />;
+    }
+  };
+
+  const getDynamicServiceImage = (tags: any) => {
+    if (tags.amenity === 'restaurant' || tags.amenity === 'food_court' || tags.amenity === 'fast_food') return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop';
+    if (tags.amenity === 'cafe') return 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=800&auto=format&fit=crop';
+    if (tags.amenity === 'bank' || tags.amenity === 'atm') return 'https://images.unsplash.com/photo-1541354451442-952fe76601f0?q=80&w=800&auto=format&fit=crop';
+    if (tags.amenity === 'mosque' || tags.amenity === 'place_of_worship') return 'https://images.unsplash.com/photo-1590076212ef3-728b7e289895?q=80&w=800&auto=format&fit=crop';
+    if (tags.tourism === 'hotel' || tags.tourism === 'hostel' || tags.tourism === 'guest_house') return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop';
+    if (tags.shop) return 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?q=80&w=800&auto=format&fit=crop';
+    if (tags.amenity === 'parking') return 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=80&w=800&auto=format&fit=crop';
+    if (tags.amenity === 'fuel') return 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=800&auto=format&fit=crop';
+    return 'https://images.unsplash.com/photo-1449156001931-82992a47279c?q=80&w=800&auto=format&fit=crop';
+  };
+
+  const fetchOSMServices = useCallback(async () => {
+    if (places.length === 0 || dynamicServices.length > 0 || isFetchingServices) return;
+    
+    setIsFetchingServices(true);
+    try {
+      let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
+      places.forEach(p => {
+        if (p.location.lat < minLat) minLat = p.location.lat;
+        if (p.location.lat > maxLat) maxLat = p.location.lat;
+        if (p.location.lng < minLng) minLng = p.location.lng;
+        if (p.location.lng > maxLng) maxLng = p.location.lng;
+      });
+
+      const buffer = 0.05; 
+      const bbox = `${minLat - buffer},${minLng - buffer},${maxLat + buffer},${maxLng + buffer}`;
+
+      const query = `[out:json][timeout:25];
+        (
+          node["amenity"~"restaurant|cafe|fast_food|bank|atm|pharmacy|hospital|post_office|marketplace|clinic|mosque|place_of_worship|parking|fuel|school|university"](${bbox});
+          node["shop"](${bbox});
+          node["tourism"~"hotel|museum|hostel|guest_house|information|attraction"](${bbox});
+        );
+        out body;`;
+
+      const response = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (data.elements) {
+        const mapped: Place[] = data.elements.map((el: any) => {
+          const amenity = el.tags.amenity;
+          const shop = el.tags.shop;
+          const tourism = el.tags.tourism;
+          
+          let sub: string = 'all';
+          if (amenity === 'restaurant' || amenity === 'fast_food' || amenity === 'food_court') sub = 'restaurants';
+          else if (amenity === 'cafe') sub = 'coffee';
+          else if (amenity === 'bank' || amenity === 'atm') sub = 'banks';
+          else if (amenity === 'mosque' || amenity === 'place_of_worship') sub = 'mosques';
+          else if (tourism === 'hotel' || tourism === 'hostel' || tourism === 'guest_house') sub = 'hotels';
+          else if (shop) sub = 'stores';
+          else if (amenity === 'pharmacy') sub = 'pharmacies';
+          else if (amenity === 'hospital' || amenity === 'clinic' || amenity === 'doctors') sub = 'hospitals';
+          else if (amenity === 'school' || amenity === 'university' || amenity === 'college' || amenity === 'kindergarten') sub = 'schools';
+          else if (amenity === 'parking') sub = 'parking';
+          else if (amenity === 'fuel') sub = 'fuel';
+
+          const nameStr = el.tags.name || (lang === 'ar' ? 'خدمة محلية' : (lang === 'fr' ? 'Service local' : 'Local Service'));
+          
+          return {
+            id: `osm-${el.id}`,
+            name: { en: nameStr, ar: nameStr, fr: nameStr },
+            description: { 
+              en: `Service point available in Touggourt area. Type: ${sub}`, 
+              ar: `نقطة خدمة متوفرة في منطقة تقرت. النوع: ${t[sub]?.[lang] || sub}`, 
+              fr: `Point de service disponible dans la zone de Touggourt. Type: ${sub}` 
+            },
+            category: 'services',
+            subCategory: sub,
+            rating: 4.0 + (Math.random() * 0.8),
+            imageUrl: { cover: getDynamicServiceImage(el.tags) },
+            location: { lat: el.lat, lng: el.lon },
+            address: { 
+              en: el.tags['addr:street'] || 'Touggourt, Algeria', 
+              ar: el.tags['addr:street'] || 'تقرت، الجزائر', 
+              fr: el.tags['addr:street'] || 'Touggourt, Algérie' 
+            },
+            featured: false
+          };
+        });
+        
+        const unique = mapped.reduce((acc: Place[], current) => {
+          const x = acc.find(item => item.name.en === current.name.en && Math.abs(item.location.lat - current.location.lat) < 0.001);
+          if (!x) return acc.concat([current]);
+          return acc;
+        }, []);
+
+        setDynamicServices(unique);
+      }
+    } catch (error) {
+      console.warn("OSM Services fetch failed", error);
+    } finally {
+      setIsFetchingServices(false);
+    }
+  }, [places, dynamicServices.length, isFetchingServices, lang, t]);
+
+  useEffect(() => {
+    if (selectedCategory === 'services' && places.length > 0) {
+      fetchOSMServices();
+    }
+  }, [selectedCategory, places.length, fetchOSMServices]);
 
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
       
-      // Fetch Config
       try {
         const catDocRef = doc(db, "appConfig", "categories");
         const catSnap = await getDoc(catDocRef);
@@ -123,7 +255,6 @@ const AppContent: React.FC = () => {
         }
       } catch (err) { console.warn("Config fetch failed", err); }
 
-      // Fetch Places
       try {
         const placesSnapshot = await getDocs(collection(db, "places"));
         const fetchedPlaces = placesSnapshot.docs.map(doc => {
@@ -151,7 +282,6 @@ const AppContent: React.FC = () => {
         setPlaces(fetchedPlaces);
       } catch (err) { console.error("Places fetch error", err); }
 
-      // Fetch Gallery
       try {
         const gallerySnapshot = await getDocs(collection(db, "gallery"));
         const fetchedGallery = gallerySnapshot.docs.map(doc => {
@@ -179,7 +309,6 @@ const AppContent: React.FC = () => {
         setGalleryItems(fetchedGallery);
       } catch (err) { console.warn("Gallery fetch failed", err); }
 
-      // Fetch City Bio
       try {
         const bioSnapshot = await getDocs(collection(db, "aboutCity"));
         let mergedBioData: any = {};
@@ -195,7 +324,6 @@ const AppContent: React.FC = () => {
     } catch (error) {
       console.error("Firestore loading error:", error);
     } finally {
-      // Small delay for better UX on the splash screen
       setTimeout(() => {
         setIsLoading(false);
       }, 1500);
@@ -227,13 +355,24 @@ const AppContent: React.FC = () => {
 
   const filteredPlaces = useMemo(() => {
     const queryStr = searchQuery.toLowerCase();
-    return places.filter(p => {
+    
+    const sourceData = selectedCategory === 'services' ? dynamicServices : places;
+    
+    return sourceData.filter(p => {
+      if (selectedCategory === 'services') {
+        if (!p.id.startsWith('osm-')) return false;
+        if (selectedSubCategory !== 'all' && p.subCategory !== selectedSubCategory) return false;
+      }
+      
       const matchesSearch = (p.name[lang] || '').toLowerCase().includes(queryStr) || (p.description[lang] || '').toLowerCase().includes(queryStr);
-      const matchesCategory = selectedCategory === 'all' || p.category.toLowerCase() === selectedCategory.toLowerCase();
+      
+      const matchesCategory = selectedCategory === 'all' || 
+                              p.category.toLowerCase() === selectedCategory.toLowerCase();
+      
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
     });
-  }, [searchQuery, selectedCategory, activeTab, favorites, places, lang]);
+  }, [searchQuery, selectedCategory, selectedSubCategory, activeTab, favorites, places, dynamicServices, lang]);
 
   const filteredGallery = useMemo(() => {
     if (activeTab !== 'gallery') return [];
@@ -261,12 +400,10 @@ const AppContent: React.FC = () => {
 
   const userInitial = profile?.fullName ? profile.fullName[0].toUpperCase() : null;
 
-  // New Opening / Splash Screen
   if (isLoading) {
     return (
       <div className={`fixed inset-0 z-[9999] bg-slate-50 flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700 ${lang === 'ar' ? 'font-arabic' : ''}`}>
         <div className="flex flex-col items-center gap-8 animate-in zoom-in-95 slide-in-from-bottom-4 duration-1000">
-          {/* Splash Logo */}
           <div className="w-24 h-24 bg-white rounded-[32px] flex items-center justify-center shadow-2xl shadow-orange-500/10 border border-slate-100 p-4">
             {appLogo ? (
               <img src={appLogo} alt="Logo" className="w-full h-full object-contain" />
@@ -275,7 +412,6 @@ const AppContent: React.FC = () => {
             )}
           </div>
           
-          {/* App Name */}
           <div className="space-y-2">
             <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
               {t.appName[lang]}
@@ -283,7 +419,6 @@ const AppContent: React.FC = () => {
             <div className="h-1 w-12 bg-orange-500 mx-auto rounded-full"></div>
           </div>
 
-          {/* Loading Phrase */}
           <div className="flex flex-col items-center gap-4 mt-4">
             <div className="flex items-center gap-3">
               <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
@@ -370,7 +505,7 @@ const AppContent: React.FC = () => {
                   <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
                   <div className="grid grid-cols-3 gap-3">
                     {dynamicCategories.filter(c => c !== 'all').map(cat => (
-                      <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
+                      <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); setSelectedSubCategory('all'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
                         <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">{getCategoryIcon(cat)}</div>
                         <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || cat}</span>
                       </button>
@@ -418,21 +553,46 @@ const AppContent: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                  
+                  {/* Category Pills */}
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-2">
                     {dynamicCategories.map(cat => (
-                      <button key={cat} onClick={() => setSelectedCategory(cat)} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
+                      <button key={cat} onClick={() => { setSelectedCategory(cat); setSelectedSubCategory('all'); }} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
                         {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
                       </button>
                     ))}
                   </div>
+
+                  {/* Service Subcategory Pills (Only visible when Services is selected) */}
+                  {selectedCategory === 'services' && (
+                    <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide animate-in slide-in-from-top-2 duration-300">
+                      {SERVICE_SUBCATEGORIES.map(sub => (
+                        <button 
+                          key={sub} 
+                          onClick={() => setSelectedSubCategory(sub)} 
+                          className={`whitespace-nowrap flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${selectedSubCategory === sub ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-400 border-slate-100'}`}
+                        >
+                          {sub !== 'all' && getSubCategoryIcon(sub)}
+                          {sub === 'all' ? t.all[lang] : (t[sub]?.[lang] || sub)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               <section className="mt-2">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : t.explore[lang])}</h2>
+                <div className="flex items-center justify-between mb-4">
+                   <h2 className="text-xl font-bold text-slate-900">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : (categoryConfig[selectedCategory]?.[lang] || t.explore[lang]))}</h2>
+                   {isFetchingServices && <Loader2 className="w-4 h-4 animate-spin text-orange-500" />}
+                </div>
                 <div className="space-y-4">
                   {filteredPlaces.length > 0 ? (
                     filteredPlaces.map(place => (
-                      <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
+                      place.id.startsWith('osm-') ? (
+                        <ServiceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
+                      ) : (
+                        <PlaceCard key={place.id} place={place} lang={lang} onSelect={setSelectedPlace} isFavorite={favorites.includes(place.id)} onToggleFavorite={handleToggleFavorite} />
+                      )
                     ))
                   ) : (
                     <div className="py-20 text-center text-slate-400">
@@ -449,8 +609,8 @@ const AppContent: React.FC = () => {
 
       <nav className="flex-shrink-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 pb-[calc(4px+env(safe-area-inset-bottom))] z-40">
         <div className="max-w-xl mx-auto flex justify-around p-2">
-          <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.home[lang]}</span></button>
-          <button onClick={() => { setActiveTab('explore'); setSelectedCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'explore' ? 'text-orange-500' : 'text-slate-400'}`}><Compass size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.explore[lang]}</span></button>
+          <button onClick={() => { setActiveTab('home'); setSearchQuery(''); setSelectedCategory('all'); setSelectedSubCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'home' ? 'text-orange-500' : 'text-slate-400'}`}><Home size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.home[lang]}</span></button>
+          <button onClick={() => { setActiveTab('explore'); setSelectedCategory('all'); setSelectedSubCategory('all'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'explore' ? 'text-orange-500' : 'text-slate-400'}`}><Compass size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.explore[lang]}</span></button>
           <button onClick={() => { setActiveTab('gallery'); setSearchQuery(''); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'gallery' ? 'text-orange-500' : 'text-slate-400'}`}><ImageIcon size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.gallery[lang]}</span></button>
           <button onClick={() => { if(!user) setIsAuthModalOpen(true); else setActiveTab('favorites'); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'favorites' ? 'text-orange-500' : 'text-slate-400'}`}><Heart size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.favorites[lang]}</span></button>
           <button onClick={() => { setActiveTab('about'); setSearchQuery(''); }} className={`flex flex-col items-center gap-1 transition-colors flex-1 py-1 ${activeTab === 'about' ? 'text-orange-500' : 'text-slate-400'}`}><Info size={22} /><span className="text-[8px] font-black uppercase tracking-[0.1em]">{t.about[lang]}</span></button>

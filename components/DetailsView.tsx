@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Place, Language, CategoryConfig } from '../types';
-import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box, ChevronRight } from 'lucide-react';
+import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box, ChevronRight, Landmark, Coffee, Bed, Store, PlusSquare, Building2, GraduationCap, Car, Fuel, Utensils, HelpCircle } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
 import ReviewSection from './ReviewSection';
@@ -72,6 +72,8 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const scrollRef = useRef<HTMLDivElement>(null);
   const fullScreenScrollRef = useRef<HTMLDivElement>(null);
 
+  const isService = place.id.startsWith('osm-');
+
   const images = [
     place.imageUrl.cover,
     place.imageUrl.img1,
@@ -133,34 +135,64 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
 
   const categoryLabel = categoryConfig?.[place.category]?.[lang] || t[place.category]?.[lang] || place.category;
 
+  const getServiceVisuals = () => {
+    const desc = (place.description.en || '').toLowerCase();
+    if (desc.includes('mosque')) return { icon: <Landmark size={48} />, color: 'bg-emerald-500' };
+    if (desc.includes('coffee') || desc.includes('cafe')) return { icon: <Coffee size={48} />, color: 'bg-orange-500' };
+    if (desc.includes('hotel')) return { icon: <Bed size={48} />, color: 'bg-indigo-500' };
+    if (desc.includes('restaurant')) return { icon: <Utensils size={48} />, color: 'bg-rose-500' };
+    if (desc.includes('bank')) return { icon: <Building2 size={48} />, color: 'bg-blue-600' };
+    if (desc.includes('pharmacy') || desc.includes('hospital')) return { icon: <PlusSquare size={48} />, color: 'bg-red-500' };
+    if (desc.includes('school')) return { icon: <GraduationCap size={48} />, color: 'bg-violet-600' };
+    if (desc.includes('store') || desc.includes('shop')) return { icon: <Store size={48} />, color: 'bg-amber-500' };
+    return { icon: <HelpCircle size={48} />, color: 'bg-slate-500' };
+  };
+
+  const serviceVisuals = getServiceVisuals();
+
   return (
     <div className="fixed inset-0 z-[1000] bg-white flex flex-col h-[100dvh] overflow-hidden animate-in slide-in-from-bottom duration-300">
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-32">
         <div className="relative h-[45vh] flex-shrink-0 bg-slate-900 group">
-          <div ref={scrollRef} onScroll={() => handleScroll(scrollRef, setActiveImageIndex)} className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide" onClick={() => setIsFullScreen(true)}>
-            {images.map((img, idx) => (
-              <div key={idx} className="w-full h-full flex-shrink-0 snap-center cursor-zoom-in">
-                <img src={img} alt={`${place.name[lang]} ${idx + 1}`} className="w-full h-full object-cover" />
-              </div>
-            ))}
-          </div>
-          {images.length > 1 && (
+          {isService ? (
+            <div className={`w-full h-full ${serviceVisuals.color} flex flex-col items-center justify-center text-white p-8 text-center`}>
+               <div className="bg-white/20 p-8 rounded-[40px] backdrop-blur-md mb-6 animate-in zoom-in duration-500">
+                  {serviceVisuals.icon}
+               </div>
+               <h2 className="text-2xl font-black">{place.name[lang]}</h2>
+               <p className="text-sm font-bold opacity-60 mt-2 uppercase tracking-widest">{place.address?.[lang]}</p>
+            </div>
+          ) : (
+            <div ref={scrollRef} onScroll={() => handleScroll(scrollRef, setActiveImageIndex)} className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide" onClick={() => setIsFullScreen(true)}>
+              {images.map((img, idx) => (
+                <div key={idx} className="w-full h-full flex-shrink-0 snap-center cursor-zoom-in">
+                  <img src={img} alt={`${place.name[lang]} ${idx + 1}`} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {!isService && images.length > 1 && (
             <div className="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-20">
               {images.map((_, idx) => (
                 <div key={idx} className={`h-1.5 rounded-full transition-all duration-300 ${activeImageIndex === idx ? 'w-6 bg-white shadow-sm' : 'w-1.5 bg-white/40'}`} />
               ))}
             </div>
           )}
+
           <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-start pt-[calc(1rem+env(safe-area-inset-top))] z-20">
             <button onClick={onClose} className="p-2.5 bg-white/80 backdrop-blur-xl rounded-full shadow-lg border border-white/50"><X size={24} /></button>
             <button onClick={handleShare} className="p-2.5 bg-white/80 backdrop-blur-xl rounded-full shadow-lg border border-white/50"><Share2 size={24} /></button>
           </div>
-          <div className="absolute bottom-10 left-6 right-6 z-10 pointer-events-none">
-            <div className="bg-black/20 backdrop-blur-sm p-4 rounded-3xl -mx-2">
-              <span className="inline-block bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-2">{categoryLabel}</span>
-              <h2 className="text-3xl font-black text-white drop-shadow-md leading-tight">{place.name[lang]}</h2>
+
+          {!isService && (
+            <div className="absolute bottom-10 left-6 right-6 z-10 pointer-events-none">
+              <div className="bg-black/20 backdrop-blur-sm p-4 rounded-3xl -mx-2">
+                <span className="inline-block bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-2">{categoryLabel}</span>
+                <h2 className="text-3xl font-black text-white drop-shadow-md leading-tight">{place.name[lang]}</h2>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="bg-white -mt-8 rounded-t-[40px] p-8 shadow-2xl relative z-10 min-h-[60vh]">
@@ -172,7 +204,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-2 rounded-2xl border border-yellow-200">
                 <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                <span className="text-xs font-black text-yellow-700">{place.rating}</span>
+                <span className="text-xs font-black text-yellow-700">{place.rating.toFixed(1)}</span>
               </div>
               <div className="flex items-center gap-1.5 bg-red-50 px-3 py-2 rounded-2xl border border-red-100">
                 <Heart size={14} className="text-red-500 fill-red-500" />
@@ -191,7 +223,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
               </div>
               <p className="text-slate-600 leading-relaxed text-lg font-medium mb-8">{place.description[lang]}</p>
               
-              {threeDImage && (
+              {!isService && threeDImage && (
                 <button 
                   onClick={() => setIs3DOpen(true)}
                   className="w-full flex items-center gap-4 p-5 bg-indigo-50 text-indigo-700 rounded-[32px] border border-indigo-100 shadow-sm active:scale-[0.98] transition-all group"
@@ -209,7 +241,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
               )}
             </section>
 
-            {videos.length > 0 && (
+            {!isService && videos.length > 0 && (
               <section>
                 <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center"><Youtube size={16} className="text-red-500" /></div>
@@ -229,12 +261,12 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
               <MapView places={[place]} lang={lang} height="h-72" initialZoom={15} />
             </section>
 
-            <ReviewSection placeId={place.id} lang={lang} />
+            {!isService && <ReviewSection placeId={place.id} lang={lang} />}
           </div>
         </div>
       </div>
 
-      {isFullScreen && (
+      {isFullScreen && !isService && (
         <div className="fixed inset-0 z-[1100] bg-black flex flex-col animate-in fade-in duration-200">
           <div className="absolute top-0 left-0 w-full p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-end z-[1110]">
             <button onClick={() => setIsFullScreen(false)} className="p-3 bg-white/10 backdrop-blur-xl text-white rounded-full"><X size={24} /></button>
