@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Place, Language, CategoryConfig } from '../types';
-import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box } from 'lucide-react';
+import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box, ChevronRight } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
 import ReviewSection from './ReviewSection';
@@ -90,9 +90,9 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const threeDImage = place.imageUrl?.['3d_img'];
 
   const t3D = {
-    en: 'See 3D visualization',
-    ar: 'رؤية التصور ثلاثي الأبعاد',
-    fr: 'Voir la visualisation 3D'
+    en: 'The monument after restoration',
+    ar: 'التصوير للمعلم بعد الترميم',
+    fr: 'Le monument après restauration'
   };
 
   const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
@@ -183,22 +183,30 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
 
           <div className="space-y-10">
             <section>
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-4">
                 <h3 className="text-xl font-black text-slate-900 flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center"><Info size={16} className="text-blue-500" /></div>
                   {t.overview[lang]}
                 </h3>
-                {threeDImage && (
-                  <button 
-                    onClick={() => setIs3DOpen(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-indigo-100 shadow-sm active:scale-95 transition-all"
-                  >
-                    <Box size={14} />
-                    {t3D[lang]}
-                  </button>
-                )}
               </div>
-              <p className="text-slate-600 leading-relaxed text-lg font-medium">{place.description[lang]}</p>
+              <p className="text-slate-600 leading-relaxed text-lg font-medium mb-8">{place.description[lang]}</p>
+              
+              {threeDImage && (
+                <button 
+                  onClick={() => setIs3DOpen(true)}
+                  className="w-full flex items-center gap-4 p-5 bg-indigo-50 text-indigo-700 rounded-[32px] border border-indigo-100 shadow-sm active:scale-[0.98] transition-all group"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 flex-shrink-0">
+                    <Box size={28} />
+                  </div>
+                  <div className={`flex-1 min-w-0 ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50 mb-1">
+                      {lang === 'ar' ? 'تصور ثلاثي الأبعاد' : (lang === 'fr' ? 'VISUALISATION 3D' : '3D VISUALIZATION')}
+                    </p>
+                    <h4 className="text-base font-black leading-tight break-words">{t3D[lang]}</h4>
+                  </div>
+                </button>
+              )}
             </section>
 
             {videos.length > 0 && (
