@@ -37,7 +37,7 @@ export const translations: TranslationDict = {
     fr: 'Oued Righ'
   },
   cityBioDescription: { 
-    en: 'Touggourt, known as the "City of a Thousand Domes," is a historic oasis city in southeastern Algeria. It serves as the gateway to the deep Sahara and the heart of the Oued Righ region.',
+    en: 'Touggourt, known as as the "City of a Thousand Domes," is a historic oasis city in southeastern Algeria. It serves as the gateway to the deep Sahara and the heart of the Oued Righ region.',
     ar: 'تقرت، المعروفة باسم "مدينة الألف قبة"، هي مدينة واحات تاريخية في جنوب شرق الجزائر. تعد بوابة للصحراء الكبرى وقلب منطقة وادي ريغ.',
     fr: 'Touggourt, surnommée la "Ville aux mille coupoles", est une ville oasis historique du sud-est de l\'Algérie. Elle est la porte d\'entrée du grand Sahara et le cœur de l\'Oued Righ.'
   },
@@ -71,9 +71,9 @@ export const translations: TranslationDict = {
   climateAndTopography: { en: 'Climate & Topography', ar: 'المناخ والتضاريس', fr: 'Climat et Topographie' },
   heritageTitle: { en: 'Material and Non-Material Heritage', ar: 'التراث المادي واللامادي', fr: 'Patrimoine Matériel et Immatériel' },
   heritageIndustries: { en: 'Industries', ar: 'الصناعات والمهن', fr: 'Industries' },
-  heritageClothing: { en: 'Traditional Clothing', ar: 'اللباس التقليدي', fr: 'Vêtements traditionnels' },
+  heritageClothing: { en: 'Traditional Clothing', ar: 'اللباس التقليدي', fr: 'اللباس التقليدي' },
   heritageCulinary: { en: 'Culinary Arts', ar: 'فنون الطبخ', fr: 'Arts culinaires' },
-  heritageFolklore: { en: 'Folklore', ar: 'الفلكلور', fr: 'الفلكلور' },
+  heritageFolklore: { en: 'Folklore', ar: 'الفلكلور', fr: 'Folklore' },
   heritageFestivals: { en: 'Festivals', ar: 'المهرجانات', fr: 'Festivals' },
   heritageGames: { en: 'Traditional Games', ar: 'الألعاب التقليدية', fr: 'Jeux traditionnels' },
   interactiveMap: { en: 'Interactive Map', ar: 'خريطة تفاعلية', fr: 'Carte interactive' },
@@ -92,6 +92,7 @@ export const translations: TranslationDict = {
   gisCategoryMap: { en: 'Category Map', ar: 'خريطة المسار', fr: 'Carte de l\'itinéraire' },
   contributorsTitle: { en: 'Responsible authorities', ar: ' الجهات المسؤولة', fr: 'Autorités responsables' },
   contactInfo: { en: 'Contact Information', ar: 'معلومات الاتصال', fr: 'Coordonnées' },
+  services: { en: 'Services', ar: 'الخدمات', fr: 'Services' },
   // Subcategories
   mosques: { en: 'Mosques', ar: 'مساجد', fr: 'Mosquées' },
   coffee: { en: 'Coffee Shops', ar: 'مقاهي', fr: 'Cafés' },
