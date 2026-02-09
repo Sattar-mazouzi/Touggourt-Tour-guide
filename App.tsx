@@ -360,6 +360,22 @@ const AppContent: React.FC = () => {
     toggleFavorite(id);
   };
 
+  const dynamicCategories = useMemo(() => {
+    const fetched = Object.keys(categoryConfig);
+    // Hardcode services if not fetched from firestore config
+    if (!fetched.includes('services')) {
+      return ['all', ...fetched, 'services'];
+    }
+    return ['all', ...fetched];
+  }, [categoryConfig]);
+  
+  const welcomeMessage = useMemo(() => {
+    if (cityBio?.name?.[lang]) return lang === 'ar' ? `مرحباً بكم في ${cityBio.name[lang]}` : (lang === 'fr' ? `Bienvenue à ${cityBio.name[lang]}` : `Welcome to ${cityBio.name[lang]}`);
+    return t.welcome[lang];
+  }, [cityBio, lang, t]);
+
+  const userInitial = profile?.fullName ? profile.fullName[0].toUpperCase() : null;
+
   const filteredPlaces = useMemo(() => {
     const queryStr = searchQuery.toLowerCase();
     
@@ -397,14 +413,6 @@ const AppContent: React.FC = () => {
   }, [galleryItems, searchQuery, activeTab, lang, gallerySortOrder]);
 
   const featuredPlaces = useMemo(() => places.filter(p => p.featured), [places]);
-  const dynamicCategories = useMemo(() => ['all', ...Object.keys(categoryConfig)], [categoryConfig]);
-  
-  const welcomeMessage = useMemo(() => {
-    if (cityBio?.name?.[lang]) return lang === 'ar' ? `مرحباً بكم في ${cityBio.name[lang]}` : (lang === 'fr' ? `Bienvenue à ${cityBio.name[lang]}` : `Welcome to ${cityBio.name[lang]}`);
-    return t.welcome[lang];
-  }, [cityBio, lang, t]);
-
-  const userInitial = profile?.fullName ? profile.fullName[0].toUpperCase() : null;
 
   if (isLoading) {
     return (
@@ -506,14 +514,14 @@ const AppContent: React.FC = () => {
                   </div>
                 </section>
               )}
-              {Object.keys(categoryConfig).length > 0 && (
+              {dynamicCategories.length > 0 && (
                 <section className="mb-8">
                   <h2 className="text-xl font-bold text-slate-900 mb-4">{t.categories[lang]}</h2>
                   <div className="grid grid-cols-3 gap-3">
                     {dynamicCategories.filter(c => c !== 'all').map(cat => (
                       <button key={cat} onClick={() => { setSelectedCategory(cat); setActiveTab('explore'); setSelectedSubCategory('all'); }} className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-all hover:bg-orange-50">
                         <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">{getCategoryIcon(cat)}</div>
-                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || cat}</span>
+                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wide text-center">{categoryConfig[cat]?.[lang] || (t as any)[cat]?.[lang] || cat}</span>
                       </button>
                     ))}
                   </div>
@@ -564,7 +572,7 @@ const AppContent: React.FC = () => {
                   <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-2">
                     {dynamicCategories.map(cat => (
                       <button key={cat} onClick={() => { setSelectedCategory(cat); setSelectedSubCategory('all'); }} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedCategory === cat ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-500 border-slate-200'}`}>
-                        {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || cat)}
+                        {cat === 'all' ? t.all[lang] : (categoryConfig[cat]?.[lang] || (t as any)[cat]?.[lang] || cat)}
                       </button>
                     ))}
                   </div>
@@ -588,7 +596,7 @@ const AppContent: React.FC = () => {
               )}
               <section className="mt-2">
                 <div className="flex items-center justify-between mb-4">
-                   <h2 className="text-xl font-bold text-slate-900">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : (categoryConfig[selectedCategory]?.[lang] || t.explore[lang]))}</h2>
+                   <h2 className="text-xl font-bold text-slate-900">{activeTab === 'favorites' ? t.favorites[lang] : (searchQuery ? `"${searchQuery}"` : (categoryConfig[selectedCategory]?.[lang] || (t as any)[selectedCategory]?.[lang] || t.explore[lang]))}</h2>
                    {isFetchingServices && <Loader2 className="w-4 h-4 animate-spin text-orange-500" />}
                 </div>
                 <div className="space-y-4">
