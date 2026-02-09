@@ -159,7 +159,7 @@ const AppContent: React.FC = () => {
         (
           node["amenity"~"restaurant|cafe|fast_food|bank|atm|pharmacy|hospital|post_office|marketplace|clinic|mosque|place_of_worship|parking|fuel|school|university"](${bbox});
           node["shop"](${bbox});
-          node["tourism"~"hotel|museum|hostel|guest_house|information|attraction"](${bbox});
+          node["tourism"~"hotel|museum|hostel|guest_house|instruction|attraction"](${bbox});
         );
         out body;`;
 
@@ -185,14 +185,21 @@ const AppContent: React.FC = () => {
           else if (amenity === 'parking') sub = 'parking';
           else if (amenity === 'fuel') sub = 'fuel';
 
-          const nameStr = el.tags.name || (lang === 'ar' ? 'خدمة محلية' : (lang === 'fr' ? 'Service local' : 'Local Service'));
+          // Correctly map translated names based on subcategory when el.tags.name is missing
+          const nameObj = el.tags.name 
+            ? { en: el.tags.name, ar: el.tags.name, fr: el.tags.name }
+            : { 
+                en: translations[sub]?.en || 'Local Service',
+                ar: translations[sub]?.ar || 'خدمة محلية',
+                fr: translations[sub]?.fr || 'Service local'
+              };
           
           return {
             id: `osm-${el.id}`,
-            name: { en: nameStr, ar: nameStr, fr: nameStr },
+            name: nameObj,
             description: { 
               en: `Service point available in Touggourt area. Type: ${sub}`, 
-              ar: `نقطة خدمة متوفرة في منطقة تقرت. النوع: ${t[sub]?.[lang] || sub}`, 
+              ar: `نقطة خدمة متوفرة في منطقة تقرت. النوع: ${t[sub]?.ar || sub}`, 
               fr: `Point de service disponible dans la zone de Touggourt. Type: ${sub}` 
             },
             category: 'services',
@@ -222,7 +229,7 @@ const AppContent: React.FC = () => {
     } finally {
       setIsFetchingServices(false);
     }
-  }, [places, dynamicServices.length, isFetchingServices, lang, t]);
+  }, [places, dynamicServices.length, isFetchingServices, t]);
 
   useEffect(() => {
     if (selectedCategory === 'services' && places.length > 0) {
