@@ -4,7 +4,7 @@ import { Place, Language } from '../types';
 import { 
   Star, MapPin, Landmark, Coffee, Bed, Store, 
   PlusSquare, Building2, GraduationCap, Car, Fuel, 
-  Utensils, HelpCircle
+  Utensils, HelpCircle, Bus, TrainFront, Plane
 } from 'lucide-react';
 
 interface Props {
@@ -17,6 +17,7 @@ const ServiceCard: React.FC<Props> = ({ place, lang, onSelect }) => {
   // Logic to determine icon and color based on service type
   const getServiceVisuals = () => {
     const sub = place.subCategory;
+    const desc = (place.description?.en || '').toLowerCase();
     
     switch (sub) {
       case 'mosques':
@@ -40,6 +41,10 @@ const ServiceCard: React.FC<Props> = ({ place, lang, onSelect }) => {
         return { icon: <Car size={32} />, color: 'bg-slate-600', bg: 'bg-slate-50' };
       case 'fuel':
         return { icon: <Fuel size={32} />, color: 'bg-yellow-600', bg: 'bg-yellow-50' };
+      case 'transportation':
+        if (desc.includes('train')) return { icon: <TrainFront size={32} />, color: 'bg-cyan-600', bg: 'bg-cyan-50' };
+        if (desc.includes('airport') || desc.includes('aerodrome')) return { icon: <Plane size={32} />, color: 'bg-sky-600', bg: 'bg-sky-50' };
+        return { icon: <Bus size={32} />, color: 'bg-blue-500', bg: 'bg-blue-50' };
       default:
         return { icon: <HelpCircle size={32} />, color: 'bg-slate-400', bg: 'bg-slate-50' };
     }

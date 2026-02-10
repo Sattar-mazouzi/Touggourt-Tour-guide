@@ -103,4 +103,5 @@ export const translations: TranslationDict = {
   parking: { en: 'Parking', ar: 'مواقف', fr: 'Parkings' },
   fuel: { en: 'Fuel', ar: 'وقود', fr: 'Stations' },
   stores: { en: 'Stores', ar: 'متاجر', fr: 'Magasins' },
+  transportation: { en: 'Transportation', ar: 'النقل والمواصلات', fr: 'Transport' },
 };

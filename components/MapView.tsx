@@ -33,10 +33,11 @@ const getRouteColor = (category: string = 'all') => {
   return '#ea580c'; // Orange (Default / All)
 };
 
-const getServiceMapVisuals = (sub: string) => {
+const getServiceMapVisuals = (sub: string, description?: string) => {
   const iconSize = 20;
   let svg = '';
   let bg = 'bg-slate-500';
+  const desc = (description || '').toLowerCase();
 
   switch (sub) {
     case 'mosques':
@@ -79,6 +80,18 @@ const getServiceMapVisuals = (sub: string) => {
     case 'fuel':
       bg = 'bg-yellow-600';
       svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><path d="M4 9h11"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L20 7"/></svg>`;
+      break;
+    case 'transportation':
+      if (desc.includes('train')) {
+        bg = 'bg-cyan-600';
+        svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M15 18H9"/><path d="M12 18V4"/><path d="M7 10V4h10v6"/><path d="M3 10h18"/><path d="M3 14h18"/><path d="M3 18h18"/></svg>`;
+      } else if (desc.includes('airport') || desc.includes('aerodrome')) {
+        bg = 'bg-sky-600';
+        svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.7 5.2c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>`;
+      } else {
+        bg = 'bg-blue-500';
+        svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="12" x="4" y="3" rx="2"/><path d="M4 11h16"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/><path d="M6 19v2"/><path d="M18 19v2"/></svg>`;
+      }
       break;
     default:
       bg = 'bg-slate-400';
@@ -310,7 +323,7 @@ const MapView: React.FC<Props> = ({
 
       if (showPreviews) {
         if (place.category === 'services' || place.id.startsWith('osm-')) {
-          const visuals = getServiceMapVisuals(place.subCategory || 'all');
+          const visuals = getServiceMapVisuals(place.subCategory || 'all', place.description?.[lang]);
           markerEl.innerHTML = `
             <div class="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
               ${badgeHtml}

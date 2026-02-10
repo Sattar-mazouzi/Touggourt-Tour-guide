@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Place, Language, CategoryConfig } from '../types';
-import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box, ChevronRight, Landmark, Coffee, Bed, Store, PlusSquare, Building2, GraduationCap, Car, Fuel, Utensils, HelpCircle } from 'lucide-react';
+import { X, MapPin, Star, Navigation, Share2, Info, Maximize2, Heart, Play, Youtube, Box, ChevronRight, Landmark, Coffee, Bed, Store, PlusSquare, Building2, GraduationCap, Car, Fuel, Utensils, HelpCircle, Bus, TrainFront, Plane } from 'lucide-react';
 import { translations } from '../i18n';
 import MapView from './MapView';
 import ReviewSection from './ReviewSection';
@@ -137,7 +137,15 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const categoryLabel = categoryConfig?.[place.category]?.[lang] || t[place.category]?.[lang] || place.category;
 
   const getServiceVisuals = () => {
-    const desc = (place.description.en || '').toLowerCase();
+    const sub = place.subCategory;
+    const desc = (place.description?.en || '').toLowerCase();
+
+    if (sub === 'transportation') {
+      if (desc.includes('train')) return { icon: <TrainFront size={48} />, color: 'bg-cyan-600' };
+      if (desc.includes('airport') || desc.includes('aerodrome')) return { icon: <Plane size={48} />, color: 'bg-sky-600' };
+      return { icon: <Bus size={48} />, color: 'bg-blue-500' };
+    }
+
     if (desc.includes('mosque')) return { icon: <Landmark size={48} />, color: 'bg-emerald-500' };
     if (desc.includes('coffee') || desc.includes('cafe')) return { icon: <Coffee size={48} />, color: 'bg-orange-500' };
     if (desc.includes('hotel')) return { icon: <Bed size={48} />, color: 'bg-indigo-500' };

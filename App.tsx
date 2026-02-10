@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare, Bus } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
@@ -50,7 +50,7 @@ const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
 };
 
 const SERVICE_SUBCATEGORIES = [
-  'all', 'hotels', 'restaurants', 'coffee', 'mosques', 'banks', 'stores', 'pharmacies', 'hospitals', 'schools', 'parking', 'fuel'
+  'all', 'hotels', 'restaurants', 'coffee', 'mosques', 'banks', 'stores', 'pharmacies', 'hospitals', 'schools', 'parking', 'fuel', 'transportation'
 ];
 
 const AppContent: React.FC = () => {
@@ -123,6 +123,7 @@ const AppContent: React.FC = () => {
       case 'schools': return <GraduationCap size={14} />;
       case 'parking': return <Car size={14} />;
       case 'fuel': return <Fuel size={14} />;
+      case 'transportation': return <Bus size={14} />;
       default: return <Sparkles size={14} />;
     }
   };
@@ -136,6 +137,7 @@ const AppContent: React.FC = () => {
     if (tags.shop) return 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?q=80&w=800&auto=format&fit=crop';
     if (tags.amenity === 'parking') return 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=80&w=800&auto=format&fit=crop';
     if (tags.amenity === 'fuel') return 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=800&auto=format&fit=crop';
+    if (tags.amenity === 'bus_station' || tags.railway === 'station' || tags.aeroway === 'aerodrome') return 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=800&auto=format&fit=crop';
     return 'https://images.unsplash.com/photo-1449156001931-82992a47279c?q=80&w=800&auto=format&fit=crop';
   };
 
@@ -144,6 +146,7 @@ const AppContent: React.FC = () => {
     
     setIsFetchingServices(true);
     try {
+      // 1. Calculate bounding box using ALL available places to ensure we cover the entire tourist area
       let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
       places.forEach(p => {
         if (p.location.lat < minLat) minLat = p.location.lat;
@@ -152,16 +155,21 @@ const AppContent: React.FC = () => {
         if (p.location.lng > maxLng) maxLng = p.location.lng;
       });
 
-      const buffer = 0.05; 
+      // Expand buffer slightly for better coverage of transport hubs which might be on city outskirts
+      const buffer = 0.08; 
       const bbox = `${minLat - buffer},${minLng - buffer},${maxLat + buffer},${maxLng + buffer}`;
 
-      const query = `[out:json][timeout:25];
+      // 2. Query OSM for amenities, shops, tourism, and specific transport hubs
+      // Changed from 'node' to 'nwr' (node, way, relation) to capture area-based features like airports
+      const query = `[out:json][timeout:30];
         (
-          node["amenity"~"restaurant|cafe|fast_food|bank|atm|pharmacy|hospital|post_office|marketplace|clinic|mosque|place_of_worship|parking|fuel|school|university"](${bbox});
-          node["shop"](${bbox});
-          node["tourism"~"hotel|museum|hostel|guest_house|instruction|attraction"](${bbox});
+          nwr["amenity"~"restaurant|cafe|fast_food|bank|atm|pharmacy|hospital|post_office|marketplace|clinic|mosque|place_of_worship|parking|fuel|school|university|bus_station|taxi"](${bbox});
+          nwr["shop"](${bbox});
+          nwr["tourism"~"hotel|museum|hostel|guest_house|information|attraction"](${bbox});
+          nwr["railway"~"station"](${bbox});
+          nwr["aeroway"~"aerodrome"](${bbox});
         );
-        out body;`;
+        out center;`;
 
       const response = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
       const data = await response.json();
@@ -171,9 +179,15 @@ const AppContent: React.FC = () => {
           const amenity = el.tags.amenity;
           const shop = el.tags.shop;
           const tourism = el.tags.tourism;
+          const railway = el.tags.railway;
+          const aeroway = el.tags.aeroway;
           
           let sub: string = 'all';
-          if (amenity === 'restaurant' || amenity === 'fast_food' || amenity === 'food_court') sub = 'restaurants';
+          // Categorization logic
+          if (amenity === 'bus_station' || railway === 'station' || aeroway === 'aerodrome' || amenity === 'taxi') {
+            sub = 'transportation';
+          }
+          else if (amenity === 'restaurant' || amenity === 'fast_food' || amenity === 'food_court') sub = 'restaurants';
           else if (amenity === 'cafe') sub = 'coffee';
           else if (amenity === 'bank' || amenity === 'atm') sub = 'banks';
           else if (amenity === 'mosque' || amenity === 'place_of_worship') sub = 'mosques';
@@ -193,20 +207,36 @@ const AppContent: React.FC = () => {
                 ar: translations[sub]?.ar || 'خدمة محلية',
                 fr: translations[sub]?.fr || 'Service local'
               };
+
+          // Generate a specific description for transit hubs
+          let description = { 
+            en: `Service point available in Touggourt area. Type: ${sub}`, 
+            ar: `نقطة خدمة متوفرة في منطقة تقرت. النوع: ${t[sub]?.ar || sub}`, 
+            fr: `Point de service disponible dans la zone de Touggourt. Type: ${sub}` 
+          };
+
+          if (sub === 'transportation') {
+            const transitType = aeroway === 'aerodrome' ? 'Airport' : (railway === 'station' ? 'Train Station' : 'Bus Station');
+            description = {
+              en: `${transitType} serving the Touggourt region.`,
+              ar: `${transitType === 'Airport' ? 'مطار' : (transitType === 'Train Station' ? 'محطة قطار' : 'محطة حافلات')} يخدم منطقة تقرت.`,
+              fr: `${transitType === 'Airport' ? 'Aéroport' : (transitType === 'Train Station' ? 'Gare ferroviaire' : 'Gare routière')} desservant la région de Touggourt.`
+            };
+          }
           
+          // For ways/relations, OSM center is in el.center.lat/lon
+          const lat = el.lat || el.center?.lat;
+          const lon = el.lon || el.center?.lon;
+
           return {
             id: `osm-${el.id}`,
             name: nameObj,
-            description: { 
-              en: `Service point available in Touggourt area. Type: ${sub}`, 
-              ar: `نقطة خدمة متوفرة في منطقة تقرت. النوع: ${t[sub]?.ar || sub}`, 
-              fr: `Point de service disponible dans la zone de Touggourt. Type: ${sub}` 
-            },
+            description: description,
             category: 'services',
             subCategory: sub,
             rating: 4.0 + (Math.random() * 0.8),
             imageUrl: { cover: getDynamicServiceImage(el.tags) },
-            location: { lat: el.lat, lng: el.lon },
+            location: { lat: lat, lng: lon },
             address: { 
               en: el.tags['addr:street'] || 'Touggourt, Algeria', 
               ar: el.tags['addr:street'] || 'تقرت، الجزائر', 
@@ -214,7 +244,7 @@ const AppContent: React.FC = () => {
             },
             featured: false
           };
-        });
+        }).filter((p: any) => p.location.lat && p.location.lng);
         
         const unique = mapped.reduce((acc: Place[], current) => {
           const x = acc.find(item => item.name.en === current.name.en && Math.abs(item.location.lat - current.location.lat) < 0.001);
