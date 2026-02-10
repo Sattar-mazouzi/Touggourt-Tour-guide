@@ -305,6 +305,7 @@ const AppContent: React.FC = () => {
             description: data.description || { en: '', ar: '', fr: '' },
             category: (data.category || 'all').toLowerCase() as Category,
             rating: Number(data.rating) || 0,
+            order: Number(data.order) || 0,
             imageUrl: imgObj,
             address: data.address || { en: 'No address', ar: 'لا يوجد عنوان', fr: 'Aucune adresse' },
             location: { 
@@ -411,7 +412,7 @@ const AppContent: React.FC = () => {
     
     const sourceData = selectedCategory === 'services' ? dynamicServices : places;
     
-    return sourceData.filter(p => {
+    const filtered = sourceData.filter(p => {
       if (selectedCategory === 'services') {
         if (selectedSubCategory !== 'all' && p.subCategory !== selectedSubCategory) return false;
       }
@@ -424,6 +425,9 @@ const AppContent: React.FC = () => {
       const isFav = activeTab === 'favorites' ? favorites.includes(p.id) : true;
       return matchesSearch && matchesCategory && isFav;
     });
+
+    // Numerical ascending sort by the 'order' field
+    return [...filtered].sort((a, b) => (a.order || 0) - (b.order || 0));
   }, [searchQuery, selectedCategory, selectedSubCategory, activeTab, favorites, places, dynamicServices, lang]);
 
   const filteredGallery = useMemo(() => {
