@@ -33,6 +33,61 @@ const getRouteColor = (category: string = 'all') => {
   return '#ea580c'; // Orange (Default / All)
 };
 
+const getServiceMapVisuals = (sub: string) => {
+  const iconSize = 20;
+  let svg = '';
+  let bg = 'bg-slate-500';
+
+  switch (sub) {
+    case 'mosques':
+      bg = 'bg-emerald-500';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="21" x2="21" y2="21"/><path d="M4 21V10l8-7 8 7v11"/><path d="M9 21v-8a3 3 0 0 1 6 0v8"/></svg>`;
+      break;
+    case 'coffee':
+      bg = 'bg-orange-500';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>`;
+      break;
+    case 'hotels':
+      bg = 'bg-indigo-500';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12"/><path d="M2 10h20"/><path d="M2 14h20"/><path d="M5 20v-4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v4"/><path d="M11 20v-4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4"/></svg>`;
+      break;
+    case 'restaurants':
+      bg = 'bg-rose-500';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>`;
+      break;
+    case 'banks':
+      bg = 'bg-blue-600';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M5 6l7-4 7 4"/><path d="M4 10v11"/><path d="M20 10v11"/><path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/></svg>`;
+      break;
+    case 'pharmacies':
+    case 'hospitals':
+      bg = 'bg-red-500';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>`;
+      break;
+    case 'schools':
+      bg = 'bg-violet-600';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+      break;
+    case 'stores':
+      bg = 'bg-amber-500';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+      break;
+    case 'parking':
+      bg = 'bg-slate-600';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>`;
+      break;
+    case 'fuel':
+      bg = 'bg-yellow-600';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><path d="M4 9h11"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L20 7"/></svg>`;
+      break;
+    default:
+      bg = 'bg-slate-400';
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+  }
+
+  return { svg, bg };
+};
+
 const MapView: React.FC<Props> = ({ 
   places, 
   lang, 
@@ -254,19 +309,34 @@ const MapView: React.FC<Props> = ({
           : '';
 
       if (showPreviews) {
-        const coverImg = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
-        markerEl.innerHTML = `
-          <div class="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
-            ${badgeHtml}
-            <div class="w-14 h-14 rounded-2xl overflow-hidden border-4 border-white shadow-2xl relative">
-              <img src="${coverImg}" class="w-full h-full object-cover" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        if (place.category === 'services' || place.id.startsWith('osm-')) {
+          const visuals = getServiceMapVisuals(place.subCategory || 'all');
+          markerEl.innerHTML = `
+            <div class="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
+              ${badgeHtml}
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 border-white shadow-2xl relative ${visuals.bg}">
+                <div class="text-white">${visuals.svg}</div>
+              </div>
+              <div class="bg-white/95 backdrop-blur-md px-2 py-1 rounded-xl shadow-xl border border-white/50 -mt-2 relative z-10 max-w-[90px]">
+                <p class="text-[7px] font-black text-slate-900 truncate text-center">${place.name[lang]}</p>
+              </div>
             </div>
-            <div class="bg-white/95 backdrop-blur-md px-2 py-1 rounded-xl shadow-xl border border-white/50 -mt-2 relative z-10 max-w-[90px]">
-              <p class="text-[7px] font-black text-slate-900 truncate text-center">${place.name[lang]}</p>
+          `;
+        } else {
+          const coverImg = place.imageUrl?.cover || 'https://images.unsplash.com/photo-1544411047-c4915842273b?q=80&w=800&auto=format&fit=crop';
+          markerEl.innerHTML = `
+            <div class="relative flex flex-col items-center gap-1 group active:scale-95 transition-transform animate-in zoom-in duration-300">
+              ${badgeHtml}
+              <div class="w-14 h-14 rounded-2xl overflow-hidden border-4 border-white shadow-2xl relative">
+                <img src="${coverImg}" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              </div>
+              <div class="bg-white/95 backdrop-blur-md px-2 py-1 rounded-xl shadow-xl border border-white/50 -mt-2 relative z-10 max-w-[90px]">
+                <p class="text-[7px] font-black text-slate-900 truncate text-center">${place.name[lang]}</p>
+              </div>
             </div>
-          </div>
-        `;
+          `;
+        }
       } else {
         markerEl.innerHTML = `
           <div class="relative">
