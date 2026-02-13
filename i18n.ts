@@ -12,7 +12,7 @@ export const translations: TranslationDict = {
   list: { en: 'List', ar: 'قائمة', fr: 'Liste' },
   featured: { en: 'Featured Places', ar: 'أماكن مميزة', fr: 'Lieux Incontournables' },
   categories: { en: 'Tourist and historical routes', ar: 'المسارات السياحية والتاريخية', fr: 'itinéraires touristiques et historiques' },
-  searchPlaceholder: { en: 'Search places in Touggourt...', ar: 'ابحث عن أماكن في تقرت...', fr: 'Rechercher à Touggourt...' },
+  searchPlaceholder: { en: 'Search places in Touggourt...', ar: 'ابحث عن أماكن في توقرت...', fr: 'Rechercher à Touggourt...' },
   all: { en: 'All', ar: 'الكل', fr: 'Tous' },
   historical: { en: 'Historical', ar: 'تاريخي', fr: 'Historique' },
   religion: { en: 'Religious', ar: 'ديني', fr: 'المدار الديني' },
@@ -24,7 +24,7 @@ export const translations: TranslationDict = {
   noPlacesFound: { en: 'No places found', ar: 'لم يتم العور على أماكن', fr: 'Aucun lieu trouvé' },
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات', fr: 'Itinéraire' },
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
-  welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في تقرت', fr: 'Bienvenue à Touggourt' },
+  welcome: { en: 'Welcome to Touggourt', ar: 'مرحباً بكم في توقرت', fr: 'Bienvenue à Touggourt' },
   discoverPrompt: { en: 'Discover the hidden gems in the heart of the Southeast', ar: ' اكتشف الجواهر الخفية في قلب الجنوب الشرقي', fr: 'Découvrez les joyaux cachés au cœur du Sud-Est' },
   cityBioTitle: { 
     en: 'Discover Our Joyous Touggourt', 
@@ -38,7 +38,7 @@ export const translations: TranslationDict = {
   },
   cityBioDescription: { 
     en: 'Touggourt, known as as the "City of a Thousand Domes," is a historic oasis city in southeastern Algeria. It serves as the gateway to the deep Sahara and the heart of the Oued Righ region.',
-    ar: 'تقرت، المعروفة باسم "مدينة الألف قبة"، هي مدينة واحات تاريخية في جنوب شرق الجزائر. تعد بوابة للصحراء الكبرى وقلب منطقة وادي ريغ.',
+    ar: 'توقرت، المعروفة باسم "مدينة الألف قبة"، هي مدينة واحات تاريخية في جنوب شرق الجزائر. تعد بوابة للصحراء الكبرى وقلب منطقة وادي ريغ.',
     fr: 'Touggourt, surnommée la "Ville aux mille coupoles", est une ville oasis historique du sud-est de l\'Algérie. Elle est la porte d\'entrée du grand Sahara et le cœur de l\'Oued Righ.'
   },
   loginRequired: { en: 'Login Required', ar: 'يجب تسجيل الدخول', fr: 'Connexion requise' },

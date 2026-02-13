@@ -6,7 +6,7 @@ export const PLACES: Place[] = [
     id: '1',
     name: { 
       en: 'Great Mosque of Touggourt', 
-      ar: 'المسجد الكبير بتقرت', 
+      ar: 'المسجد الكبير توقرت', 
       fr: 'Grande Mosquée de Touggourt' 
     },
     description: { 
@@ -27,7 +27,7 @@ export const PLACES: Place[] = [
     },
     address: { 
       en: 'Center of Touggourt, Algeria', 
-      ar: 'وسط مدينة تقرت، الجزائر', 
+      ar: 'وسط مدينة توقرت الجزائر', 
       fr: 'Centre de Touggourt, Algérie' 
     },
     featured: true
@@ -36,7 +36,7 @@ export const PLACES: Place[] = [
     id: '2',
     name: { 
       en: 'The Palmeraie of Touggourt', 
-      ar: 'واحات النخيل بتقرت', 
+      ar: 'واحات النخيل توقرت', 
       fr: 'La Palmeraie de Touggourt' 
     },
     description: {

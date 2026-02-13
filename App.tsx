@@ -211,7 +211,7 @@ const AppContent: React.FC = () => {
           // Generate a specific description for transit hubs
           let description = { 
             en: `Service point available in Touggourt area. Type: ${sub}`, 
-            ar: `نقطة خدمة متوفرة في منطقة تقرت. النوع: ${t[sub]?.ar || sub}`, 
+            ar: `نقطة خدمة متوفرة في منطقة توقرت. النوع: ${t[sub]?.ar || sub}`, 
             fr: `Point de service disponible dans la zone de Touggourt. Type: ${sub}` 
           };
 
@@ -219,7 +219,7 @@ const AppContent: React.FC = () => {
             const transitType = aeroway === 'aerodrome' ? 'Airport' : (railway === 'station' ? 'Train Station' : 'Bus Station');
             description = {
               en: `${transitType} serving the Touggourt region.`,
-              ar: `${transitType === 'Airport' ? 'مطار' : (transitType === 'Train Station' ? 'محطة قطار' : 'محطة حافلات')} يخدم منطقة تقرت.`,
+              ar: `${transitType === 'Airport' ? 'مطار' : (transitType === 'Train Station' ? 'محطة قطار' : 'محطة حافلات')} يخدم منطقة توقرت.`,
               fr: `${transitType === 'Airport' ? 'Aéroport' : (transitType === 'Train Station' ? 'Gare ferroviaire' : 'Gare routière')} desservant la région de Touggourt.`
             };
           }
@@ -239,7 +239,7 @@ const AppContent: React.FC = () => {
             location: { lat: lat, lng: lon },
             address: { 
               en: el.tags['addr:street'] || 'Touggourt, Algeria', 
-              ar: el.tags['addr:street'] || 'تقرت، الجزائر', 
+              ar: el.tags['addr:street'] || 'توقرت. الجزائر', 
               fr: el.tags['addr:street'] || 'Touggourt, Algérie' 
             },
             featured: false
