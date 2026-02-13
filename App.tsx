@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare, Bus } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare, Bus, Trees } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
@@ -50,7 +50,7 @@ const ROUTE_TITLES: Record<string, { en: string; ar: string; fr: string }> = {
 };
 
 const SERVICE_SUBCATEGORIES = [
-  'all', 'hotels', 'restaurants', 'coffee', 'mosques', 'banks', 'stores', 'pharmacies', 'hospitals', 'schools', 'parking', 'fuel', 'transportation'
+  'all', 'hotels', 'restaurants', 'coffee', 'mosques', 'banks', 'stores', 'pharmacies', 'hospitals', 'schools', 'parking', 'fuel', 'transportation', 'parks'
 ];
 
 const AppContent: React.FC = () => {
@@ -124,6 +124,7 @@ const AppContent: React.FC = () => {
       case 'parking': return <Car size={14} />;
       case 'fuel': return <Fuel size={14} />;
       case 'transportation': return <Bus size={14} />;
+      case 'parks': return <Trees size={14} />;
       default: return <Sparkles size={14} />;
     }
   };
@@ -138,6 +139,7 @@ const AppContent: React.FC = () => {
     if (tags.amenity === 'parking') return 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=80&w=800&auto=format&fit=crop';
     if (tags.amenity === 'fuel') return 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=800&auto=format&fit=crop';
     if (tags.amenity === 'bus_station' || tags.railway === 'station' || tags.aeroway === 'aerodrome') return 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=800&auto=format&fit=crop';
+    if (tags.leisure === 'park' || tags.leisure === 'garden' || tags.place === 'square') return 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop';
     return 'https://images.unsplash.com/photo-1449156001931-82992a47279c?q=80&w=800&auto=format&fit=crop';
   };
 
@@ -159,7 +161,7 @@ const AppContent: React.FC = () => {
       const buffer = 0.08; 
       const bbox = `${minLat - buffer},${minLng - buffer},${maxLat + buffer},${maxLng + buffer}`;
 
-      // 2. Query OSM for amenities, shops, tourism, and specific transport hubs
+      // 2. Query OSM for amenities, shops, tourism, transport, and parks/squares
       // Changed from 'node' to 'nwr' (node, way, relation) to capture area-based features like airports
       const query = `[out:json][timeout:30];
         (
@@ -168,6 +170,8 @@ const AppContent: React.FC = () => {
           nwr["tourism"~"hotel|museum|hostel|guest_house|information|attraction"](${bbox});
           nwr["railway"~"station"](${bbox});
           nwr["aeroway"~"aerodrome"](${bbox});
+          nwr["leisure"~"park|garden"](${bbox});
+          nwr["place"~"square"](${bbox});
         );
         out center;`;
 
@@ -181,10 +185,15 @@ const AppContent: React.FC = () => {
           const tourism = el.tags.tourism;
           const railway = el.tags.railway;
           const aeroway = el.tags.aeroway;
+          const leisure = el.tags.leisure;
+          const placeTag = el.tags.place;
           
           let sub: string = 'all';
           // Categorization logic
-          if (amenity === 'bus_station' || railway === 'station' || aeroway === 'aerodrome' || amenity === 'taxi') {
+          if (leisure === 'park' || leisure === 'garden' || placeTag === 'square') {
+            sub = 'parks';
+          }
+          else if (amenity === 'bus_station' || railway === 'station' || aeroway === 'aerodrome' || amenity === 'taxi') {
             sub = 'transportation';
           }
           else if (amenity === 'restaurant' || amenity === 'fast_food' || amenity === 'food_court') sub = 'restaurants';
@@ -208,7 +217,7 @@ const AppContent: React.FC = () => {
                 fr: translations[sub]?.fr || 'Service local'
               };
 
-          // Generate a specific description for transit hubs
+          // Generate a specific description
           let description = { 
             en: `Service point available in Touggourt area. Type: ${sub}`, 
             ar: `نقطة خدمة متوفرة في منطقة توقرت. النوع: ${t[sub]?.ar || sub}`, 
@@ -221,6 +230,12 @@ const AppContent: React.FC = () => {
               en: `${transitType} serving the Touggourt region.`,
               ar: `${transitType === 'Airport' ? 'مطار' : (transitType === 'Train Station' ? 'محطة قطار' : 'محطة حافلات')} يخدم منطقة توقرت.`,
               fr: `${transitType === 'Airport' ? 'Aéroport' : (transitType === 'Train Station' ? 'Gare ferroviaire' : 'Gare routière')} desservant la région de Touggourt.`
+            };
+          } else if (sub === 'parks') {
+             description = {
+              en: `Public ${placeTag === 'square' ? 'square' : 'park'} for leisure and gathering.`,
+              ar: `مساحة عامة (${placeTag === 'square' ? 'ساحة' : 'منتزه'}) للراحة والتجمع.`,
+              fr: `Espace public (${placeTag === 'square' ? 'place' : 'parc'}) pour les loisirs et les rencontres.`
             };
           }
           

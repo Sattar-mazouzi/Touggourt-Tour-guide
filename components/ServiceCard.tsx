@@ -4,7 +4,7 @@ import { Place, Language } from '../types';
 import { 
   Star, MapPin, Landmark, Coffee, Bed, Store, 
   PlusSquare, Building2, GraduationCap, Car, Fuel, 
-  Utensils, HelpCircle, Bus, TrainFront, Plane
+  Utensils, HelpCircle, Bus, TrainFront, Plane, Trees
 } from 'lucide-react';
 
 interface Props {
@@ -45,6 +45,8 @@ const ServiceCard: React.FC<Props> = ({ place, lang, onSelect }) => {
         if (desc.includes('train')) return { icon: <TrainFront size={32} />, color: 'bg-cyan-600', bg: 'bg-cyan-50' };
         if (desc.includes('airport') || desc.includes('aerodrome')) return { icon: <Plane size={32} />, color: 'bg-sky-600', bg: 'bg-sky-50' };
         return { icon: <Bus size={32} />, color: 'bg-blue-500', bg: 'bg-blue-50' };
+      case 'parks':
+        return { icon: <Trees size={32} />, color: 'bg-emerald-600', bg: 'bg-emerald-50' };
       default:
         return { icon: <HelpCircle size={32} />, color: 'bg-slate-400', bg: 'bg-slate-50' };
     }
