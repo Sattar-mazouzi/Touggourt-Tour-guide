@@ -416,7 +416,13 @@ const AppContent: React.FC = () => {
   }, [categoryConfig]);
   
   const welcomeMessage = useMemo(() => {
-    if (cityBio?.name?.[lang]) return lang === 'ar' ? `مرحباً بكم في ${cityBio.name[lang]}` : (lang === 'fr' ? `Bienvenue à ${cityBio.name[lang]}` : `Welcome to ${cityBio.name[lang]}`);
+    if (cityBio?.name?.[lang]) {
+      return lang === 'ar' 
+        ? `مرحبا بكم في ولاية ${cityBio.name[lang]}` 
+        : (lang === 'fr' 
+            ? `Bienvenue dans l'État de ${cityBio.name[lang]}` 
+            : `Welcome to the state of ${cityBio.name[lang]}`);
+    }
     return t.welcome[lang];
   }, [cityBio, lang, t]);
 
@@ -629,6 +635,7 @@ const AppContent: React.FC = () => {
                   {/* Service Subcategory Pills (Only visible when Services is selected) */}
                   {selectedCategory === 'services' && (
                     <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide animate-in slide-in-from-top-2 duration-300">
+                      {/* Fixed typo: SERVICE_SUATEGORIES to SERVICE_SUBCATEGORIES */}
                       {SERVICE_SUBCATEGORIES.map(sub => (
                         <button 
                           key={sub} 

@@ -24,7 +24,7 @@ export const translations: TranslationDict = {
   noPlacesFound: { en: 'No places found', ar: 'لم يتم العور على أماكن', fr: 'Aucun lieu trouvé' },
   getDirections: { en: 'Get Directions', ar: 'احصل على الاتجاهات', fr: 'Itinéraire' },
   address: { en: 'Address', ar: 'العنوان', fr: 'Adresse' },
-  welcome: { en: 'Welcome to the state of Touggourt', ar: 'مرحبا بكم في ولاية توقرت', fr: 'Bienvenue dans l État de Touggourt' },
+  welcome: { en: 'Welcome to the state of Touggourt', ar: 'مرحبا بكم في ولاية توقرت', fr: "Bienvenue dans l'État de Touggourt" },
   discoverPrompt: { en: 'Discover the hidden gems in the heart of the Southeast', ar: ' اكتشف الجواهر الخفية في قلب الجنوب الشرقي', fr: 'Découvrez les joyaux cachés au cœur du Sud-Est' },
   cityBioTitle: { 
     en: 'Discover Our Joyous Touggourt', 
