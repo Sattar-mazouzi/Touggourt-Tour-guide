@@ -93,9 +93,9 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const threeDImage = place.imageUrl?.['3d_img'];
 
   const t3D = {
-    en: 'The monument after restoration',
-    ar: 'التصوير للمعلم بعد الترميم',
-    fr: 'Le monument après restauration'
+    en: 'Future vision of the monument after restoration',
+    ar: 'التصور المستقبلي للمعلم بعد الترميم',
+    fr: 'Vision future du monument après restauration'
   };
 
   const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
