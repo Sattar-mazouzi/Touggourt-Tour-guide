@@ -71,6 +71,10 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
   const [is3DOpen, setIs3DOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fullScreenScrollRef = useRef<HTMLDivElement>(null);
+  const thumbScrollRef = useRef<HTMLDivElement>(null);
+  const fullScreenThumbScrollRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScroll = useRef(false);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Expanded check to include manually categorized services
   const isService = place.id.startsWith('osm-') || place.category === 'services';
@@ -98,23 +102,61 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
     fr: 'Vision future du monument après restauration'
   };
 
-  const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
+  const handleScroll = (ref: React.RefObject<HTMLDivElement | null>) => {
+    if (isProgrammaticScroll.current) return;
+    
     if (ref.current) {
       const { scrollLeft, clientWidth } = ref.current;
-      const index = Math.round(scrollLeft / clientWidth);
-      setter(index);
+      if (clientWidth > 0) {
+        const index = Math.round(scrollLeft / clientWidth);
+        if (index !== activeImageIndex) {
+          setActiveImageIndex(index);
+        }
+      }
     }
   };
 
+  // Sync scroll position when entering/exiting full screen
   useEffect(() => {
-    if (isFullScreen && fullScreenScrollRef.current) {
-      const width = fullScreenScrollRef.current.clientWidth;
-      fullScreenScrollRef.current.scrollLeft = activeImageIndex * width;
-    } else if (!isFullScreen && scrollRef.current) {
-      const width = scrollRef.current.clientWidth;
-      scrollRef.current.scrollLeft = activeImageIndex * width;
+    const ref = isFullScreen ? fullScreenScrollRef : scrollRef;
+    if (ref.current) {
+      const width = ref.current.clientWidth;
+      if (width > 0) {
+        ref.current.scrollLeft = activeImageIndex * width;
+      }
     }
-  }, [isFullScreen, activeImageIndex]);
+  }, [isFullScreen]);
+
+  useEffect(() => {
+    const ref = isFullScreen ? fullScreenThumbScrollRef : thumbScrollRef;
+    if (ref.current) {
+      const activeThumb = ref.current.children[activeImageIndex] as HTMLElement;
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeImageIndex, isFullScreen]);
+
+  const goToImage = (index: number) => {
+    if (index === activeImageIndex) return;
+    
+    isProgrammaticScroll.current = true;
+    setActiveImageIndex(index);
+    
+    const ref = isFullScreen ? fullScreenScrollRef : scrollRef;
+    if (ref.current && ref.current.children[index]) {
+      ref.current.children[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+      });
+    }
+
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(() => {
+      isProgrammaticScroll.current = false;
+    }, 1000);
+  };
 
   const handleOpenMap = () => {
     if (!place.location || typeof place.location.lat !== 'number' || typeof place.location.lng !== 'number') return;
@@ -173,7 +215,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
                <p className="text-sm font-bold opacity-60 mt-2 uppercase tracking-widest">{place.address?.[lang]}</p>
             </div>
           ) : (
-            <div ref={scrollRef} onScroll={() => handleScroll(scrollRef, setActiveImageIndex)} className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide" onClick={() => setIsFullScreen(true)}>
+            <div ref={scrollRef} onScroll={() => handleScroll(scrollRef)} className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide" onClick={() => setIsFullScreen(true)}>
               {images.map((img, idx) => (
                 <div key={idx} className="w-full h-full flex-shrink-0 snap-center cursor-zoom-in">
                   <img src={img} alt={`${place.name[lang]} ${idx + 1}`} className="w-full h-full object-cover" />
@@ -183,10 +225,21 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
           )}
           
           {!isService && images.length > 1 && (
-            <div className="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-20">
-              {images.map((_, idx) => (
-                <div key={idx} className={`h-1.5 rounded-full transition-all duration-300 ${activeImageIndex === idx ? 'w-6 bg-white shadow-sm' : 'w-1.5 bg-white/40'}`} />
-              ))}
+            <div className="absolute bottom-4 left-0 right-0 px-6 z-20">
+              <div ref={thumbScrollRef} className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x">
+                {images.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToImage(idx);
+                    }}
+                    className={`relative w-16 h-12 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all snap-center ${activeImageIndex === idx ? 'border-orange-500 scale-110 shadow-lg' : 'border-white/50 opacity-60'}`}
+                  >
+                    <img src={img} className="w-full h-full object-cover" alt={`Thumbnail ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -196,7 +249,7 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
           </div>
 
           {!isService && (
-            <div className="absolute bottom-10 left-6 right-6 z-10 pointer-events-none">
+            <div className="absolute bottom-20 left-6 right-6 z-10 pointer-events-none">
               <div className="bg-black/20 backdrop-blur-sm p-4 rounded-3xl -mx-2">
                 <span className="inline-block bg-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-2">{categoryLabel}</span>
                 <h2 className="text-3xl font-black text-white drop-shadow-md leading-tight">{place.name[lang]}</h2>
@@ -283,11 +336,29 @@ const DetailsView: React.FC<Props> = ({ place, lang, categoryConfig, onClose }) 
           <div className="absolute top-0 left-0 w-full p-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-end z-[1110]">
             <button onClick={() => setIsFullScreen(false)} className="p-3 bg-white/10 backdrop-blur-xl text-white rounded-full"><X size={24} /></button>
           </div>
-          <div ref={fullScreenScrollRef} onScroll={() => handleScroll(fullScreenScrollRef, setActiveImageIndex)} className="flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+          <div ref={fullScreenScrollRef} onScroll={() => handleScroll(fullScreenScrollRef)} className="flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
             {images.map((img, idx) => (
               <div key={idx} className="w-full h-full flex-shrink-0 flex items-center justify-center snap-center p-2"><img src={img} alt="full" className="max-w-full max-h-full object-contain" /></div>
             ))}
           </div>
+          {images.length > 1 && (
+            <div className="p-6 bg-black/40 backdrop-blur-xl border-t border-white/10">
+              <div ref={fullScreenThumbScrollRef} className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x justify-center">
+                {images.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToImage(idx);
+                    }}
+                    className={`relative w-20 h-14 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all snap-center ${activeImageIndex === idx ? 'border-orange-500 scale-110 shadow-2xl' : 'border-white/20 opacity-40 hover:opacity-100'}`}
+                  >
+                    <img src={img} className="w-full h-full object-cover" alt={`Thumbnail ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
