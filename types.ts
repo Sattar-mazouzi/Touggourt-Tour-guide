@@ -8,6 +8,7 @@ export interface Place {
   category: Category;
   subCategory?: string; // New field for sub-filtering
   order?: number; // Sequence number for ordering
+  categoryOrder?: number; // Sequence number for ordering within a category
   rating: number;
   ratingCount?: number;
   favoritesCount?: number;
