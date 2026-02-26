@@ -67,6 +67,10 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fullScreenScrollRef = useRef<HTMLDivElement>(null);
+  const thumbScrollRef = useRef<HTMLDivElement>(null);
+  const fullScreenThumbScrollRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScroll = useRef(false);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const images = [
     item.images.img1,
@@ -82,23 +86,61 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
     item.videos?.video3,
   ].filter(Boolean) as string[];
 
-  const handleScroll = (ref: React.RefObject<HTMLDivElement | null>, setter: (i: number) => void) => {
+  const handleScroll = (ref: React.RefObject<HTMLDivElement | null>) => {
+    if (isProgrammaticScroll.current) return;
+    
     if (ref.current) {
       const { scrollLeft, clientWidth } = ref.current;
-      const index = Math.round(scrollLeft / clientWidth);
-      setter(index);
+      if (clientWidth > 0) {
+        const index = Math.round(scrollLeft / clientWidth);
+        if (index !== activeImageIndex) {
+          setActiveImageIndex(index);
+        }
+      }
     }
   };
 
+  // Sync scroll position when entering/exiting full screen
   useEffect(() => {
-    if (isFullScreen && fullScreenScrollRef.current) {
-      const width = fullScreenScrollRef.current.clientWidth;
-      fullScreenScrollRef.current.scrollLeft = activeImageIndex * width;
-    } else if (!isFullScreen && scrollRef.current) {
-      const width = scrollRef.current.clientWidth;
-      scrollRef.current.scrollLeft = activeImageIndex * width;
+    const ref = isFullScreen ? fullScreenScrollRef : scrollRef;
+    if (ref.current) {
+      const width = ref.current.clientWidth;
+      if (width > 0) {
+        ref.current.scrollLeft = activeImageIndex * width;
+      }
     }
-  }, [isFullScreen, activeImageIndex]);
+  }, [isFullScreen]);
+
+  useEffect(() => {
+    const ref = isFullScreen ? fullScreenThumbScrollRef : thumbScrollRef;
+    if (ref.current) {
+      const activeThumb = ref.current.children[activeImageIndex] as HTMLElement;
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeImageIndex, isFullScreen]);
+
+  const goToImage = (index: number) => {
+    if (index === activeImageIndex) return;
+    
+    isProgrammaticScroll.current = true;
+    setActiveImageIndex(index);
+    
+    const ref = isFullScreen ? fullScreenScrollRef : scrollRef;
+    if (ref.current && ref.current.children[index]) {
+      ref.current.children[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+      });
+    }
+
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(() => {
+      isProgrammaticScroll.current = false;
+    }, 1000);
+  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -118,7 +160,7 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
         <div className="relative h-[50vh] flex-shrink-0 bg-slate-900">
           <div 
             ref={scrollRef} 
-            onScroll={() => handleScroll(scrollRef, setActiveImageIndex)} 
+            onScroll={() => handleScroll(scrollRef)} 
             className="flex h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             onClick={() => setIsFullScreen(true)}
           >
@@ -135,17 +177,28 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
             <button onClick={handleShare} className="p-2.5 bg-black/20 backdrop-blur-xl text-white rounded-full shadow-lg border border-white/20"><Share2 size={24} /></button>
           </div>
 
-          {/* Indicators */}
+          {/* Indicators / Thumbnails */}
           {images.length > 1 && (
-            <div className="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-20">
-              {images.map((_, idx) => (
-                <div key={idx} className={`h-1.5 rounded-full transition-all duration-300 ${activeImageIndex === idx ? 'w-6 bg-orange-500' : 'w-1.5 bg-white/40'}`} />
-              ))}
+            <div className="absolute bottom-4 left-0 right-0 px-6 z-20">
+              <div ref={thumbScrollRef} className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x">
+                {images.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToImage(idx);
+                    }}
+                    className={`relative w-16 h-12 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all snap-center ${activeImageIndex === idx ? 'border-orange-500 scale-110 shadow-lg' : 'border-white/50 opacity-60'}`}
+                  >
+                    <img src={img} className="w-full h-full object-cover" alt={`Thumbnail ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
           {/* Maximize Button Overlay */}
-          <div className="absolute bottom-12 right-6 z-20">
+          <div className="absolute bottom-20 right-6 z-20">
             <button onClick={() => setIsFullScreen(true)} className="p-2 bg-black/30 backdrop-blur-md rounded-xl text-white border border-white/10">
               <Maximize2 size={18} />
             </button>
@@ -203,13 +256,8 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
                     <img 
                       key={i} 
                       src={img} 
-                      onClick={() => {
-                        setActiveImageIndex(i);
-                        if (scrollRef.current) {
-                          scrollRef.current.scrollLeft = i * scrollRef.current.clientWidth;
-                        }
-                      }}
-                      className={`w-full h-32 object-cover rounded-2xl shadow-sm cursor-pointer transition-all border-2 ${activeImageIndex === i ? 'border-orange-500 scale-[1.02]' : 'border-slate-100 hover:border-orange-200'}`} 
+                    onClick={() => goToImage(i)}
+                    className={`w-full h-32 object-cover rounded-2xl shadow-sm cursor-pointer transition-all border-2 ${activeImageIndex === i ? 'border-orange-500 scale-[1.02]' : 'border-slate-100 hover:border-orange-200'}`} 
                       alt="gallery thumb" 
                     />
                   ))}
@@ -233,7 +281,7 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
           </div>
           <div 
             ref={fullScreenScrollRef} 
-            onScroll={() => handleScroll(fullScreenScrollRef, setActiveImageIndex)} 
+            onScroll={() => handleScroll(fullScreenScrollRef)} 
             className="flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
           >
             {images.map((img, idx) => (
@@ -242,12 +290,24 @@ const GalleryDetailsView: React.FC<Props> = ({ item, lang, onClose }) => {
               </div>
             ))}
           </div>
-          {/* Swipe indicator at bottom */}
-          <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-1 pointer-events-none">
-             {images.map((_, idx) => (
-               <div key={idx} className={`h-1 rounded-full transition-all duration-300 ${activeImageIndex === idx ? 'w-8 bg-orange-500' : 'w-2 bg-white/20'}`} />
-             ))}
-          </div>
+          {images.length > 1 && (
+            <div className="p-6 bg-black/40 backdrop-blur-xl border-t border-white/10">
+              <div ref={fullScreenThumbScrollRef} className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x justify-center">
+                {images.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToImage(idx);
+                    }}
+                    className={`relative w-20 h-14 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all snap-center ${activeImageIndex === idx ? 'border-orange-500 scale-110 shadow-2xl' : 'border-white/20 opacity-40 hover:opacity-100'}`}
+                  >
+                    <img src={img} className="w-full h-full object-cover" alt={`Thumbnail ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
