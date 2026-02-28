@@ -105,4 +105,11 @@ export const translations: TranslationDict = {
   stores: { en: 'Stores', ar: 'متاجر', fr: 'Magasins' },
   transportation: { en: 'Transportation', ar: 'النقل والمواصلات', fr: 'Transport' },
   parks: { en: 'Parks & Squares', ar: 'منتزهات وساحات', fr: 'Parcs et Places' },
+  youtubeChannelTitle: { en: 'Our YouTube Channel', ar: 'قناتنا على اليوتوب', fr: 'Notre chaîne YouTube' },
+  youtubeChannelDesc: { 
+    en: "To discover our civilization and our cultural and tourist heritage in selected, filmed and recorded videos from local hands, follow our YouTube channel 'Memory of Touggourt'", 
+    ar: "لتكتشف حضارتنا وموروثنا الثقافي والسياحي في فديوهات منتقاة ومصورة ومسجلة من أيادي محلية تابع قناتنا على اليوتوب 'ذاكرة توقرت'", 
+    fr: "Pour découvrir notre civilisation et notre patrimoine culturel et touristique dans des vidéos sélectionnées, filmées et enregistrées par des mains locales, suivez notre chaîne YouTube 'Mémoire de Touggourt'" 
+  },
+  visitChannel: { en: 'Visit Channel', ar: 'زيارة القناة', fr: 'Visiter la chaîne' },
 };

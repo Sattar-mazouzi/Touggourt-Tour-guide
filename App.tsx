@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare, Bus, Trees } from 'lucide-react';
+import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare, Bus, Trees, Youtube } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 import { collection, getDocs, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
@@ -593,15 +593,31 @@ const AppContent: React.FC = () => {
 
           {activeTab === 'gallery' ? (
             <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-slate-900">{t.gallery[lang]}</h2>
-                <button 
-                  onClick={() => setGallerySortOrder(gallerySortOrder === 'desc' ? 'asc' : 'desc')}
-                  className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 active:scale-95 transition-all shadow-sm"
-                >
-                  {gallerySortOrder === 'desc' ? <SortDesc size={14} /> : <SortAsc size={14} />}
-                  {gallerySortOrder === 'desc' ? t.sortNewest[lang] : t.sortOldest[lang]}
-                </button>
+              <div className="sticky top-0 bg-slate-50/95 backdrop-blur-sm z-20 -mx-4 px-4 py-4 mb-4 border-b border-slate-100">
+                <div className="flex items-center justify-between max-w-xl mx-auto">
+                  <h2 className="text-xl font-bold text-slate-900">{t.gallery[lang]}</h2>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => {
+                        const element = document.getElementById('youtube-section');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-600 active:scale-95 transition-all shadow-sm"
+                    >
+                      <Youtube size={14} />
+                      {t.youtubeChannelTitle[lang]}
+                    </button>
+                    <button 
+                      onClick={() => setGallerySortOrder(gallerySortOrder === 'desc' ? 'asc' : 'desc')}
+                      className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 active:scale-95 transition-all shadow-sm"
+                    >
+                      {gallerySortOrder === 'desc' ? <SortDesc size={14} /> : <SortAsc size={14} />}
+                      {gallerySortOrder === 'desc' ? t.sortNewest[lang] : t.sortOldest[lang]}
+                    </button>
+                  </div>
+                </div>
               </div>
               {filteredGallery.length > 0 ? (
                 filteredGallery.map(item => (
@@ -613,6 +629,55 @@ const AppContent: React.FC = () => {
                   <p className="font-medium">{t.noPlacesFound[lang]}</p>
                 </div>
               )}
+
+              {/* YouTube Channel Subsection */}
+              <div id="youtube-section" className="mt-12 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                <div className="bg-gradient-to-br from-red-50 to-white border border-red-100 rounded-[32px] p-8 shadow-sm relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-red-500/10 transition-colors"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-red-600/20">
+                        <Youtube size={32} />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-black text-slate-900 leading-tight">
+                          {t.youtubeChannelTitle[lang]}
+                        </h3>
+                        <p className="text-red-600 text-xs font-bold uppercase tracking-widest mt-1">
+                          {lang === 'ar' ? 'ذاكرة توقرت' : (lang === 'fr' ? 'Mémoire de Touggourt' : 'Memory of Touggourt')}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className={`text-slate-600 leading-relaxed font-medium mb-8 ${lang === 'ar' ? 'text-lg' : 'text-base'}`}>
+                      {t.youtubeChannelDesc[lang]}
+                    </p>
+
+                    <div className="flex flex-wrap gap-4">
+                      <a 
+                        href="https://www.youtube.com/channel/UC5BbyNGM2QDPhSUk7iWtilQ" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-3 px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-red-600/20 active:scale-95 transition-all hover:bg-red-700"
+                      >
+                        <Youtube size={20} />
+                        {t.visitChannel[lang]}
+                      </a>
+                      <button 
+                        onClick={() => {
+                          const main = document.querySelector('main');
+                          if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="inline-flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-sm uppercase tracking-widest shadow-sm active:scale-95 transition-all hover:bg-slate-50"
+                      >
+                        <SortAsc className="rotate-180" size={20} />
+                        {lang === 'ar' ? 'العودة للأعلى' : (lang === 'fr' ? 'Haut de page' : 'Back to top')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
           ) : activeTab === 'about' ? (
             <AboutView lang={lang} data={aboutAppData} appLogo={appLogo} />
