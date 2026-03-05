@@ -74,6 +74,7 @@ const AboutView: React.FC<Props> = ({ lang, data, appLogo }) => {
     data.contributors.contributor_2,
     data.contributors.contributor_3,
     data.contributors.contributor_4,
+    data.contributors.contributor_5,
   ].filter(Boolean) as Contributor[];
 
   return (

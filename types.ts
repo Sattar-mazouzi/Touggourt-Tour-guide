@@ -144,6 +144,7 @@ export interface AboutAppData {
     contributor_2?: Contributor;
     contributor_3?: Contributor;
     contributor_4?: Contributor;
+    contributor_5?: Contributor;
   };
 }
 
