@@ -150,64 +150,18 @@ const AppContent: React.FC = () => {
     hasFetchedOSM.current = true;
     setIsFetchingServices(true);
     try {
-      // Hardcode bounding box for Touggourt city and immediate surroundings to ensure fast, reliable local services fetch
-      const minLat = 33.05;
-      const maxLat = 33.18;
-      const minLng = 6.00;
-      const maxLng = 6.15;
-
-      const bbox = `${minLat},${minLng},${maxLat},${maxLng}`;
-
-      // 2. Query OSM for amenities, shops, tourism, transport, and parks/squares
-      // Using node and way explicitly is often faster than nwr
-      const query = `[out:json][timeout:25];
-        (
-          node["amenity"](${bbox});
-          way["amenity"](${bbox});
-          node["shop"](${bbox});
-          way["shop"](${bbox});
-          node["tourism"](${bbox});
-          way["tourism"](${bbox});
-          node["leisure"](${bbox});
-          way["leisure"](${bbox});
-        );
-        out center;`;
-
-      const endpoints = [
-        'https://overpass-api.de/api/interpreter',
-        'https://lz4.overpass-api.de/api/interpreter',
-        'https://z.overpass-api.de/api/interpreter',
-        'https://overpass.kumi.systems/api/interpreter'
-      ];
-
-      let data = null;
-      
-      for (const endpoint of endpoints) {
-        try {
-          const response = await fetch(`${endpoint}?data=${encodeURIComponent(query)}`);
-          
-          if (!response.ok) continue;
-          
-          const text = await response.text();
-          // Check if the response is actually JSON and not an HTML error page
-          if (text.trim().startsWith('<')) {
-            console.warn(`Endpoint ${endpoint} returned HTML error.`);
-            continue;
-          }
-          
-          data = JSON.parse(text);
-          if (data && data.elements) {
-            break; // Successfully fetched data
-          }
-        } catch (e) {
-          console.warn(`Endpoint ${endpoint} failed:`, e);
-        }
+      // Fetch pre-processed local static data instead of live OSM data
+      const response = await fetch('/services.json');
+      if (!response.ok) {
+        throw new Error("Failed to fetch local services data.");
       }
+      const data = await response.json();
 
       if (!data || !data.elements) {
-        throw new Error("All Overpass endpoints failed or returned empty data.");
+        throw new Error("Local services data is empty or invalid.");
       }
-        const mapped: Place[] = data.elements.map((el: any) => {
+      
+      const mapped: Place[] = data.elements.map((el: any) => {
           const tags = el.tags || {};
           const amenity = tags.amenity;
           const shop = tags.shop;

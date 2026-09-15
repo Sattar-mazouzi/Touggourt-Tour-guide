@@ -1,0 +1,5653 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-09-15T21:31:02Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 3225428993,
+  "lat": 33.1178172,
+  "lon": 6.0615518,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "cafe"
+  }
+},
+{
+  "type": "node",
+  "id": 3243245391,
+  "lat": 33.1111714,
+  "lon": 6.0697409,
+  "tags": {
+    "addr:city": "تقرت",
+    "amenity": "taxi"
+  }
+},
+{
+  "type": "node",
+  "id": 3283272625,
+  "lat": 33.1058921,
+  "lon": 6.0588167,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "post_office",
+    "brand": "Algérie Poste",
+    "brand:ar": "بريد الجزائر",
+    "brand:email": "clientalgerieposte@poste.dz",
+    "brand:fr": "Algérie Poste",
+    "brand:website": "https://www.poste.dz/",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "fr:Algérie Poste",
+    "fax": "+21323923170",
+    "name": "مكتب البريد والمواصلات",
+    "name:ar": "مكتب البريد والمواصلات",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "08:30-12:30,13:30-16:30",
+    "operator": "Algérie Poste",
+    "operator:ar": "بريد الجزائر",
+    "operator:fr": "Algérie Poste",
+    "operator:website": "https://www.poste.dz/",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "fr:Algérie Poste",
+    "phone": "021711220"
+  }
+},
+{
+  "type": "node",
+  "id": 3285049917,
+  "lat": 33.1021022,
+  "lon": 6.0650805,
+  "tags": {
+    "amenity": "place_of_worship",
+    "denomination": "sunni",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 3285051685,
+  "lat": 33.1027349,
+  "lon": 6.0652111,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "dentist",
+    "healthcare": "dentist",
+    "name": "عيادة جراحة الأسنان الحكيم بن حيزية نصر الدين",
+    "name:ar": "عيادة جراحة الأسنان الحكيم بن حيزية نصر الدين",
+    "name:fr": "Cabinet dentaire Dr. Ben Hiziya Nasredine"
+  }
+},
+{
+  "type": "node",
+  "id": 3289023815,
+  "lat": 33.0930371,
+  "lon": 6.0603320,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية النصر",
+    "name:ar": "صيدلية النصر",
+    "name:fr": "Pharmacie Ennasr",
+    "operator": "جعفر بن عبد الصدوق",
+    "operator:ar": "جعفر بن عبد الصدوق",
+    "operator:fr": "Benabdessadok Djaafar",
+    "phone": "+21329 68 37 98"
+  }
+},
+{
+  "type": "node",
+  "id": 3682693869,
+  "lat": 33.1083467,
+  "lon": 6.0836581,
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:country": "DZ",
+    "addr:postcode": "30016",
+    "addr:suburb": "Tebesbest",
+    "amenity": "townhall",
+    "name": "Mairie de Tebesbest",
+    "opening_hours": "Su-Th 08:00-12:00,13:00-16:30; PH off"
+  }
+},
+{
+  "type": "node",
+  "id": 3682702063,
+  "lat": 33.1109226,
+  "lon": 6.0702953,
+  "tags": {
+    "amenity": "fuel",
+    "brand": "Naftal",
+    "brand:ar": "نفطال",
+    "brand:fr": "Naftal",
+    "brand:website": "https://www.naftal.dz/fr/",
+    "brand:wikidata": "Q3335043",
+    "brand:wikipedia": "fr:Naftal",
+    "fuel:lpg": "no"
+  }
+},
+{
+  "type": "node",
+  "id": 4105396243,
+  "lat": 33.1031075,
+  "lon": 6.0646882,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "cafe",
+    "name": "الجمل",
+    "name:ar": "الجمل",
+    "name:fr": "Aljamal"
+  }
+},
+{
+  "type": "node",
+  "id": 4337278697,
+  "lat": 33.1042770,
+  "lon": 6.0703085,
+  "tags": {
+    "description": "بيع العتاد،الحديد،صنع المباني المعدنية",
+    "name": "Eurl Fomaco",
+    "shop": "trade"
+  }
+},
+{
+  "type": "node",
+  "id": 4337278698,
+  "lat": 33.1076221,
+  "lon": 6.0710446,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "name": "متجر مراد بن شلوية لتصليح وبيع الساعات",
+    "name:ar": "متجر مراد بن شلوية لتصليح وبيع الساعات",
+    "name:fr": "Mourad Ben Chelouia",
+    "shop": "watches"
+  }
+},
+{
+  "type": "node",
+  "id": 4337278701,
+  "lat": 33.1064190,
+  "lon": 6.0700352,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية الفارابي",
+    "name:ar": "صيدلية الفارابي",
+    "name:fr": "Pharmacie El Farabi"
+  }
+},
+{
+  "type": "node",
+  "id": 4337278761,
+  "lat": 33.1075674,
+  "lon": 6.0694943,
+  "tags": {
+    "name": "Hôtel Hoggar",
+    "name:ar": "فندق الهقار",
+    "tourism": "hotel"
+  }
+},
+{
+  "type": "node",
+  "id": 4337278782,
+  "lat": 33.1074422,
+  "lon": 6.0690649,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "name": "محل ياسمين لتجهيز العرائس",
+    "name:ar": "محل ياسمين لتجهيز العرائس",
+    "name:fr": "Boutique Yasmine",
+    "shop": "clothes"
+  }
+},
+{
+  "type": "node",
+  "id": 4337278989,
+  "lat": 33.1077167,
+  "lon": 6.0701840,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية خديجة",
+    "name:ar": "صيدلية خديجة",
+    "name:fr": "Pharmacie Khadidja"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420788,
+  "lat": 33.1102951,
+  "lon": 6.0763007,
+  "tags": {
+    "addr:country": "DZ",
+    "name": "Major Informatique",
+    "shop": "computer"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420789,
+  "lat": 33.1094863,
+  "lon": 6.0749737,
+  "tags": {
+    "addr:country": "DZ",
+    "name": "سوبرات بدوي",
+    "name:ar": "سوبرات بدوي",
+    "name:fr": "Superette Badoui",
+    "shop": "convenience"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420790,
+  "lat": 33.1091662,
+  "lon": 6.0745851,
+  "tags": {
+    "amenity": "place_of_worship",
+    "name": "مسجد بن باديس سيدي بوعزيز",
+    "name:ar": "مسجد بن باديس سيدي بوعزيز",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420791,
+  "lat": 33.1091887,
+  "lon": 6.0740862,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "fast_food",
+    "cuisine": "pizza",
+    "name": "Pizzeria AC Milan"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420792,
+  "lat": 33.1089910,
+  "lon": 6.0740754,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية شتحونة",
+    "name:ar": "صيدلية شتحونة",
+    "name:fr": "Pharmacie Chahtouna"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420793,
+  "lat": 33.1091572,
+  "lon": 6.0729784,
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:country": "DZ",
+    "addr:postcode": "30002",
+    "name": "Alimentaire",
+    "shop": "convenience"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420794,
+  "lat": 33.1093302,
+  "lon": 6.0731528,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "cafe",
+    "name": "مقهى الجيجلي",
+    "name:ar": "مقهى الجيجلي",
+    "name:fr": "Café Jijeli"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420795,
+  "lat": 33.1084136,
+  "lon": 6.0726968,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "restaurant",
+    "name": "دوبارة حارة",
+    "name:ar": "دوبارة حارة",
+    "name:fr": "Doubara Hara"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420796,
+  "lat": 33.1085798,
+  "lon": 6.0728765,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "restaurant",
+    "name": "مطعم السعيد",
+    "name:ar": "مطعم السعيد",
+    "name:fr": "Restaurant Said"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420797,
+  "lat": 33.1086248,
+  "lon": 6.0726110,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "restaurant",
+    "name": "مطعم معراج",
+    "name:ar": "مطعم معراج",
+    "name:fr": "Restaurant Maaradj"
+  }
+},
+{
+  "type": "node",
+  "id": 4337420798,
+  "lat": 33.1090404,
+  "lon": 6.0724473,
+  "tags": {
+    "amenity": "taxi",
+    "name": "محطة لنقل المسافرين الجلفة",
+    "name:ar": "محطة لنقل المسافرين الجلفة",
+    "name:fr": "Gare de transport de passagers de Djelfa"
+  }
+},
+{
+  "type": "node",
+  "id": 4338343589,
+  "lat": 33.1321401,
+  "lon": 6.0827410,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "townhall",
+    "name": "مقر بلدية الزاوية العابدية",
+    "name:ar": "مقر بلدية الزاوية العابدية",
+    "name:fr": "Mairie de Zaouira El Abidia",
+    "opening_hours": "Su-Th 08:00-12:00,13:00-16:30; PH off"
+  }
+},
+{
+  "type": "node",
+  "id": 4338343674,
+  "lat": 33.1294162,
+  "lon": 6.0841406,
+  "tags": {
+    "amenity": "place_of_worship",
+    "name": "مسجد سيدي الأخضر",
+    "name:ar": "مسجد سيدي الأخضر",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 4338343675,
+  "lat": 33.1297621,
+  "lon": 6.0832662,
+  "tags": {
+    "amenity": "place_of_worship",
+    "name": "مسجد سيدي عبيد",
+    "name:ar": "مسجد سيدي عبيد",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 4338343676,
+  "lat": 33.1299013,
+  "lon": 6.0845269,
+  "tags": {
+    "amenity": "place_of_worship",
+    "name": "مسجد سيدي العابد",
+    "name:ar": "مسجد سيدي العابد",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 4338343913,
+  "lat": 33.1270397,
+  "lon": 6.0784906,
+  "tags": {
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "PHARMACIE HAMADOU",
+    "phone": "+213 29 69 19 82"
+  }
+},
+{
+  "type": "node",
+  "id": 4338356152,
+  "lat": 33.1265266,
+  "lon": 6.0820827,
+  "tags": {
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية الأمين (حي البدر الزاوية العابدية )",
+    "name:ar": "صيدلية الأمين (حي البدر الزاوية العابدية )",
+    "name:fr": "Pharmacie Amine",
+    "phone": "+213 29 69 12 06"
+  }
+},
+{
+  "type": "node",
+  "id": 4338380836,
+  "lat": 33.1169077,
+  "lon": 6.0738577,
+  "tags": {
+    "addr:country": "DZ",
+    "name": "مخبزة محمدي",
+    "name:ar": "مخبزة محمدي",
+    "name:fr": "Boulangerie Mohamdi",
+    "shop": "bakery"
+  }
+},
+{
+  "type": "node",
+  "id": 4338380999,
+  "lat": 33.1161683,
+  "lon": 6.0716234,
+  "tags": {
+    "amenity": "police",
+    "name": "Siège de la gendarmerie nationale de Touggourt",
+    "name:ar": "الدرك الوطني",
+    "name:ber": "ⵜⴰⵎⵙⴻⵜⵍⴰ ⵜⴰⵖⴻⵍⵏⴰⵡⵜ",
+    "name:fr": "Gendarmerie nationale",
+    "name:kab": "Tamsetla taɣelnawt",
+    "operator": "الدرك الوطني الجزائري",
+    "operator:ar": "الدرك الوطني الجزائري",
+    "operator:wikidata": "Q3100409",
+    "operator:wikipedia": "ar:الدرك الوطني الجزائري",
+    "phone": "+213 1055",
+    "wikidata": "Q3100409",
+    "wikipedia": "fr:Gendarmerie nationale (Algérie)"
+  }
+},
+{
+  "type": "node",
+  "id": 4424619705,
+  "lat": 33.0900867,
+  "lon": 6.0414100,
+  "tags": {
+    "shop": "sports"
+  }
+},
+{
+  "type": "node",
+  "id": 4462674291,
+  "lat": 33.1105981,
+  "lon": 6.0709250,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:postcode": "30200",
+    "amenity": "doctors",
+    "healthcare": "doctor",
+    "name": "عيادة ابن سينا للطب والجراحة",
+    "name:ar": "عيادة ابن سينا للطب والجراحة",
+    "name:fr": "Cabinet médico-chirurgical Ibn Sina",
+    "opening_hours": "Sa-Th 08:30-04:30; Fr off"
+  }
+},
+{
+  "type": "node",
+  "id": 4469455590,
+  "lat": 33.1001729,
+  "lon": 6.0600464,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "doctors",
+    "healthcare": "doctor",
+    "name": "د. موان طب العظام",
+    "name:ar": "د. موان طب العظام",
+    "name:en": "Dr. Mouan",
+    "name:fr": "Dr. Mouan"
+  }
+},
+{
+  "type": "node",
+  "id": 4469461289,
+  "lat": 33.1002491,
+  "lon": 6.0601099,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "dentist",
+    "healthcare": "dentist",
+    "name": "د. ضب. إ",
+    "name:ar": "د. ضب. إ",
+    "name:en": "Dr. Dob.I",
+    "name:fr": "Dr. Dob.I"
+  }
+},
+{
+  "type": "node",
+  "id": 4473010728,
+  "lat": 33.1151766,
+  "lon": 6.0866481,
+  "tags": {
+    "addr:street": "سيدي عمر",
+    "name": "سوبرات عبعوب",
+    "name:ar": "سوبرات عبعوب",
+    "name:fr": "Superette Abob",
+    "shop": "department_store"
+  }
+},
+{
+  "type": "node",
+  "id": 4486802891,
+  "lat": 33.1075065,
+  "lon": 6.0824713,
+  "tags": {
+    "amenity": "school",
+    "name": "مسجد المنار",
+    "name:ar": "مسجد المنار"
+  }
+},
+{
+  "type": "node",
+  "id": 4520653089,
+  "lat": 33.1066365,
+  "lon": 6.0821020,
+  "tags": {
+    "amenity": "school",
+    "name": "المدرسة الابتدائية بني اسود",
+    "name:ar": "المدرسة الابتدائية بني اسود",
+    "name:fr": "Ecole primaire Béni Assoud"
+  }
+},
+{
+  "type": "node",
+  "id": 4525782790,
+  "lat": 33.1082631,
+  "lon": 6.0732988,
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:housenumber": "6",
+    "email": "medali11.03.1989@gmail.com",
+    "name": "سيفو كوسميتيك",
+    "name:ar": "سيفو كوسميتيك",
+    "name:fr": "Sifou Cosmétique",
+    "phone": "0665913727",
+    "shop": "cosmetics"
+  }
+},
+{
+  "type": "node",
+  "id": 4556996090,
+  "lat": 33.1342674,
+  "lon": 6.0809126,
+  "tags": {
+    "amenity": "school",
+    "name": "ابتدائية عقبة بن نافع",
+    "name:ar": "ابتدائية عقبة بن نافع",
+    "name:fr": "École primaire Oqba Ibn Nafi"
+  }
+},
+{
+  "type": "node",
+  "id": 4557289491,
+  "lat": 33.1132860,
+  "lon": 6.0811374,
+  "tags": {
+    "addr:country": "DZ",
+    "name": "مكتبة الطاهر بن دومة",
+    "name:ar": "مكتبة الطاهر بن دومة",
+    "name:fr": "Bibliothèque Tahar Ben Douma",
+    "shop": "books"
+  }
+},
+{
+  "type": "node",
+  "id": 4557289690,
+  "lat": 33.1126344,
+  "lon": 6.0799351,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "cafe",
+    "name": "مقهى منصف",
+    "name:ar": "مقهى منصف",
+    "name:fr": "Café Moncef"
+  }
+},
+{
+  "type": "node",
+  "id": 4557303590,
+  "lat": 33.1343710,
+  "lon": 6.0821419,
+  "tags": {
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية ع الصمد",
+    "name:ar": "صيدلية ع الصمد",
+    "name:fr": "Pharmacie Samad"
+  }
+},
+{
+  "type": "node",
+  "id": 4557321189,
+  "lat": 33.1342929,
+  "lon": 6.0821356,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "dentist",
+    "name": "طبيب اسنان",
+    "name:ar": "طبيب اسنان",
+    "name:fr": "Dentiste"
+  }
+},
+{
+  "type": "node",
+  "id": 4574029091,
+  "lat": 33.1010020,
+  "lon": 6.0475664,
+  "tags": {
+    "amenity": "place_of_worship",
+    "name": "مسجد إبراهيم الخليل _ حي الرمال",
+    "name:ar": "مسجد إبراهيم الخليل _ حي الرمال",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 4583643697,
+  "lat": 33.1062114,
+  "lon": 6.0676635,
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "bank",
+    "name": "BDL",
+    "name:ar": "بنك التنمية المحلية",
+    "name:de": "BDL",
+    "name:fr": "Banque de développement local",
+    "name:kab": "Tabanka n Tneflit Tadigant",
+    "official_name:fr": "Banque de Développement Local",
+    "short_name:fr": "BDL",
+    "website": "https://www.bdl.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 4611325590,
+  "lat": 33.1262195,
+  "lon": 6.0763532,
+  "tags": {
+    "amenity": "school",
+    "name": "مدرسة مقداد محمد",
+    "name:ar": "مدرسة مقداد محمد",
+    "name:fr": "École Mohamed Mokdad"
+  }
+},
+{
+  "type": "node",
+  "id": 4611343790,
+  "lat": 33.1277606,
+  "lon": 6.0816699,
+  "tags": {
+    "amenity": "school",
+    "name": "ابتدائية البحري بلمنور",
+    "name:ar": "ابتدائية البحري بلمنور",
+    "name:fr": "École primaire Bahri Belmenouar"
+  }
+},
+{
+  "type": "node",
+  "id": 4753604222,
+  "lat": 33.1099250,
+  "lon": 6.0775451,
+  "tags": {
+    "addr:postcode": "30260",
+    "email": "imp.ibnbadiss@yahoo.fr",
+    "name": "مطبعة ابن باديس",
+    "name:ar": "مطبعة ابن باديس",
+    "name:fr": "Imprimerie Ibn Badiss",
+    "opening_hours": "Su-Th 08:00-16:00",
+    "phone": "029671026",
+    "shop": "copyshop"
+  }
+},
+{
+  "type": "node",
+  "id": 4951802623,
+  "lat": 33.0992254,
+  "lon": 6.0482665,
+  "tags": {
+    "addr:country": "DZ",
+    "addr:postcode": "30200",
+    "addr:street": "Hay Rimel 1",
+    "amenity": "pharmacy",
+    "name:fr": "Pharmacie Harkati"
+  }
+},
+{
+  "type": "node",
+  "id": 4958746521,
+  "lat": 33.0869251,
+  "lon": 6.0466667,
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "mosque",
+    "denomination": "sunni",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 5192429921,
+  "lat": 33.0839651,
+  "lon": 6.0511757,
+  "tags": {
+    "amenity": "place_of_worship",
+    "denomination": "sunni",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 5213012724,
+  "lat": 33.1014430,
+  "lon": 6.0597125,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "clinic",
+    "healthcare": "clinic",
+    "name": "طبيب القلب الزعيم",
+    "name:ar": "طبيب القلب الزعيم",
+    "name:fr": "Zaim",
+    "phone": "029685253"
+  }
+},
+{
+  "type": "node",
+  "id": 5213012725,
+  "lat": 33.0965857,
+  "lon": 6.0694768,
+  "tags": {
+    "amenity": "toilets",
+    "opening_hours": "Mo-Su 08:00-15:00, 23:00-23:00"
+  }
+},
+{
+  "type": "node",
+  "id": 5213012726,
+  "lat": 33.0966201,
+  "lon": 6.0680469,
+  "tags": {
+    "addr:street": "النزلة",
+    "amenity": "place_of_worship",
+    "denomination": "sunni",
+    "language:ar": "main",
+    "name": "مسجد الإمام علي(طالب تونسي)",
+    "name:ar": "مسجد الإمام علي(طالب تونسي)",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 5213020125,
+  "lat": 33.1090139,
+  "lon": 6.0706398,
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "cafe",
+    "name": "مقهى الجمل",
+    "name:ar": "مقهى الجمل",
+    "name:fr": "Café Djamal"
+  }
+},
+{
+  "type": "node",
+  "id": 5213020126,
+  "lat": 33.0941069,
+  "lon": 6.0684603,
+  "tags": {
+    "addr:city": "النزلة",
+    "addr:city:ar": "النزلة",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy"
+  }
+},
+{
+  "type": "node",
+  "id": 5213020128,
+  "lat": 33.1072203,
+  "lon": 6.0697370,
+  "tags": {
+    "name": "الجزائرية للطيران",
+    "name:ar": "الجزائرية للطيران",
+    "name:fr": "Air Algérie",
+    "shop": "ticket"
+  }
+},
+{
+  "type": "node",
+  "id": 5213025323,
+  "lat": 33.0939807,
+  "lon": 6.0680335,
+  "tags": {
+    "addr:city": "النزلة",
+    "addr:city:ar": "النزلة",
+    "amenity": "nursing_home",
+    "name": "مستوصف النزلة",
+    "name:ar": "مستوصف النزلة",
+    "name:en": "Clinic Nezla",
+    "name:fr": "Clinique Nezla"
+  }
+},
+{
+  "type": "node",
+  "id": 5213025422,
+  "lat": 33.1089251,
+  "lon": 6.0564763,
+  "tags": {
+    "addr:postcode": "30200",
+    "addr:street": "العرقوب",
+    "amenity": "place_of_worship",
+    "denomination": "sunni",
+    "language:ar": "main",
+    "name": "مسجد النور",
+    "name:ar": "مسجد النور",
+    "name:ber": "ⵜⴰⵎⴻⵣⴳⵉⴷⴰ ⴰⵏ ⵏⵓⵔ",
+    "name:fr": "Mosquée An-Nour",
+    "name:kab": "Tamezgida An-Nur",
+    "phone": "0676247183",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 5213025423,
+  "lat": 33.0990520,
+  "lon": 6.0691260,
+  "tags": {
+    "addr:street": "النزلة",
+    "amenity": "place_of_worship",
+    "denomination": "sunni",
+    "language:ar": "main",
+    "name": "مسجد الإمام علي",
+    "name:ar": "مسجد الإمام علي",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 5213025424,
+  "lat": 33.1006891,
+  "lon": 6.0686760,
+  "tags": {
+    "addr:street": "النزلة",
+    "amenity": "place_of_worship",
+    "denomination": "sunni",
+    "language:ar": "main",
+    "name": "مسجد سيدي مبارك الشيخ",
+    "name:ar": "مسجد سيدي مبارك الشيخ",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "node",
+  "id": 5213025429,
+  "lat": 33.0939323,
+  "lon": 6.0676054,
+  "tags": {
+    "addr:street": "النزلة",
+    "amenity": "post_office",
+    "brand": "Algérie Poste",
+    "brand:ar": "بريد الجزائر",
+    "brand:email": "clientalgerieposte@poste.dz",
+    "brand:fr": "Algérie Poste",
+    "brand:website": "https://www.poste.dz/",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "fr:Algérie Poste",
+    "fax": "+21323923170",
+    "name": "مركز البريد النزلة",
+    "name:ar": "مركز البريد النزلة",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "08:30-12:30,13:30-16:30",
+    "operator": "Algérie Poste",
+    "operator:ar": "بريد الجزائر",
+    "operator:fr": "Algérie Poste",
+    "operator:website": "https://www.poste.dz/",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "fr:Algérie Poste"
+  }
+},
+{
+  "type": "node",
+  "id": 5213042025,
+  "lat": 33.0939832,
+  "lon": 6.0677098,
+  "tags": {
+    "amenity": "atm",
+    "opening_hours": "24/7"
+  }
+},
+{
+  "type": "node",
+  "id": 5362449207,
+  "lat": 33.1299646,
+  "lon": 6.0649882,
+  "tags": {
+    "amenity": "fuel",
+    "fuel:diesel": "yes",
+    "fuel:lpg": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 5367773425,
+  "lat": 33.1068506,
+  "lon": 6.0705970,
+  "tags": {
+    "addr:country": "DZ",
+    "addr:street": "شارع 1 نوفمبر",
+    "name": "محل الحرمين أقمصة وعطور",
+    "name:ar": "محل الحرمين أقمصة وعطور",
+    "name:fr": "Al Harameen",
+    "shop": "clothes"
+  }
+},
+{
+  "type": "node",
+  "id": 5370973621,
+  "lat": 33.1076399,
+  "lon": 6.0841560,
+  "tags": {
+    "addr:country": "DZ",
+    "addr:street": "حي الأمير عبد القادر تبسبست",
+    "amenity": "cafe",
+    "name": "محل شاي صحراوي",
+    "name:ar": "محل شاي صحراوي",
+    "name:fr": "Sahraoui"
+  }
+},
+{
+  "type": "node",
+  "id": 5370974321,
+  "lat": 33.1097891,
+  "lon": 6.0827596,
+  "tags": {
+    "addr:country": "DZ",
+    "addr:street": "حي عياد",
+    "amenity": "cafe",
+    "name": "شاي صحراوي",
+    "name:ar": "شاي صحراوي",
+    "name:fr": "Thé du désert"
+  }
+},
+{
+  "type": "node",
+  "id": 5414213422,
+  "lat": 33.1099713,
+  "lon": 6.0727257,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "shop": "bakery"
+  }
+},
+{
+  "type": "node",
+  "id": 5862350685,
+  "lat": 33.1128763,
+  "lon": 6.0806572,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية فيصل",
+    "name:ar": "صيدلية فيصل",
+    "name:en": "Pharmacie Faiçal",
+    "name:fr": "Pharmacie Faiçal",
+    "opening_hours": "Mo-Su 07:00-22:00"
+  }
+},
+{
+  "type": "node",
+  "id": 6051383985,
+  "lat": 33.1035904,
+  "lon": 6.0667432,
+  "tags": {
+    "name": "أمیر للمعلوماتیه",
+    "name:ar": "أمیر للمعلوماتیه",
+    "name:en": "Amir informatique",
+    "name:fr": "Amir informatique",
+    "opening_hours": "Sa-Th 00:00-24:00",
+    "shop": "computer"
+  }
+},
+{
+  "type": "node",
+  "id": 6157205085,
+  "lat": 33.1105928,
+  "lon": 6.0710000,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية عزي شمس الدين",
+    "name:ar": "صيدلية عزي شمس الدين",
+    "name:en": "Pharmacie Mehania - Azzi Chams Eddine",
+    "name:fr": "Pharmacie Mehania - Azzi Chams Eddine"
+  }
+},
+{
+  "type": "node",
+  "id": 6175217085,
+  "lat": 33.1090163,
+  "lon": 6.0785774,
+  "tags": {
+    "name": "نسخ المفاتيح",
+    "name:ar": "نسخ المفاتيح",
+    "name:en": "CopyKey",
+    "name:fr": "Photo clé",
+    "shop": "car_parts"
+  }
+},
+{
+  "type": "node",
+  "id": 6175270286,
+  "lat": 33.1109300,
+  "lon": 6.0710709,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy",
+    "name": "صيدلية مهنية - عزي شمس الدين",
+    "name:ar": "صيدلية مهنية - عزي شمس الدين",
+    "name:fr": "Pharmacie Mehania - Azzi Chams Eddine",
+    "opening_hours": "Sa-Th 07:00-23:00; Fr 17:00-23:00"
+  }
+},
+{
+  "type": "node",
+  "id": 6251390573,
+  "lat": 33.1002223,
+  "lon": 6.0600728,
+  "tags": {
+    "amenity": "doctors",
+    "description": "الجراحة العامة و بالمنظار",
+    "name": "dr hounat",
+    "opening_hours": "Mo-Th, Sa, Su 08:00-16:00",
+    "phone": "+21329663710"
+  }
+},
+{
+  "type": "node",
+  "id": 6254266252,
+  "lat": 33.1002148,
+  "lon": 6.0600614,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "doctors",
+    "healthcare": "doctor",
+    "name": "الدكتور هونة",
+    "name:ar": "الدكتور هونة",
+    "name:en": "Dr Hounat",
+    "name:fr": "Hounat"
+  }
+},
+{
+  "type": "node",
+  "id": 6254358926,
+  "lat": 33.1002112,
+  "lon": 6.0600728,
+  "tags": {
+    "amenity": "doctors",
+    "description": "جراحة عامة و بالمنظار",
+    "name": "د حونات",
+    "name:ar": "د حونات",
+    "name:fr": "Dr Hounat"
+  }
+},
+{
+  "type": "node",
+  "id": 6256152538,
+  "lat": 33.0988404,
+  "lon": 6.0444746,
+  "tags": {
+    "email": "sarlenergie.alternative@gmail.com",
+    "name": "SARL ENERGIE ALTERNATIVE",
+    "phone": "0674795027",
+    "service:vehicle:lpg": "yes",
+    "shop": "car_repair"
+  }
+},
+{
+  "type": "node",
+  "id": 6371449585,
+  "lat": 33.1124549,
+  "lon": 6.0583514,
+  "tags": {
+    "amenity": "cafe"
+  }
+},
+{
+  "type": "node",
+  "id": 6482120585,
+  "lat": 33.1169020,
+  "lon": 6.0787331,
+  "tags": {
+    "amenity": "clinic",
+    "name": "مصحة قلبو لعلاج الكلى",
+    "name:ar": "مصحة قلبو لعلاج الكلى",
+    "name:fr": "Centre Hymodialyse"
+  }
+},
+{
+  "type": "node",
+  "id": 6482120586,
+  "lat": 33.0942357,
+  "lon": 6.0583033,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "clinic",
+    "healthcare": "clinic",
+    "name": "صباح الأخضري",
+    "name:ar": "صباح الأخضري",
+    "name:fr": "Sabah lakhdari"
+  }
+},
+{
+  "type": "node",
+  "id": 6482120587,
+  "lat": 33.1098577,
+  "lon": 6.0714050,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6486382786,
+  "lat": 33.1147114,
+  "lon": 6.0779654,
+  "tags": {
+    "amenity": "school",
+    "name": "متوسطة عيسات ايدير",
+    "name:ar": "متوسطة عيسات ايدير",
+    "name:fr": "CEM Aissate Idir"
+  }
+},
+{
+  "type": "node",
+  "id": 6641412821,
+  "lat": 33.0816408,
+  "lon": 6.0422988,
+  "tags": {
+    "amenity": "fuel"
+  }
+},
+{
+  "type": "node",
+  "id": 6641412823,
+  "lat": 33.0648098,
+  "lon": 6.0288294,
+  "tags": {
+    "amenity": "fuel"
+  }
+},
+{
+  "type": "node",
+  "id": 6950679885,
+  "lat": 33.1070689,
+  "lon": 6.0699854,
+  "tags": {
+    "name": "العالمية للعطور الفاخرة",
+    "name:ar": "العالمية للعطور الفاخرة",
+    "name:en": "parfumerie",
+    "name:fr": "Parfums de luxe internationaux",
+    "tourism": "artwork"
+  }
+},
+{
+  "type": "node",
+  "id": 7093176386,
+  "lat": 33.1050557,
+  "lon": 6.0569634,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "doctors",
+    "healthcare": "doctor",
+    "name": "بكاكرة",
+    "name:ar": "بكاكرة",
+    "name:en": "Bkakra",
+    "name:fr": "Bkakra"
+  }
+},
+{
+  "type": "node",
+  "id": 7140189085,
+  "lat": 33.1351933,
+  "lon": 6.0819383,
+  "tags": {
+    "name": "حلاق",
+    "name:ar": "حلاق",
+    "name:fr": "Salon de coiffure",
+    "shop": "hairdresser"
+  }
+},
+{
+  "type": "node",
+  "id": 7149162387,
+  "lat": 33.1108828,
+  "lon": 6.0697147,
+  "tags": {
+    "amenity": "ice_cream",
+    "name": "كشك لبيع الشاي",
+    "name:ar": "كشك لبيع الشاي",
+    "name:fr": "Stand de thé",
+    "opening_hours": "Mo-Su 06:00-20:00"
+  }
+},
+{
+  "type": "node",
+  "id": 7149162388,
+  "lat": 33.1108740,
+  "lon": 6.0697048,
+  "tags": {
+    "amenity": "cafe",
+    "cuisine": "tea",
+    "name": "كشك لبيع الشاي",
+    "name:ar": "كشك لبيع الشاي",
+    "name:fr": "Stand de thé",
+    "opening_hours": "24/7"
+  }
+},
+{
+  "type": "node",
+  "id": 7149169987,
+  "lat": 33.1058995,
+  "lon": 6.0587784,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "atm",
+    "brand": "بريد الجزائر",
+    "brand:ar": "بريد الجزائر",
+    "brand:website": "https://www.poste.dz/lang/ar",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "ar:بريد الجزائر",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "24/7",
+    "operator": "بريد الجزائر",
+    "operator:ar": "بريد الجزائر",
+    "operator:website": "https://www.poste.dz/lang/ar",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "ar:بريد الجزائر"
+  }
+},
+{
+  "type": "node",
+  "id": 7149169988,
+  "lat": 33.1054546,
+  "lon": 6.0686411,
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "atm",
+    "brand": "بريد الجزائر",
+    "brand:ar": "بريد الجزائر",
+    "brand:website": "https://www.poste.dz/lang/ar",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "ar:بريد الجزائر",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "24/7",
+    "operator": "بريد الجزائر",
+    "operator:ar": "بريد الجزائر",
+    "operator:website": "https://www.poste.dz/lang/ar",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "ar:بريد الجزائر"
+  }
+},
+{
+  "type": "node",
+  "id": 7149169989,
+  "lat": 33.1160711,
+  "lon": 6.0762552,
+  "tags": {
+    "addr:street": "حي 630 مسكن",
+    "amenity": "post_office",
+    "name": "مركز بريد 630 مسكن",
+    "name:ar": "مركز بريد 630 مسكن",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "Su-Th 08:00-16:00"
+  }
+},
+{
+  "type": "node",
+  "id": 7149179285,
+  "lat": 33.1160381,
+  "lon": 6.0763448,
+  "tags": {
+    "amenity": "atm",
+    "opening_hours": "24/7"
+  }
+},
+{
+  "type": "node",
+  "id": 8058634285,
+  "lat": 33.0873229,
+  "lon": 6.0690679,
+  "tags": {
+    "name": "سكانار",
+    "name:ar": "سكانار",
+    "name:fr": "Scanar",
+    "shop": "car_repair"
+  }
+},
+{
+  "type": "node",
+  "id": 8059053085,
+  "lat": 33.0824981,
+  "lon": 6.0616885,
+  "tags": {
+    "name": "لزهر مك",
+    "name:ar": "لزهر مك",
+    "name:fr": "Lezhar",
+    "tourism": "apartment"
+  }
+},
+{
+  "type": "node",
+  "id": 8195959117,
+  "lat": 33.0868817,
+  "lon": 6.0623246,
+  "tags": {
+    "name": "لزهر ميكانيك",
+    "name:fr": "Lahar",
+    "shop": "car_repair"
+  }
+},
+{
+  "type": "node",
+  "id": 8196306817,
+  "lat": 33.0896145,
+  "lon": 6.0687621,
+  "tags": {
+    "name": "Torneur",
+    "tourism": "viewpoint"
+  }
+},
+{
+  "type": "node",
+  "id": 9347299791,
+  "lat": 33.1041946,
+  "lon": 6.0669387,
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "node",
+  "id": 9347299795,
+  "lat": 33.1040031,
+  "lon": 6.0661215,
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "node",
+  "id": 9347299796,
+  "lat": 33.1041741,
+  "lon": 6.0658969,
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "node",
+  "id": 9347299798,
+  "lat": 33.1038268,
+  "lon": 6.0659823,
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "node",
+  "id": 9609415809,
+  "lat": 33.1412914,
+  "lon": 6.0695052,
+  "tags": {
+    "repair": "only",
+    "shop": "tyres"
+  }
+},
+{
+  "type": "node",
+  "id": 9950401317,
+  "lat": 33.0862997,
+  "lon": 6.0449454,
+  "tags": {
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 9950401517,
+  "lat": 33.0863366,
+  "lon": 6.0448655,
+  "tags": {
+    "amenity": "police",
+    "name": "الامن الحضري الاول تقرت"
+  }
+},
+{
+  "type": "node",
+  "id": 9950401817,
+  "lat": 33.0863582,
+  "lon": 6.0446949,
+  "tags": {
+    "amenity": "police",
+    "name": "amn hadary awal tggrt",
+    "name:en": "amn hadary awal"
+  }
+},
+{
+  "type": "node",
+  "id": 14030942300,
+  "lat": 33.1071453,
+  "lon": 6.0715687,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55066",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "TOUGGOURT",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "TOUGGOURT ETABLISSEMENT POSTAL ITINERANT 1",
+    "name:ar": "توقرت-المكتب-البريدي-المتنقل-1",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961801,
+  "lat": 33.1220435,
+  "lon": 6.0465639,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55060",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "ROUTE NATIONALE N 05",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "HAI EL MOUSTAKBEL",
+    "name:ar": "حي المستقبل",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961802,
+  "lat": 33.1110858,
+  "lon": 6.0818925,
+  "tags": {
+    "addr:city": "TEBESBEST",
+    "addr:postcode": "55058",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE AHMED ABCHI EL MOSTAKBEL",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "TEBESBEST HAY AYAD",
+    "name:ar": "تبسبست حي عياد",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961822,
+  "lat": 33.1318820,
+  "lon": 6.0824989,
+  "tags": {
+    "addr:city": "ZAOUIA EL ABIDIA",
+    "addr:postcode": "55018",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE OUED RIGH",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "ZAOUIA SIDI LABED",
+    "name:ar": "زاوية-سيدي-العابد",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961823,
+  "lat": 33.1057501,
+  "lon": 6.0588662,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55017",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE AHMED DJARI",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "TOUGGOURT EMIR AEK",
+    "name:ar": "تقرت-الأمير- عبد-ق",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961824,
+  "lat": 33.1159937,
+  "lon": 6.0762809,
+  "tags": {
+    "addr:city": "TEBESBEST",
+    "addr:postcode": "55016",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE BAGHDAD",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "TOUGGOURT TEBESBEST",
+    "name:ar": "تقرت-تيبسبست",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961826,
+  "lat": 33.0939101,
+  "lon": 6.0676512,
+  "tags": {
+    "addr:city": "NEZLA",
+    "addr:postcode": "55010",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE ABANE RAMADANE",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "TOUGGOURT NEZLA",
+    "name:ar": "تقرت-االنزلة",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961830,
+  "lat": 33.0806814,
+  "lon": 6.0493371,
+  "tags": {
+    "addr:city": "NEZLA",
+    "addr:postcode": "55004",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE TERMINUS",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "AIN SAHRA",
+    "name:ar": "عين-الصحراء",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030961832,
+  "lat": 33.1052684,
+  "lon": 6.0684296,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55002",
+    "addr:state": "TOUGGOURT",
+    "addr:street": "RUE LIBERTE",
+    "amenity": "post_office",
+    "contact:facebook": "https://www.facebook.com/algerieposteofficiel",
+    "contact:instagram": "https://www.instagram.com/algerie_poste/",
+    "contact:linkedin": "https://www.linkedin.com/company/algerieposte/posts/?feedView=all",
+    "contact:youtube": "https://www.youtube.com/channel/UCZubjROY1tbvANdCcehe4NQ",
+    "email": "contact@poste.dz",
+    "name": "TOUGGOURT",
+    "name:ar": "تقرت",
+    "opening_hours": "08:00-12:00,13:30-17:00",
+    "operator": "Algérie Poste",
+    "source": "FB: Algerie Mapper Team",
+    "website": "www.poste.dz"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969381,
+  "lat": 33.1110190,
+  "lon": 6.0818606,
+  "tags": {
+    "addr:city": "TEBESBEST",
+    "addr:postcode": "55058",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "TEBESBEST HAY AYAD",
+    "name:ar": "تبسبست",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "12124",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969387,
+  "lat": 33.1319874,
+  "lon": 6.0823812,
+  "tags": {
+    "addr:city": "ZAOUIA EL ABIDIA",
+    "addr:postcode": "55018",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "ZAOUIA-SIDI-LABED",
+    "name:ar": "الزاوية العابدية",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "1551",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969388,
+  "lat": 33.1057522,
+  "lon": 6.0587855,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55017",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "TOUGGOURT EMIR AEK",
+    "name:ar": "توقرت",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "2438",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969389,
+  "lat": 33.1161872,
+  "lon": 6.0760555,
+  "tags": {
+    "addr:city": "TEBESBEST",
+    "addr:postcode": "55016",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "TEBESBEST",
+    "name:ar": "تبسبست",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "1548",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969391,
+  "lat": 33.0939738,
+  "lon": 6.0676462,
+  "tags": {
+    "addr:city": "NEZLA",
+    "addr:postcode": "55010",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "NEZLA",
+    "name:ar": "النزلة",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "1764",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969394,
+  "lat": 33.0805832,
+  "lon": 6.0492744,
+  "tags": {
+    "addr:city": "NEZLA",
+    "addr:postcode": "55004",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "AIN SAHRA",
+    "name:ar": "النزلة",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "11585",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969396,
+  "lat": 33.1057660,
+  "lon": 6.0682150,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55002",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "TOUGGOURT RP LS 1",
+    "name:ar": "توقرت",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "13335",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "node",
+  "id": 14030969397,
+  "lat": 33.1054499,
+  "lon": 6.0685719,
+  "tags": {
+    "addr:city": "TOUGGOURT",
+    "addr:postcode": "55002",
+    "addr:state": "TOUGGOURT",
+    "amenity": "atm",
+    "name": "TOUGOURT",
+    "name:ar": "توقرت",
+    "opening_hours": "24/7",
+    "operator": "Algérie Poste",
+    "ref": "1550",
+    "source": "FB: Algerie Mapper Team"
+  }
+},
+{
+  "type": "way",
+  "id": 242547182,
+  "center": {
+    "lat": 33.1022419,
+    "lon": 6.0704750
+  },
+  "nodes": [
+    2500135752,
+    2500135753,
+    2500135754,
+    2500135755,
+    4337278696,
+    4337278695,
+    2500135752
+  ],
+  "tags": {
+    "name": "Hôtel L'oasis",
+    "name:ar": "فندق الواحات",
+    "tourism": "hotel"
+  }
+},
+{
+  "type": "way",
+  "id": 268684344,
+  "center": {
+    "lat": 33.0816276,
+    "lon": 6.0422927
+  },
+  "nodes": [
+    2740192913,
+    2740192917,
+    2740192920,
+    2740192922,
+    2740192913
+  ],
+  "tags": {
+    "amenity": "fuel"
+  }
+},
+{
+  "type": "way",
+  "id": 268684359,
+  "center": {
+    "lat": 33.0936340,
+    "lon": 6.0712013
+  },
+  "nodes": [
+    2740193083,
+    2740193087,
+    2740193089,
+    2740193091,
+    2740193083
+  ],
+  "tags": {
+    "amenity": "fuel"
+  }
+},
+{
+  "type": "way",
+  "id": 268697503,
+  "center": {
+    "lat": 33.1090816,
+    "lon": 6.0725991
+  },
+  "nodes": [
+    2740319764,
+    2740319768,
+    2740319771,
+    2740319776,
+    2740319764
+  ],
+  "tags": {
+    "amenity": "parking",
+    "parking": "surface"
+  }
+},
+{
+  "type": "way",
+  "id": 268717339,
+  "center": {
+    "lat": 33.0870006,
+    "lon": 6.0583910
+  },
+  "nodes": [
+    2740465798,
+    2740465800,
+    2740465801,
+    2740465802,
+    2740465798
+  ],
+  "tags": {
+    "leisure": "stadium",
+    "name": "Stade municipal de Nezla",
+    "name:ar": "ملعب بلدي للنزلة",
+    "name:fr": "Stade municipal de Nezla"
+  }
+},
+{
+  "type": "way",
+  "id": 289021891,
+  "center": {
+    "lat": 33.1366031,
+    "lon": 6.0818050
+  },
+  "nodes": [
+    2925706965,
+    2925706966,
+    2925706967,
+    2925706968,
+    2925706965
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "name": "مسجد الإمام مالك",
+    "name:ar": "مسجد الإمام مالك",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289089526,
+  "center": {
+    "lat": 33.1261581,
+    "lon": 6.0826073
+  },
+  "nodes": [
+    2926397861,
+    2926397862,
+    2926397863,
+    2926397864,
+    2926397865,
+    2926397866,
+    2926397867,
+    2926397868,
+    2926397869,
+    2926397861
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289099559,
+  "center": {
+    "lat": 33.1105303,
+    "lon": 6.0837243
+  },
+  "nodes": [
+    2926501374,
+    2926501375,
+    2926501376,
+    2926501377,
+    2926501374
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289100361,
+  "center": {
+    "lat": 33.1075083,
+    "lon": 6.0853321
+  },
+  "nodes": [
+    2926507962,
+    2926507963,
+    2926507964,
+    2926507965,
+    2926507962
+  ],
+  "tags": {
+    "amenity": "fuel"
+  }
+},
+{
+  "type": "way",
+  "id": 289111797,
+  "center": {
+    "lat": 33.0907823,
+    "lon": 6.0644174
+  },
+  "nodes": [
+    2926618236,
+    2926618237,
+    2926618238,
+    2926618239,
+    2926618236
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289165157,
+  "center": {
+    "lat": 33.0911107,
+    "lon": 6.0567225
+  },
+  "nodes": [
+    2927188747,
+    2927188748,
+    2927188749,
+    2927188750,
+    2927188751,
+    2927188747
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289167005,
+  "center": {
+    "lat": 33.0794833,
+    "lon": 6.0512491
+  },
+  "nodes": [
+    2927222863,
+    2927222864,
+    2927222865,
+    2927222866,
+    2927222863
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "mosque",
+    "denomination": "sunni",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289229116,
+  "center": {
+    "lat": 33.0989564,
+    "lon": 6.0595155
+  },
+  "nodes": [
+    2927771078,
+    2927771079,
+    2927771080,
+    2927771081,
+    2927771082,
+    2927771078
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "mosque",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 289234534,
+  "center": {
+    "lat": 33.0635362,
+    "lon": 6.0292962
+  },
+  "nodes": [
+    2927804682,
+    2927804683,
+    2927804684,
+    2927804685,
+    2927804682
+  ],
+  "tags": {
+    "amenity": "fuel"
+  }
+},
+{
+  "type": "way",
+  "id": 316427603,
+  "center": {
+    "lat": 33.1178175,
+    "lon": 6.0616681
+  },
+  "nodes": [
+    3225428997,
+    3225428996,
+    3225428989,
+    3225428990,
+    3225428992,
+    3225428991,
+    3225428995,
+    3225428994,
+    3225428997
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "tourism": "hotel"
+  }
+},
+{
+  "type": "way",
+  "id": 316427605,
+  "center": {
+    "lat": 33.1170839,
+    "lon": 6.0614302
+  },
+  "nodes": [
+    3225428983,
+    3225428977,
+    3225428981,
+    3225428988,
+    3225428987,
+    3225428986,
+    3225428985,
+    3225428976,
+    3225428983
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "bus_station",
+    "building": "transportation",
+    "bus": "yes",
+    "name": "المحطة البرية",
+    "name:ar": "المحطة البرية",
+    "name:fr": "Gare routière",
+    "public_transport": "station"
+  }
+},
+{
+  "type": "way",
+  "id": 317982176,
+  "center": {
+    "lat": 33.1112744,
+    "lon": 6.0698451
+  },
+  "nodes": [
+    3243245387,
+    3243245388,
+    3243245389,
+    3243245390,
+    3243245387
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 321566590,
+  "center": {
+    "lat": 33.1056860,
+    "lon": 6.0625013
+  },
+  "nodes": [
+    3283268261,
+    3283268262,
+    3283268263,
+    3283268264,
+    3283268261
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "mosque",
+    "denomination": "sunni",
+    "name": "Mosquée Ahmed Djari",
+    "name:ar": "مسجد احمد جاري",
+    "name:fr": "Mosquée Ahmed Djari",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 321566834,
+  "center": {
+    "lat": 33.1060655,
+    "lon": 6.0635324
+  },
+  "nodes": [
+    3283271152,
+    3283271153,
+    3283268672,
+    3283271147,
+    3283271155,
+    3283271152
+  ],
+  "tags": {
+    "amenity": "fire_station",
+    "brand": "Protection civile algérienne",
+    "brand:ar": "الحماية المدنية الجزائرية",
+    "brand:fr": "Protection civile algérienne",
+    "brand:wikidata": "Q3407913",
+    "brand:wikipedia": "fr:Protection civile en Algérie",
+    "contact:phone": "14",
+    "email": "webmaster@protectioncivile.dz",
+    "fax": "021717487",
+    "name": "Unité de Protection civile",
+    "name:ar": "وحدة الحماية المدنية",
+    "name:ber": "ⴰⵃⵓⴷⴷⵓ ⴰⵖⴰⵔⵉⵎ",
+    "name:fr": "Protection civile",
+    "name:kab": "Aḥuddu aɣarim",
+    "operator": "Ministère de l'Intérieur et des Collectivités locales",
+    "operator:ar": "وزارة الداخلية والجماعات المحلية والتهيئة العمرانية",
+    "operator:fr": "Ministère de l'Intérieur et des Collectivités locales",
+    "operator:website": "https://www.interieur.gov.dz/index.php/fr/",
+    "operator:wikidata": "Q3315224",
+    "operator:wikipedia": "fr:Ministère de l'Intérieur et des Collectivités locales",
+    "phone": "14",
+    "phone_1": "023568484",
+    "source": "Algrien Mapper Team",
+    "website": "https://www.protectioncivile.dz/",
+    "wikidata": "Q3407913",
+    "wikipedia": "fr:Protection civile en Algérie"
+  }
+},
+{
+  "type": "way",
+  "id": 321567762,
+  "center": {
+    "lat": 33.1060378,
+    "lon": 6.0599514
+  },
+  "nodes": [
+    3283286207,
+    3283286213,
+    3283286208,
+    3283286209,
+    3283286210,
+    3283286207
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "alt_name": "ابتدائية مالك",
+    "alt_name:ar": "ابتدائية مالك",
+    "amenity": "school",
+    "name": "المدرسة الابتدائية مالك بن أنس",
+    "name:ar": "المدرسة الابتدائية مالك بن أنس",
+    "name:fr": "Ecole primaire Imam Malik"
+  }
+},
+{
+  "type": "way",
+  "id": 321567995,
+  "center": {
+    "lat": 33.1030197,
+    "lon": 6.0579646
+  },
+  "nodes": [
+    3283285290,
+    3283285291,
+    3283285292,
+    3283285293,
+    3283285294,
+    3283285295,
+    3283285296,
+    3283285297,
+    3283285290
+  ],
+  "tags": {
+    "amenity": "college",
+    "name": "INSFP",
+    "name:ar": "المعهد الوطني المتخصص في التكوين المهني"
+  }
+},
+{
+  "type": "way",
+  "id": 321568281,
+  "center": {
+    "lat": 33.1015175,
+    "lon": 6.0559816
+  },
+  "nodes": [
+    3283292334,
+    3283292335,
+    3283292336,
+    3283292337,
+    4583634594,
+    4583634593,
+    4583634592,
+    3283292338,
+    3283292339,
+    3283292340,
+    4583634597,
+    4583634598,
+    4583634595,
+    4583634596,
+    4583634599,
+    4583634600,
+    3283292341,
+    3283292334
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "amenity": "school",
+    "name": "Lycée Emir Abdelkader",
+    "name:ar": "ثانوية الأمير عبد القادر",
+    "name:fr": "Lycée Emir Abdelkader"
+  }
+},
+{
+  "type": "way",
+  "id": 321738112,
+  "center": {
+    "lat": 33.1021255,
+    "lon": 6.0638315
+  },
+  "nodes": [
+    3285042361,
+    3285042362,
+    3285042363,
+    3285042364,
+    3285042365,
+    3285042366,
+    3285042367,
+    3285042368,
+    3285042369,
+    3285042361
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM Bachir Ibrahimi",
+    "name:ar": "متوسطة البشير الإبرهيمي"
+  }
+},
+{
+  "type": "way",
+  "id": 321738313,
+  "center": {
+    "lat": 33.1026318,
+    "lon": 6.0634175
+  },
+  "nodes": [
+    3285045861,
+    3285045862,
+    3285045863,
+    3285045864,
+    3285045865,
+    3285045866,
+    3285045867,
+    3285045861
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM Imam Ali",
+    "name:ar": "متوسطة الامام علي"
+  }
+},
+{
+  "type": "way",
+  "id": 321923410,
+  "center": {
+    "lat": 33.0957104,
+    "lon": 6.0569319
+  },
+  "nodes": [
+    3286894807,
+    3286894808,
+    3286894809,
+    3286894810,
+    5854105604,
+    3286894811,
+    5854105605,
+    3286894812,
+    3286900398,
+    3286900397,
+    3286900396,
+    5854105602,
+    3286900395,
+    5854105603,
+    3286900394,
+    3286900393,
+    3286894813,
+    3286894814,
+    3286894807
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Lycée technique Boubakr Belkaid",
+    "name:ar": "متقنة بو بكر بلقايد"
+  }
+},
+{
+  "type": "way",
+  "id": 321923927,
+  "center": {
+    "lat": 33.0918013,
+    "lon": 6.0597331
+  },
+  "nodes": [
+    3286904004,
+    3286904005,
+    3286904006,
+    3286904007,
+    3286904004
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Ecole primaire Nasr",
+    "name:ar": "ابتدائية النصر 1"
+  }
+},
+{
+  "type": "way",
+  "id": 321924225,
+  "center": {
+    "lat": 33.0931453,
+    "lon": 6.0615666
+  },
+  "nodes": [
+    3286907961,
+    3286907962,
+    3286907963,
+    3286907964,
+    3286907965,
+    3286907966,
+    3286907967,
+    3286907968,
+    3286907961
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Lycée Ibn Haytham",
+    "name:ar": "ثانوية ابن الهيثم"
+  }
+},
+{
+  "type": "way",
+  "id": 321924594,
+  "center": {
+    "lat": 33.0951751,
+    "lon": 6.0617132
+  },
+  "nodes": [
+    3286900659,
+    3286900660,
+    3286908933,
+    3286908932,
+    3286911061,
+    3286911062,
+    3286911063,
+    3286911064,
+    3286911065,
+    3286911066,
+    3286900659
+  ],
+  "tags": {
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM BenHadia Taleb Madani",
+    "name:ar": "متوسطةبن هدية الطالب مداني"
+  }
+},
+{
+  "type": "way",
+  "id": 321925094,
+  "center": {
+    "lat": 33.0955473,
+    "lon": 6.0643121
+  },
+  "nodes": [
+    3286916067,
+    3286919510,
+    3286916064,
+    3286916074,
+    3286916067
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Ecole BenDellali Brahim"
+  }
+},
+{
+  "type": "way",
+  "id": 321925979,
+  "center": {
+    "lat": 33.0979931,
+    "lon": 6.0627604
+  },
+  "nodes": [
+    3286923008,
+    3286923009,
+    3286923010,
+    3286923011,
+    3286923008
+  ],
+  "tags": {
+    "amenity": "arts_centre",
+    "building": "yes",
+    "name": "Maison de jeunes de Nezla",
+    "name:ar": "دار الشباب النزلة"
+  }
+},
+{
+  "type": "way",
+  "id": 321928730,
+  "center": {
+    "lat": 33.0995951,
+    "lon": 6.0616740
+  },
+  "nodes": [
+    3286950961,
+    3286950962,
+    5854050373,
+    3286950963,
+    3286950964,
+    3286950965,
+    3286950966,
+    5851978504,
+    5851978505,
+    5851978503,
+    5851978506,
+    5851978502,
+    5852017299,
+    5852017293,
+    5851978501,
+    5851978507,
+    5851978509,
+    5851978508,
+    5851978500,
+    3286950967,
+    3286950968,
+    3286950969,
+    3286950961
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:postcode": "30002",
+    "amenity": "hospital",
+    "emergency": "yes",
+    "healthcare": "hospital",
+    "name": "مستشفى سليمان عميرات",
+    "name:ar": "مستشفى سليمان عميرات",
+    "name:en": "Slimen Amirat Hospital",
+    "name:fr": "EPH Slimen Amirat"
+  }
+},
+{
+  "type": "way",
+  "id": 321929019,
+  "center": {
+    "lat": 33.0994793,
+    "lon": 6.0598823
+  },
+  "nodes": [
+    3286952061,
+    3286952062,
+    3286952063,
+    3286952064,
+    3286952065,
+    3286952061
+  ],
+  "tags": {
+    "amenity": "school"
+  }
+},
+{
+  "type": "way",
+  "id": 321929247,
+  "center": {
+    "lat": 33.0993372,
+    "lon": 6.0543301
+  },
+  "nodes": [
+    3286953367,
+    3286953368,
+    3286953369,
+    3286953370,
+    3286953367
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "lit": "yes",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 321929250,
+  "center": {
+    "lat": 33.0993024,
+    "lon": 6.0542365
+  },
+  "nodes": [
+    3286953371,
+    3286953372,
+    3286953373,
+    3286953374,
+    3286953371
+  ],
+  "tags": {
+    "leisure": "stadium",
+    "name": "Stade Colonel Mohamed Chabani",
+    "name:ar": "الملعب العقيد محمد شعباني",
+    "name:fr": "Stade Colonel Mohamed Chabani"
+  }
+},
+{
+  "type": "way",
+  "id": 321929530,
+  "center": {
+    "lat": 33.0968738,
+    "lon": 6.0656175
+  },
+  "nodes": [
+    3286956594,
+    3286956595,
+    3286956596,
+    3286956597,
+    3286956598,
+    3286956599,
+    3286956594
+  ],
+  "tags": {
+    "amenity": "school"
+  }
+},
+{
+  "type": "way",
+  "id": 321933663,
+  "center": {
+    "lat": 33.0967122,
+    "lon": 6.0709164
+  },
+  "nodes": [
+    3287001650,
+    3287001651,
+    3287001652,
+    3287001653,
+    3287001654,
+    3287001655,
+    3287001650
+  ],
+  "tags": {
+    "amenity": "school"
+  }
+},
+{
+  "type": "way",
+  "id": 321934779,
+  "center": {
+    "lat": 33.0935950,
+    "lon": 6.0685708
+  },
+  "nodes": [
+    3287010762,
+    3287010763,
+    3287010764,
+    3287010765,
+    3287010766,
+    3287010762
+  ],
+  "tags": {
+    "addr:city": "النزلة",
+    "addr:city:ar": "النزلة",
+    "amenity": "school",
+    "name": "ابتدائية بوليفة محمد عمران",
+    "name:ar": "ابتدائية بوليفة محمد عمران",
+    "name:fr": "Ecole primaire Boulifa Mohamed Amrane"
+  }
+},
+{
+  "type": "way",
+  "id": 321935157,
+  "center": {
+    "lat": 33.0884265,
+    "lon": 6.0672045
+  },
+  "nodes": [
+    3287014462,
+    3287014463,
+    3287014464,
+    3287014465,
+    3287014462
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "C.E.M abdelmomen ben ali"
+  }
+},
+{
+  "type": "way",
+  "id": 321935589,
+  "center": {
+    "lat": 33.0891314,
+    "lon": 6.0620839
+  },
+  "nodes": [
+    3287019338,
+    3287019339,
+    3287019340,
+    3287019341,
+    3287019342,
+    3287019343,
+    3287019344,
+    3287019338
+  ],
+  "tags": {
+    "addr:city": "النزلة",
+    "addr:city:ar": "النزلة",
+    "amenity": "clinic",
+    "healthcare": "clinic",
+    "name": "عيادة متعددة الخدمات",
+    "name:ar": "عيادة متعددة الخدمات",
+    "name:fr": "Polyclinique Nezla"
+  }
+},
+{
+  "type": "way",
+  "id": 321935594,
+  "center": {
+    "lat": 33.0871894,
+    "lon": 6.0632285
+  },
+  "nodes": [
+    3287019352,
+    3287019353,
+    3287019354,
+    3287019355,
+    3287019352
+  ],
+  "tags": {
+    "amenity": "school"
+  }
+},
+{
+  "type": "way",
+  "id": 321935807,
+  "center": {
+    "lat": 33.0843863,
+    "lon": 6.0565541
+  },
+  "nodes": [
+    3287021061,
+    3287021062,
+    3287021063,
+    3287021064,
+    3287021061
+  ],
+  "tags": {
+    "amenity": "school"
+  }
+},
+{
+  "type": "way",
+  "id": 321935863,
+  "center": {
+    "lat": 33.0832658,
+    "lon": 6.0636784
+  },
+  "nodes": [
+    3287021847,
+    3287021848,
+    3287021849,
+    3287021850,
+    3287021851,
+    3287021852,
+    3287021853,
+    3287021854,
+    3287021855,
+    3287021856,
+    3287021857,
+    3287021847
+  ],
+  "tags": {
+    "building": "yes",
+    "leisure": "sports_centre",
+    "name:fr": "salle de sport",
+    "sport": "swimming"
+  }
+},
+{
+  "type": "way",
+  "id": 321936165,
+  "center": {
+    "lat": 33.0869466,
+    "lon": 6.0546255
+  },
+  "nodes": [
+    3287024357,
+    3287024358,
+    3287024359,
+    3287024360,
+    3287024461,
+    3287024462,
+    3287024357
+  ],
+  "tags": {
+    "addr:city": "Nezla",
+    "amenity": "college",
+    "name": "CFPA de la commune de de Nezla",
+    "name:ar": "مركز التكوين المهني لبلدية النزلة"
+  }
+},
+{
+  "type": "way",
+  "id": 322142239,
+  "center": {
+    "lat": 33.0934732,
+    "lon": 6.0653072
+  },
+  "nodes": [
+    3289020209,
+    3289020210,
+    3289020211,
+    3289020212,
+    3289020209
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 364202932,
+  "center": {
+    "lat": 33.1169712,
+    "lon": 6.0761002
+  },
+  "nodes": [
+    3682661915,
+    3682661916,
+    3682661917,
+    3682661918,
+    3682661919,
+    3682661920,
+    3682661921,
+    3682661922,
+    3682661915
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Lycée Bachir El Ibrahimi"
+  }
+},
+{
+  "type": "way",
+  "id": 364207859,
+  "center": {
+    "lat": 33.1180494,
+    "lon": 6.0511373
+  },
+  "nodes": [
+    3682671676,
+    3682671677,
+    3682671678,
+    3682671679,
+    3682671676
+  ],
+  "tags": {
+    "leisure": "stadium",
+    "name": "Stade de la Nouvelle Cité El Moustakbal",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 364207860,
+  "center": {
+    "lat": 33.1182655,
+    "lon": 6.0533687
+  },
+  "nodes": [
+    3682671680,
+    3682671681,
+    3682671682,
+    3682671683,
+    3682671680
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "leisure": "sports_centre",
+    "sport": "multi"
+  }
+},
+{
+  "type": "way",
+  "id": 364207861,
+  "center": {
+    "lat": 33.1181080,
+    "lon": 6.0588858
+  },
+  "nodes": [
+    3682671684,
+    3682671685,
+    3682671686,
+    3682671687,
+    3682671688,
+    3682671689,
+    3682671691,
+    3682671692,
+    3682671690,
+    3682671684
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "hospital",
+    "emergency": "yes",
+    "healthcare": "hospital",
+    "name": "مستشفى الجديد تقرت",
+    "name:ar": "مستشفى الجديد تقرت",
+    "name:fr": "Nouvel Hôpital de Touggourt",
+    "owner": "Ministère de la santé"
+  }
+},
+{
+  "type": "way",
+  "id": 364210941,
+  "center": {
+    "lat": 33.1114291,
+    "lon": 6.0724227
+  },
+  "nodes": [
+    3682702064,
+    3682702065,
+    3682702066,
+    3682702067,
+    3682702068,
+    3682702064
+  ],
+  "tags": {
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM Mohamed Laamouri"
+  }
+},
+{
+  "type": "way",
+  "id": 364210942,
+  "center": {
+    "lat": 33.1108732,
+    "lon": 6.0747476
+  },
+  "nodes": [
+    3682702069,
+    4337420262,
+    4827035517,
+    4337420261,
+    4337420278,
+    4337420277,
+    4337420276,
+    3682702070,
+    3682702071,
+    3682702072,
+    3682702069
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "hospital",
+    "emergency": "yes",
+    "healthcare": "hospital",
+    "name": "مستشفى الولادة تقرت",
+    "name:ar": "مستشفى الولادة تقرت",
+    "name:fr": "Hôpital de maternité E-H-S TGGT"
+  }
+},
+{
+  "type": "way",
+  "id": 364211567,
+  "center": {
+    "lat": 33.1091330,
+    "lon": 6.0817322
+  },
+  "nodes": [
+    3682693854,
+    3682693855,
+    3682693856,
+    3682693857,
+    3682693858,
+    3682693859,
+    3682693854
+  ],
+  "tags": {
+    "leisure": "stadium",
+    "name": "Stade de Tebesbest",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 364211568,
+  "center": {
+    "lat": 33.1106271,
+    "lon": 6.0812454
+  },
+  "nodes": [
+    3682693860,
+    3682693861,
+    3682693862,
+    3682693863,
+    3682693864,
+    3682693865,
+    3682693866,
+    3682693867,
+    3682693868,
+    3682693860
+  ],
+  "tags": {
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM Cheikh Mokrani"
+  }
+},
+{
+  "type": "way",
+  "id": 364212171,
+  "center": {
+    "lat": 33.1058697,
+    "lon": 6.0582509
+  },
+  "nodes": [
+    3682693883,
+    3682693884,
+    3283284061,
+    3283284062,
+    3682693885,
+    3682693886,
+    3682693887,
+    3682693888,
+    3682693889,
+    3682693890,
+    3682693891,
+    3682693892,
+    3682693894,
+    3682693893,
+    3682693883
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "متوسطة ابن رشد",
+    "name:ar": "متوسطة ابن رشد",
+    "name:fr": "CEM Ibn Rochd"
+  }
+},
+{
+  "type": "way",
+  "id": 364225397,
+  "center": {
+    "lat": 33.1226258,
+    "lon": 6.0456170
+  },
+  "nodes": [
+    3682835782,
+    3682835783,
+    3682835784,
+    3682835785,
+    3682835782
+  ],
+  "tags": {
+    "amenity": "marketplace",
+    "building": "retail",
+    "name": "Marché Couvert de la Cité El Moustakbal"
+  }
+},
+{
+  "type": "way",
+  "id": 364227685,
+  "center": {
+    "lat": 33.1220027,
+    "lon": 6.0468228
+  },
+  "nodes": [
+    3682847010,
+    3682847011,
+    3682847012,
+    3682847013,
+    3682847014,
+    3682847015,
+    3682847016,
+    3682847017,
+    3682847018,
+    3682847010
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:place": "حي المستقبل",
+    "addr:place:ar": "حي المستقبل",
+    "amenity": "post_office",
+    "brand": "Algérie Poste",
+    "brand:ar": "بريد الجزائر",
+    "brand:email": "clientalgerieposte@poste.dz",
+    "brand:fr": "Algérie Poste",
+    "brand:website": "https://www.poste.dz/",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "fr:Algérie Poste",
+    "building": "yes",
+    "fax": "+21323923170",
+    "name": "مكتب البريد حي المستقبل",
+    "name:ar": "مكتب البريد حي المستقبل",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "08:30-12:30,13:30-16:30",
+    "operator": "Algérie Poste",
+    "operator:ar": "بريد الجزائر",
+    "operator:fr": "Algérie Poste",
+    "operator:website": "https://www.poste.dz/",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "fr:Algérie Poste"
+  }
+},
+{
+  "type": "way",
+  "id": 383803332,
+  "center": {
+    "lat": 33.1059560,
+    "lon": 6.0687498
+  },
+  "nodes": [
+    3871202362,
+    3871202360,
+    3871202358,
+    3871195956,
+    3871195954,
+    3871195953,
+    3871195951,
+    3871195950,
+    3871195948,
+    3871195944,
+    3871195946,
+    3871195942,
+    3871195938,
+    3871195939,
+    3871195935,
+    3871195937,
+    3871195952,
+    3871195955,
+    3871202357,
+    3871202359,
+    3871202361,
+    3871202363,
+    3871202362
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:postcode": "30002",
+    "alt_name": "بدر;بدر بنك;بنك بدر",
+    "alt_name:ar": "بدر;بدر بنك;بنك بدر",
+    "amenity": "bank",
+    "brand": "BADR Banque",
+    "brand:ar": "بنك الفلاحة والتنمية الريفية",
+    "brand:fr": "BADR Banque",
+    "brand:wikidata": "Q2883031",
+    "brand:wikipedia": "fr:Banque de l'agriculture et du développement rural",
+    "building": "service",
+    "name": "بنك الفلاحة والتنمية الريفية",
+    "name:ar": "بنك الفلاحة والتنمية الريفية",
+    "name:fr": "Banque de l'agriculture et du développement rural",
+    "name:kab": "Tabanka n tfellaḥt d usnerni n temnaḍin",
+    "official_name": "Banque de l'agriculture et du développement rural",
+    "official_name:ar": "بنك الفلاحة والتنمية الريفية",
+    "official_name:fr": "Banque de l'agriculture et du développement rural",
+    "opening_hours": "Mo-Fr 08:00-17:00",
+    "operator": "بنك الفلاحة والتنمية الريفية",
+    "operator:ar": "بنك الفلاحة والتنمية الريفية",
+    "operator:fr": "Banque de l'agriculture et du développement rural",
+    "operator:wikidata": "Q2883031",
+    "operator:wikipedia": "fr:Banque de l'agriculture et du développement rural",
+    "short_name:fr": "BADR"
+  }
+},
+{
+  "type": "way",
+  "id": 383803333,
+  "center": {
+    "lat": 33.1054124,
+    "lon": 6.0685110
+  },
+  "nodes": [
+    3871195922,
+    3871195929,
+    3871195924,
+    3871195930,
+    3871195923,
+    3871195928,
+    3871195921,
+    4583643718,
+    3871195925,
+    3871195916,
+    3871195915,
+    3871195912,
+    3871195910,
+    3871195907,
+    3871195903,
+    3871195902,
+    3871195905,
+    3871195904,
+    3871195906,
+    3871195908,
+    3871195909,
+    3871195911,
+    3871195913,
+    3871195918,
+    3871195917,
+    3871195922
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:postcode": "30002",
+    "amenity": "post_office",
+    "brand": "Algérie Poste",
+    "brand:ar": "بريد الجزائر",
+    "brand:email": "clientalgerieposte@poste.dz",
+    "brand:fr": "Algérie Poste",
+    "brand:website": "https://www.poste.dz/",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "fr:Algérie Poste",
+    "building": "service",
+    "name": "مكتب بريد - تقرت",
+    "name:ar": "مكتب بريد - تقرت",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "08:30-12:30,13:30-16:30",
+    "operator": "Algérie Poste",
+    "operator:ar": "بريد الجزائر",
+    "operator:fr": "Algérie Poste",
+    "operator:website": "https://www.poste.dz/",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "fr:Algérie Poste"
+  }
+},
+{
+  "type": "way",
+  "id": 383811132,
+  "center": {
+    "lat": 33.1052504,
+    "lon": 6.0664301
+  },
+  "nodes": [
+    3871276455,
+    3871276459,
+    3871276456,
+    3871276463,
+    3871276464,
+    3871276465,
+    3871276467,
+    3871276466,
+    3871276468,
+    3871276462,
+    3871276461,
+    3871276460,
+    3871276455
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "bank",
+    "brand": "Banque extérieure d'Algérie",
+    "brand:ar": "بنك الجزائر الخارجي",
+    "brand:fr": "Banque extérieure d'Algérie",
+    "brand:short": "BEA",
+    "brand:website": "https://www.bea.dz/",
+    "brand:wikidata": "Q86660761",
+    "brand:wikipedia": "fr:Banque extérieure d'Algérie",
+    "building": "service",
+    "name": "Banque extérieure d'Algérie",
+    "name:ar": "بنك الجزائر الخارجي",
+    "name:en": "BEA",
+    "name:fr": "Banque extérieure d'Algérie",
+    "name:kab": "Tabanka taberranit n Lezzayer",
+    "official_name": "Banque extérieure d'Algérie",
+    "official_name:ar": "بنك الجزائر الخارجي",
+    "official_name:fr": "Banque extérieure d'Algérie",
+    "opening_hours": "Mo-Fr 08:00-17:00",
+    "operator": "Banque extérieure d'Algérie",
+    "operator:ar": "بنك الجزائر الخارجي",
+    "operator:fr": "Banque extérieure d'Algérie",
+    "operator:short": "BEA",
+    "operator:website": "https://www.bea.dz/",
+    "operator:wikidata": "Q86660761",
+    "operator:wikipedia": "fr:Banque extérieure d'Algérie",
+    "short_name": "BEA",
+    "short_name:ar": "ب.خ.ج",
+    "short_name:fr": "BEA"
+  }
+},
+{
+  "type": "way",
+  "id": 383811133,
+  "center": {
+    "lat": 33.1078606,
+    "lon": 6.0725824
+  },
+  "nodes": [
+    3871276492,
+    2926524107,
+    2926524112,
+    3871276495,
+    3871276496,
+    3871276491,
+    3871276488,
+    2926518515,
+    3871276492
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "marketplace",
+    "name": "Marché de Touggourt",
+    "name:ar": "سوق تقرت",
+    "name:fr": "Marché de Touggourt"
+  }
+},
+{
+  "type": "way",
+  "id": 383811134,
+  "center": {
+    "lat": 33.1036205,
+    "lon": 6.0655813
+  },
+  "nodes": [
+    3871276431,
+    3871276432,
+    3871276438,
+    3871276439,
+    3871276440,
+    3871276436,
+    3871276437,
+    3871276435,
+    3871276434,
+    3871276433,
+    3871276431
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "townhall",
+    "building": "public",
+    "name": "Mairie de Touggourt",
+    "name:ar": "مقر بلدية تقرت",
+    "name:fr": "Mairie de Touggourt"
+  }
+},
+{
+  "type": "way",
+  "id": 383811136,
+  "center": {
+    "lat": 33.1046666,
+    "lon": 6.0654758
+  },
+  "nodes": [
+    3871276441,
+    3871276444,
+    3871276448,
+    3871276454,
+    3871276442,
+    3871276441
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "police",
+    "name": "Sûreté de Daïra",
+    "name:ar": "أمن دائرة",
+    "name:ber": "ⵜⴰⵎⵙⵓⵍⵜⴰ ⵜⴰⵖⴻⵍⵏⴰⵡⵜ",
+    "name:fr": "Police nationale",
+    "name:kab": "Tamsulta taɣelnawt",
+    "operator": "DGSN",
+    "phone": "+213 17",
+    "wikidata": "Q12218510",
+    "wikipedia": "fr:Police nationale (Algérie)"
+  }
+},
+{
+  "type": "way",
+  "id": 384334491,
+  "center": {
+    "lat": 33.1063178,
+    "lon": 6.0715641
+  },
+  "nodes": [
+    3876360792,
+    5851949588,
+    5851949587,
+    5851949586,
+    5851949585,
+    5851948084,
+    3876360793,
+    3876360794,
+    3876360795,
+    3876360796,
+    5851949589,
+    5851949593,
+    5851949594,
+    5851949592,
+    5851949590,
+    5851949591,
+    3876360792
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "bus_station",
+    "building": "yes",
+    "bus": "yes",
+    "name": "محطة نقل المسافرين",
+    "name:ar": "محطة نقل المسافرين",
+    "name:fr": "Gare Routière",
+    "public_transport": "station"
+  }
+},
+{
+  "type": "way",
+  "id": 384334493,
+  "center": {
+    "lat": 33.1057079,
+    "lon": 6.0697328
+  },
+  "nodes": [
+    3876360802,
+    3876360803,
+    3876360804,
+    3876360805,
+    3876360802
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:postcode": "30002",
+    "name": "متحف المجاهدين",
+    "name:ar": "متحف المجاهدين",
+    "name:fr": "Musée de Moudjahid",
+    "tourism": "museum"
+  }
+},
+{
+  "type": "way",
+  "id": 384335715,
+  "center": {
+    "lat": 33.1092716,
+    "lon": 6.0708875
+  },
+  "nodes": [
+    3876359751,
+    3876359752,
+    3876359753,
+    3876359754,
+    3876359755,
+    3876359756,
+    3876371157,
+    3876371158,
+    3876371159,
+    3876371160,
+    3876371161,
+    3876371162,
+    3876371163,
+    3876371164,
+    3876371165,
+    3876371166,
+    3876371167,
+    3876371168,
+    3876371169,
+    3876371170,
+    3876359751
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "community_centre",
+    "building": "civic",
+    "name": "Maison des Jeunes Kheir Eddine"
+  }
+},
+{
+  "type": "way",
+  "id": 412954584,
+  "center": {
+    "lat": 33.1134596,
+    "lon": 6.0640449
+  },
+  "nodes": [
+    4142752749,
+    4142752748,
+    4142752746,
+    4142752747,
+    4142752749
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "name": "مسجد احمد مقنين",
+    "name:ar": "مسجد احمد مقنين",
+    "name:en": "Ahmed Meknin Mosque",
+    "name:fr": "mosqué Ahmed Meknin",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 435834336,
+  "center": {
+    "lat": 33.1070327,
+    "lon": 6.0693464
+  },
+  "nodes": [
+    4337278723,
+    4337278724,
+    4337278725,
+    4337278735,
+    4337278726,
+    4337278736,
+    4337278727,
+    4337278737,
+    4337278728,
+    4337278729,
+    4337278738,
+    4337278730,
+    4337278739,
+    4337278731,
+    4337278740,
+    4337278732,
+    4337278733,
+    4337278734,
+    4337278723
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "denomination": "sunni",
+    "name": "مسجد الطالب بابا ساسي",
+    "name:ar": "مسجد الطالب بابا ساسي",
+    "name:fr": "Mosquée Al Taleb Baba Sassi",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 435834340,
+  "center": {
+    "lat": 33.1069753,
+    "lon": 6.0696676
+  },
+  "nodes": [
+    4337278784,
+    4337278785,
+    4337278786,
+    4337278787,
+    4337278784
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "cafe",
+    "building": "yes",
+    "name": "مقهى الشيحاني",
+    "name:ar": "مقهى الشيحاني",
+    "name:fr": "Café Chihani"
+  }
+},
+{
+  "type": "way",
+  "id": 435849486,
+  "center": {
+    "lat": 33.1110529,
+    "lon": 6.0767898
+  },
+  "nodes": [
+    4337420689,
+    4337420690,
+    4337420691,
+    4337420692,
+    4337420693,
+    4337420694,
+    4337420695,
+    4337420696,
+    4337420697,
+    4337420698,
+    4337420699,
+    4337420700,
+    4337420689
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "courthouse",
+    "building": "yes",
+    "name": "محكمة تقرت",
+    "name:ar": "محكمة تقرت",
+    "name:fr": "Tribunal de Touggourt",
+    "website": "https://www.mjustice.dz/"
+  }
+},
+{
+  "type": "way",
+  "id": 435862961,
+  "center": {
+    "lat": 33.1423629,
+    "lon": 6.0812540
+  },
+  "nodes": [
+    4337549808,
+    4337549809,
+    4337549810,
+    4337549811,
+    4337549808
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 435933813,
+  "center": {
+    "lat": 33.1436676,
+    "lon": 6.0837940
+  },
+  "nodes": [
+    4338268024,
+    4597625805,
+    4338268025,
+    4338268026,
+    4597625804,
+    4338268027,
+    4338268028,
+    4338268024
+  ],
+  "tags": {
+    "amenity": "fuel",
+    "brand": "Naftal",
+    "brand:ar": "نفطال",
+    "brand:fr": "Naftal",
+    "brand:website": "https://www.naftal.dz/fr/",
+    "brand:wikidata": "Q3335043",
+    "brand:wikipedia": "fr:Naftal",
+    "building": "roof",
+    "name": "Station BETTAYEB Service"
+  }
+},
+{
+  "type": "way",
+  "id": 435933832,
+  "center": {
+    "lat": 33.1392777,
+    "lon": 6.0832606
+  },
+  "nodes": [
+    4338268085,
+    4338268086,
+    4338268087,
+    4338268088,
+    4338268085
+  ],
+  "tags": {
+    "leisure": "garden",
+    "name": "حديقة حي المنصور",
+    "name:ar": "حديقة حي المنصور",
+    "name:fr": "Parc cité Mansour"
+  }
+},
+{
+  "type": "way",
+  "id": 435933833,
+  "center": {
+    "lat": 33.1368476,
+    "lon": 6.0847212
+  },
+  "nodes": [
+    4338268289,
+    4338268290,
+    4338268291,
+    4338268292,
+    4338268293,
+    4338268294,
+    4338268295,
+    4338268296,
+    4338268297,
+    4338268298,
+    4338268289
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "name": "مسجد الكوثر",
+    "name:ar": "مسجد الكوثر",
+    "name:fr": "Mosquée Kawthar",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 435944483,
+  "center": {
+    "lat": 33.1324141,
+    "lon": 6.0844504
+  },
+  "nodes": [
+    4338343560,
+    4338343561,
+    4338343562,
+    4338343563,
+    4338343564,
+    4338343565,
+    4338343566,
+    4338343567,
+    4338343568,
+    4338343569,
+    4338343560
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "mosque",
+    "name": "مسجد سيدي النبي",
+    "name:ar": "مسجد سيدي النبي",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 435944485,
+  "center": {
+    "lat": 33.1316628,
+    "lon": 6.0825150
+  },
+  "nodes": [
+    4338343590,
+    4338343591,
+    4338343592,
+    4338343593,
+    4338343594,
+    4338343595,
+    4338343596,
+    4338343590
+  ],
+  "tags": {
+    "amenity": "post_office",
+    "brand": "Algérie Poste",
+    "brand:ar": "بريد الجزائر",
+    "brand:email": "clientalgerieposte@poste.dz",
+    "brand:fr": "Algérie Poste",
+    "brand:website": "https://www.poste.dz/",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "fr:Algérie Poste",
+    "building": "yes",
+    "fax": "+21323923170",
+    "name": "Algérie Poste - Zaouia Labidia",
+    "name:ar": "مكتب البريد الزاوية العابدية",
+    "opening_hours": "08:30-12:30,13:30-16:30",
+    "operator": "Algérie Poste",
+    "operator:ar": "بريد الجزائر",
+    "operator:fr": "Algérie Poste",
+    "operator:website": "https://www.poste.dz/",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "fr:Algérie Poste"
+  }
+},
+{
+  "type": "way",
+  "id": 435944497,
+  "center": {
+    "lat": 33.1290669,
+    "lon": 6.0812677
+  },
+  "nodes": [
+    4338343659,
+    4338343671,
+    4338343660,
+    4338343661,
+    4338343662,
+    4338343670,
+    4338343669,
+    4338343668,
+    4338343667,
+    4338343666,
+    4338343665,
+    4338343664,
+    4338343663,
+    4338343672,
+    4338343659
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "متوسطة حمزة بن عبد المطلب",
+    "name:ar": "متوسطة حمزة بن عبد المطلب",
+    "name:fr": "Collège Hamza ibn Abd al-Muttalib"
+  }
+},
+{
+  "type": "way",
+  "id": 435944505,
+  "center": {
+    "lat": 33.1311160,
+    "lon": 6.0771865
+  },
+  "nodes": [
+    4338343766,
+    4338343767,
+    4338343768,
+    4338343769,
+    4338343766
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 435944506,
+  "center": {
+    "lat": 33.1306128,
+    "lon": 6.0776455
+  },
+  "nodes": [
+    4338343760,
+    4338343759,
+    4338343696,
+    4338343695,
+    4338343710,
+    4338343770,
+    4338343765,
+    4338343764,
+    4338343763,
+    4338343762,
+    4338343761,
+    4338343760
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "ثانوية لزهاري التونسي",
+    "name:ar": "ثانوية لزهاري التونسي",
+    "name:fr": "Lycée Lazhari Tounsi",
+    "phone": "+213 29 68 00 00"
+  }
+},
+{
+  "type": "way",
+  "id": 435944525,
+  "center": {
+    "lat": 33.1286051,
+    "lon": 6.0789634
+  },
+  "nodes": [
+    4338343898,
+    4338343902,
+    4338343903,
+    4338343904,
+    4338343905,
+    4338343899,
+    4338343818,
+    4338343819,
+    4338343822,
+    4338343821,
+    4338343797,
+    4338343906,
+    4338343907,
+    4338343829,
+    4338343908,
+    4338343909,
+    4338343832,
+    4338343910,
+    4338343912,
+    4338343911,
+    4338343888,
+    4338343889,
+    4338343890,
+    4338343891,
+    4338343892,
+    4338343893,
+    4338343896,
+    4338343897,
+    4338343898
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "ثانوية هواري بومدين",
+    "name:ar": "ثانوية هواري بومدين",
+    "name:fr": "Lycée Houari Boumediene"
+  }
+},
+{
+  "type": "way",
+  "id": 435945308,
+  "center": {
+    "lat": 33.1263441,
+    "lon": 6.0769618
+  },
+  "nodes": [
+    4338356103,
+    4338356104,
+    4338356105,
+    4338356106,
+    4338356107,
+    4338356108,
+    4338356109,
+    4338356110,
+    4338356111,
+    4338356112,
+    4338356113,
+    4338356114,
+    4338356115,
+    4338356116,
+    4338356117,
+    4338356118,
+    4338356119,
+    4338356120,
+    4338356121,
+    4338356122,
+    4338356103
+  ],
+  "tags": {
+    "amenity": "place_of_worship",
+    "building": "yes",
+    "name": "مسجد الإمام علي",
+    "name:ar": "مسجد الإمام علي",
+    "name:fr": "Mosquée Imam Ali",
+    "religion": "muslim"
+  }
+},
+{
+  "type": "way",
+  "id": 435945310,
+  "center": {
+    "lat": 33.1294882,
+    "lon": 6.0799094
+  },
+  "nodes": [
+    4338356142,
+    4338356143,
+    4338356144,
+    4338356145,
+    4338356146,
+    4338356147,
+    4338356151,
+    4338356150,
+    4338356149,
+    4338356148,
+    4338356142
+  ],
+  "tags": {
+    "amenity": "library",
+    "building": "yes",
+    "name": "مكتبة بورنان",
+    "name:ar": "مكتبة الزاوية العابدية",
+    "name:fr": "Bibliothèque Bournane"
+  }
+},
+{
+  "type": "way",
+  "id": 435949488,
+  "center": {
+    "lat": 33.1159740,
+    "lon": 6.0728080
+  },
+  "nodes": [
+    4338381001,
+    4338381002,
+    4338381003,
+    4338381004,
+    4338381001
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "amenity": "prison",
+    "name": "Prison de la ville de Touggourt"
+  }
+},
+{
+  "type": "way",
+  "id": 463048037,
+  "center": {
+    "lat": 33.1041136,
+    "lon": 6.0646884
+  },
+  "nodes": [
+    4583643699,
+    4583643700,
+    4583643701,
+    4583643702,
+    4583643703,
+    4583643704,
+    4583643705,
+    4583643706,
+    4583643707,
+    4583643708,
+    4583643699
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "school",
+    "name": "Ecole Cheikh Tahar Lâabidi",
+    "name:ar": "مدرسة الشيخ طاهر لعبيدي"
+  }
+},
+{
+  "type": "way",
+  "id": 463048038,
+  "center": {
+    "lat": 33.1056966,
+    "lon": 6.0681067
+  },
+  "nodes": [
+    3871276472,
+    4583643710,
+    4583643711,
+    4583643712,
+    4583643713,
+    4583643714,
+    4583643715,
+    4583643716,
+    4583643717,
+    4583643718,
+    3871195925,
+    3871195916,
+    4583643719,
+    4583643720,
+    4583643721,
+    4583643722,
+    4583643723,
+    3871276472
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "building": "commercial",
+    "name": "Galeries",
+    "opening_hours": "24/7",
+    "shop": "mall"
+  }
+},
+{
+  "type": "way",
+  "id": 463053220,
+  "center": {
+    "lat": 33.1113597,
+    "lon": 6.0773575
+  },
+  "nodes": [
+    4583690440,
+    4583690441,
+    4583690442,
+    4583690443,
+    4583690440
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "hospital",
+    "emergency": "yes",
+    "healthcare": "hospital",
+    "name": "مستشفى لبدوات",
+    "name:ar": "مستشفى لبدوات",
+    "name:fr": "Hôpital Lebdouat"
+  }
+},
+{
+  "type": "way",
+  "id": 463053221,
+  "center": {
+    "lat": 33.1167952,
+    "lon": 6.0807923
+  },
+  "nodes": [
+    4583690444,
+    4583690445,
+    4583690446,
+    4583690447,
+    4583690457,
+    4583690460,
+    4583690448,
+    4583690449,
+    4583690450,
+    4583690451,
+    4583690452,
+    4583690453,
+    4583690454,
+    4583690455,
+    4583690456,
+    4583690444
+  ],
+  "tags": {
+    "addr:city": "Tebesbest",
+    "amenity": "school",
+    "name": "ثانوية الكواكبي",
+    "name:ar": "ثانوية الكواكبي",
+    "name:fr": "Lycée El Kouakbi"
+  }
+},
+{
+  "type": "way",
+  "id": 463053222,
+  "center": {
+    "lat": 33.1171570,
+    "lon": 6.0824539
+  },
+  "nodes": [
+    4583690457,
+    4583690458,
+    4583690459,
+    4583690460,
+    4583690457
+  ],
+  "tags": {
+    "addr:city": "Tebesbest",
+    "amenity": "police",
+    "name": "Sureté urbaine",
+    "name:ar": "الأمن الوطني",
+    "name:ber": "ⵜⴰⵎⵙⵓⵍⵜⴰ ⵜⴰⵖⴻⵍⵏⴰⵡⵜ",
+    "name:fr": "Sureté urbaine",
+    "name:kab": "Tamsulta taɣelnawt",
+    "operator": "Direction générale de la Sureté nationale",
+    "operator:ar": "المديرية العامة للأمن الوطني",
+    "operator:fr": "Direction générale de la Sureté nationale",
+    "operator:short": "DGSN",
+    "operator:website": "https://www.algeriepolice.dz/",
+    "operator:wikidata": "Q3394130",
+    "operator:wikipedia": "fr:Direction générale de la Sûreté nationale (Algérie)",
+    "phone": "+213 17",
+    "wikidata": "Q12218510",
+    "wikipedia": "fr:Police nationale (Algérie)"
+  }
+},
+{
+  "type": "way",
+  "id": 463053223,
+  "center": {
+    "lat": 33.1048210,
+    "lon": 6.0693265
+  },
+  "nodes": [
+    4583690461,
+    4583690462,
+    4583690463,
+    3876360802,
+    3876360805,
+    3876360804,
+    4583690464,
+    4583690465,
+    4583690466,
+    4583690467,
+    4583690461
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "barrier": "wall",
+    "leisure": "park",
+    "name": "Jardin El Mourabitine",
+    "name:ar": "حديقة المرابطين",
+    "name:fr": "Jardin El Mourabitine"
+  }
+},
+{
+  "type": "way",
+  "id": 463053227,
+  "center": {
+    "lat": 33.1299710,
+    "lon": 6.0459702
+  },
+  "nodes": [
+    4583690486,
+    4583690487,
+    4583690488,
+    4583693789,
+    4583693790,
+    4583693791,
+    4583693792,
+    4583693793,
+    4583690486
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:suburb": "Cité El Moustakbal",
+    "amenity": "school",
+    "name": "Lycée El Moustakbal"
+  }
+},
+{
+  "type": "way",
+  "id": 463053228,
+  "center": {
+    "lat": 33.1294288,
+    "lon": 6.0472634
+  },
+  "nodes": [
+    4583693794,
+    4583693795,
+    4583693796,
+    4583693797,
+    4583693794
+  ],
+  "tags": {
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM",
+    "name:fr": "École élémentaire"
+  }
+},
+{
+  "type": "way",
+  "id": 463053230,
+  "center": {
+    "lat": 33.0822336,
+    "lon": 6.0467106
+  },
+  "nodes": [
+    4583693808,
+    4583693809,
+    4583693810,
+    4583693811,
+    4583693812,
+    4583693813,
+    4583693814,
+    4583693815,
+    4583693816,
+    4583693808
+  ],
+  "tags": {
+    "addr:city": "Nezla",
+    "amenity": "school",
+    "name": "Lycée Aïn Essahra",
+    "name:ar": "ثانوية عين الصحراء",
+    "name:fr": "Lycée Aïn Essahra"
+  }
+},
+{
+  "type": "way",
+  "id": 463053231,
+  "center": {
+    "lat": 33.0830488,
+    "lon": 6.0483196
+  },
+  "nodes": [
+    4583693817,
+    4583693818,
+    4583693819,
+    4583693820,
+    4583693817
+  ],
+  "tags": {
+    "addr:city": "Nezla",
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "CEM Tedjini Mohamed"
+  }
+},
+{
+  "type": "way",
+  "id": 463053234,
+  "center": {
+    "lat": 33.0812194,
+    "lon": 6.0435136
+  },
+  "nodes": [
+    4583693821,
+    4583693822,
+    4583693823,
+    4583693824,
+    4583693821
+  ],
+  "tags": {
+    "addr:city": "Nezla",
+    "addr:suburb": "Aïn Sahra",
+    "email": "hotel.ainsahra@gmail.com",
+    "internet_access": "wlan",
+    "name": "فندق التجاني",
+    "name:ar": "فندق التجاني",
+    "name:fr": "Hôtel Tidjani",
+    "opening_hours": "Mo-Su 08:00-24:00",
+    "phone": "029649480",
+    "tourism": "hotel"
+  }
+},
+{
+  "type": "way",
+  "id": 463053235,
+  "center": {
+    "lat": 33.0804525,
+    "lon": 6.0501561
+  },
+  "nodes": [
+    4583693826,
+    4583693827,
+    4583693828,
+    4583693829,
+    4583693826
+  ],
+  "tags": {
+    "addr:city": "Nezla",
+    "amenity": "school",
+    "name": "Ecole primaire Temacini Abderrahmane"
+  }
+},
+{
+  "type": "way",
+  "id": 570051699,
+  "center": {
+    "lat": 33.1039677,
+    "lon": 6.0462654
+  },
+  "nodes": [
+    5481073470,
+    8411425738,
+    5481073471,
+    5481073472,
+    8410086230,
+    8410086229,
+    8410113686,
+    8410086228,
+    8410086227,
+    5481073473,
+    8410086221,
+    8410086222,
+    5481073470
+  ],
+  "tags": {
+    "addr:city": "Touggourt ⵜⵓⴳⵓⵔⵜ تقرت",
+    "amenity": "bus_station",
+    "architect": "dehane abdlazize",
+    "bus": "yes",
+    "public_transport": "station",
+    "train": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 619492401,
+  "center": {
+    "lat": 33.0892837,
+    "lon": 6.0549883
+  },
+  "nodes": [
+    5854118028,
+    5854118027,
+    5854118026,
+    5854118025,
+    5854118012,
+    5854118024,
+    5854118023,
+    5854118022,
+    5854118021,
+    5854118020,
+    5854118019,
+    5854118018,
+    5854118017,
+    5854118016,
+    5854118015,
+    5854118014,
+    5854118013,
+    5854118028
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "CEM Ennasr",
+    "name:ar": "متوسطة حي النصر",
+    "name:fr": "CEM Ennasr"
+  }
+},
+{
+  "type": "way",
+  "id": 714065591,
+  "center": {
+    "lat": 33.0685278,
+    "lon": 6.0347299
+  },
+  "nodes": [
+    6713001399,
+    6713001287,
+    6713001386,
+    6713001318,
+    6712994982,
+    6712994950,
+    6713001319,
+    6712994917,
+    6712994909,
+    6713001332,
+    6712994979,
+    6713001288,
+    6713001369,
+    6713001359,
+    6713001419,
+    6712994932,
+    6713001410,
+    6713001407,
+    6713001399
+  ],
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 714065596,
+  "center": {
+    "lat": 33.0679460,
+    "lon": 6.0352567
+  },
+  "nodes": [
+    6712994941,
+    6713001356,
+    6713001355,
+    6712994965,
+    6712994915,
+    6713001388,
+    6713001403,
+    6713001418,
+    6713001409,
+    6712994961,
+    6713001328,
+    6712994910,
+    6712994929,
+    6712994974,
+    6712994941
+  ],
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 714065597,
+  "center": {
+    "lat": 33.0681735,
+    "lon": 6.0354810
+  },
+  "nodes": [
+    6713001321,
+    6713001424,
+    6713001361,
+    6713001394,
+    6712994925,
+    6713001304,
+    6712994940,
+    6712994966,
+    6712994919,
+    6712994947,
+    6713001340,
+    6713001398,
+    6712994973,
+    6712994907,
+    6713001321
+  ],
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 714065598,
+  "center": {
+    "lat": 33.0674723,
+    "lon": 6.0341502
+  },
+  "nodes": [
+    6712994967,
+    6713001327,
+    9332429249,
+    9332429241,
+    6712994923,
+    9332429248,
+    9332429247,
+    6712994960,
+    6712994906,
+    6713001375,
+    6713001402,
+    6712994916,
+    6712994971,
+    6712994967
+  ],
+  "tags": {
+    "name": "Messaoudi Park",
+    "tourism": "theme_park"
+  }
+},
+{
+  "type": "way",
+  "id": 714065602,
+  "center": {
+    "lat": 33.0683973,
+    "lon": 6.0351152
+  },
+  "nodes": [
+    6713001401,
+    6712994957,
+    6713001337,
+    6713001331,
+    6713001339,
+    6713001376,
+    6713001357,
+    6713001309,
+    6712994952,
+    6713001381,
+    6712994956,
+    6713001311,
+    6713001320,
+    6712994978,
+    6713001365,
+    6713001416,
+    6713001295,
+    6713001401
+  ],
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 714065604,
+  "center": {
+    "lat": 33.0680818,
+    "lon": 6.0347439
+  },
+  "nodes": [
+    6713001347,
+    6713001348,
+    6713001360,
+    6713001405,
+    6713001371,
+    6712994970,
+    6713001289,
+    6713001286,
+    6712994975,
+    6713001315,
+    6712994964,
+    6712994928,
+    6713001362,
+    6713001353,
+    6713001367,
+    6712994955,
+    6713001293,
+    6712994945,
+    6713001390,
+    6713001335,
+    6713001345,
+    6713001347
+  ],
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 714065606,
+  "center": {
+    "lat": 33.0664211,
+    "lon": 6.0332263
+  },
+  "nodes": [
+    6713001290,
+    6712994944,
+    6713001396,
+    6713001338,
+    6713001290
+  ],
+  "tags": {
+    "access": "yes",
+    "addr:street": "rue national 16",
+    "amenity": "parking",
+    "capacity": "30",
+    "capacity:disabled": "0",
+    "operator:type": "public",
+    "parking": "surface",
+    "surface": "gravel"
+  }
+},
+{
+  "type": "way",
+  "id": 714066369,
+  "center": {
+    "lat": 33.0670434,
+    "lon": 6.0345968
+  },
+  "nodes": [
+    6712983358,
+    6712983357,
+    6712983362,
+    6712983359,
+    6712983361,
+    6712983363,
+    6712983354,
+    6712983352,
+    6712983356,
+    6712983364,
+    6712983355,
+    6712983353,
+    6712983360,
+    6712983358
+  ],
+  "tags": {
+    "leisure": "water_park"
+  }
+},
+{
+  "type": "way",
+  "id": 905610866,
+  "center": {
+    "lat": 33.1022727,
+    "lon": 6.0445433
+  },
+  "nodes": [
+    8410086223,
+    8410086304,
+    8410086224,
+    8410086225,
+    8410086226,
+    8410086223
+  ],
+  "tags": {
+    "access": "yes",
+    "amenity": "parking",
+    "fee": "no",
+    "parking": "surface",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 905610867,
+  "center": {
+    "lat": 33.1039817,
+    "lon": 6.0460754
+  },
+  "nodes": [
+    8410086231,
+    8410086232,
+    8410086233,
+    8410086234,
+    8410086235,
+    8410086236,
+    8410086237,
+    8410086238,
+    8410086239,
+    8410086240,
+    8410086241,
+    8410086242,
+    8410086243,
+    8410086244,
+    8410086245,
+    8410086246,
+    8410086247,
+    8410086248,
+    8410086249,
+    8410086250,
+    8410086251,
+    8410086252,
+    8410086253,
+    8410086254,
+    8410086255,
+    8410086256,
+    8410086257,
+    8410086258,
+    8410086259,
+    8410086260,
+    8410086261,
+    8410086262,
+    8410086263,
+    8410086264,
+    8410086265,
+    8410086266,
+    8410086267,
+    8410086268,
+    8410086269,
+    8410086270,
+    8410086271,
+    8410086272,
+    8410086273,
+    8410086274,
+    8410086275,
+    8410086276,
+    8410086277,
+    8410086278,
+    8410086279,
+    8410086280,
+    8410086281,
+    8410086282,
+    8410086283,
+    8410086284,
+    8410086285,
+    8410086286,
+    8410086287,
+    8410086288,
+    8410086289,
+    8410086290,
+    8410086291,
+    8410086292,
+    8410086293,
+    8410086294,
+    8410086295,
+    8410086296,
+    8410086297,
+    8410086298,
+    8410086299,
+    8410086300,
+    8410086302,
+    8410086301,
+    8410086231
+  ],
+  "tags": {
+    "addr:city": "Touggourt ⵜⵓⴳⵓⵔⵜ تقرت",
+    "amenity": "bus_station",
+    "building": "yes",
+    "bus": "yes",
+    "public_transport": "station"
+  }
+},
+{
+  "type": "way",
+  "id": 913477761,
+  "center": {
+    "lat": 33.1069220,
+    "lon": 6.0356473
+  },
+  "nodes": [
+    8485641073,
+    8485641074,
+    8485641075,
+    8485641076,
+    8485641077,
+    8485641078,
+    8485641079,
+    8485641080,
+    8485641081,
+    8485641073
+  ],
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 1005848139,
+  "center": {
+    "lat": 33.1152807,
+    "lon": 6.0721201
+  },
+  "nodes": [
+    9280437043,
+    9280437044,
+    9280437045,
+    9280437046,
+    9280437043
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1005850264,
+  "center": {
+    "lat": 33.1146907,
+    "lon": 6.0786939
+  },
+  "nodes": [
+    9280457199,
+    9280457200,
+    9280457201,
+    9280457202,
+    9280457199
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1005850265,
+  "center": {
+    "lat": 33.1189914,
+    "lon": 6.0864071
+  },
+  "nodes": [
+    9280457203,
+    9280457204,
+    9280457205,
+    9280457206,
+    9280457203
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1005850266,
+  "center": {
+    "lat": 33.1196589,
+    "lon": 6.0796013
+  },
+  "nodes": [
+    9280457207,
+    9280457208,
+    9280457209,
+    9280457210,
+    9280457207
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1005850267,
+  "center": {
+    "lat": 33.1214164,
+    "lon": 6.0810947
+  },
+  "nodes": [
+    9280457211,
+    9280457212,
+    9280457213,
+    9280457214,
+    9280457211
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1005850268,
+  "center": {
+    "lat": 33.1204247,
+    "lon": 6.0821481
+  },
+  "nodes": [
+    9280457215,
+    9280457216,
+    9280459717,
+    9280459718,
+    9280457215
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1005850269,
+  "center": {
+    "lat": 33.1283820,
+    "lon": 6.0767115
+  },
+  "nodes": [
+    9280459719,
+    9280459720,
+    9280459721,
+    9280459722,
+    9280459719
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "multi"
+  }
+},
+{
+  "type": "way",
+  "id": 1011489660,
+  "center": {
+    "lat": 33.0671041,
+    "lon": 6.0334222
+  },
+  "nodes": [
+    6713001292,
+    6713001302,
+    6712994953,
+    6712994972,
+    6713001292
+  ],
+  "tags": {
+    "addr:city": "touggourt",
+    "addr:postcode": "123",
+    "addr:street": "Evitement Sud de Touggourt",
+    "building": "yes",
+    "building:levels": "0",
+    "name": "mole",
+    "name:fr": "centre commerciel",
+    "opening_hours": "09.00",
+    "shop": "mall"
+  }
+},
+{
+  "type": "way",
+  "id": 1011489661,
+  "center": {
+    "lat": 33.0682312,
+    "lon": 6.0336110
+  },
+  "nodes": [
+    6712994912,
+    12046690498,
+    6713001344,
+    6712994980,
+    6713001303,
+    6712994912
+  ],
+  "tags": {
+    "addr:city": "touggourt",
+    "addr:postcode": "123",
+    "addr:street": "rue national 03",
+    "building": "yes",
+    "building:flats": "1",
+    "building:levels": "0",
+    "leisure": "amusement_arcade",
+    "name": "salle de jeux électroniques"
+  }
+},
+{
+  "type": "way",
+  "id": 1013175705,
+  "center": {
+    "lat": 33.1041168,
+    "lon": 6.0660138
+  },
+  "nodes": [
+    9347374455,
+    9347374456,
+    9347374457,
+    9347374458,
+    9347374455
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "leisure": "park",
+    "name": "ساحة مقام الشهيد"
+  }
+},
+{
+  "type": "way",
+  "id": 1149726165,
+  "center": {
+    "lat": 33.0682175,
+    "lon": 6.0329450
+  },
+  "nodes": [
+    10695500735,
+    10695500736,
+    10695500737,
+    10695500738,
+    10695500739,
+    10695500740,
+    10695500741,
+    10695500742,
+    10695500744,
+    10695500743,
+    10695500735
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1175954817,
+  "center": {
+    "lat": 33.0768167,
+    "lon": 6.0380243
+  },
+  "nodes": [
+    10926655713,
+    10926655103,
+    10926661316,
+    10926662704,
+    10926658763,
+    4583693830,
+    10926653457,
+    10926663743,
+    10926653340,
+    10926654259,
+    10926664284,
+    10926660143,
+    10926657251,
+    10926657351,
+    10926655713
+  ],
+  "tags": {
+    "addr:city": "النزلة",
+    "addr:city:ar": "النزلة",
+    "brand": "تويوتا",
+    "brand:ar": "تويوتا",
+    "brand:ja": "トヨタ",
+    "brand:wikidata": "Q53268",
+    "brand:wikipedia": "ar:تويوتا",
+    "building": "yes",
+    "name": "تويوتا",
+    "name:ar": "تويوتا",
+    "name:de": "Toyota",
+    "name:fr": "Toyota",
+    "name:ja": "トヨタ",
+    "shop": "car"
+  }
+},
+{
+  "type": "way",
+  "id": 1175956021,
+  "center": {
+    "lat": 33.0804083,
+    "lon": 6.0492736
+  },
+  "nodes": [
+    10926660057,
+    10926655625,
+    10926656526,
+    10926657172,
+    10926657336,
+    10926660667,
+    10926654649,
+    4583693825,
+    10926660057
+  ],
+  "tags": {
+    "addr:city": "النزلة",
+    "addr:city:ar": "النزلة",
+    "addr:place": "عين الصحراء",
+    "addr:place:ar": "عين الصحراء",
+    "amenity": "post_office",
+    "brand": "Algérie Poste",
+    "brand:ar": "بريد الجزائر",
+    "brand:email": "clientalgerieposte@poste.dz",
+    "brand:fr": "Algérie Poste",
+    "brand:website": "https://www.poste.dz/",
+    "brand:wikidata": "Q2836029",
+    "brand:wikipedia": "fr:Algérie Poste",
+    "building": "yes",
+    "fax": "+21323923170",
+    "name": "مكتب البريد عين الصحراء",
+    "name:ar": "مكتب البريد عين الصحراء",
+    "name:fr": "Bureau de poste",
+    "opening_hours": "08:30-12:30,13:30-16:30",
+    "operator": "Algérie Poste",
+    "operator:ar": "بريد الجزائر",
+    "operator:fr": "Algérie Poste",
+    "operator:website": "https://www.poste.dz/",
+    "operator:wikidata": "Q2836029",
+    "operator:wikipedia": "fr:Algérie Poste"
+  }
+},
+{
+  "type": "way",
+  "id": 1175958059,
+  "center": {
+    "lat": 33.1058811,
+    "lon": 6.0662812
+  },
+  "nodes": [
+    10926675774,
+    10926669676,
+    10926669532,
+    10926673300,
+    10926674528,
+    10926676371,
+    10926670855,
+    10926669817,
+    4574111289,
+    10926672002,
+    10926675774
+  ],
+  "tags": {
+    "addr:housenumber": "03",
+    "addr:street": "Place El Horia,Local N03,Touggourt",
+    "building": "yes",
+    "email": "touggourt-voy@hotmail.com",
+    "name": "Touggourt Tourisme et Voyage",
+    "name:ar": "وكالة تقرت للسياحة والأسفار",
+    "name:en": "Touggourt Tourism and Travel Agency",
+    "opening_hours": "24/7",
+    "phone": "0660440456",
+    "shop": "travel_agency",
+    "source": "FB: Algerie Mapper Team : (Superadlen)"
+  }
+},
+{
+  "type": "way",
+  "id": 1175959747,
+  "center": {
+    "lat": 33.0866724,
+    "lon": 6.0472623
+  },
+  "nodes": [
+    10926688238,
+    10926687323,
+    10926688624,
+    10926690523,
+    10926687178,
+    10926690471,
+    9950400717,
+    10926687917,
+    10926687504,
+    10926686598,
+    10926688238
+  ],
+  "tags": {
+    "addr:housenumber": "01",
+    "amenity": "pharmacy",
+    "building": "yes",
+    "email": "necibseddik39@gmail.com",
+    "name": "صيدلية نصيب",
+    "name:en": "necib pharmacy",
+    "opening_hours": "Mo-Su 08:00-00:00",
+    "phone": "0659518397",
+    "source": "FB: Algerie Mapper Team : (Superadlen)"
+  }
+},
+{
+  "type": "way",
+  "id": 1176011553,
+  "center": {
+    "lat": 33.1204227,
+    "lon": 6.0799568
+  },
+  "nodes": [
+    10927104147,
+    10927105951,
+    10927108887,
+    10927106565,
+    10927108394,
+    10927102596,
+    10927102563,
+    10927107850,
+    10927111195,
+    10927113280,
+    10927108084,
+    10927109907,
+    4542473992,
+    10927110627,
+    10927104147
+  ],
+  "tags": {
+    "addr:street": "حي 120 مسكن تبسبست",
+    "amenity": "school",
+    "building": "yes",
+    "name": "متوسطة شاوش محمد",
+    "name:ar": "متوسطة شاوش محمد",
+    "name:fr": "Collège Chaouch Mohamed"
+  }
+},
+{
+  "type": "way",
+  "id": 1176012331,
+  "center": {
+    "lat": 33.1273288,
+    "lon": 6.0824781
+  },
+  "nodes": [
+    10927106928,
+    4510706090,
+    10927106812,
+    10927109894,
+    10927102554,
+    10927111975,
+    10927106928
+  ],
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "cafe",
+    "building": "yes",
+    "internet_access": "wlan",
+    "name": "مقهى البنة",
+    "name:ar": "مقهى البنة",
+    "name:fr": "Café Bena"
+  }
+},
+{
+  "type": "way",
+  "id": 1176012969,
+  "center": {
+    "lat": 33.1209537,
+    "lon": 6.0499834
+  },
+  "nodes": [
+    4460532094,
+    10927119786,
+    10927120504,
+    10927120020,
+    10927119944,
+    10927119385,
+    10927115983,
+    10927120247,
+    4460532094
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:place": "حي المستقبل",
+    "addr:place:ar": "حي المستقبل",
+    "amenity": "pharmacy",
+    "building": "yes",
+    "healthcare": "pharmacy",
+    "name": "فلسطين",
+    "name:ar": "فلسطين",
+    "name:fr": "Pharmacie Palestine"
+  }
+},
+{
+  "type": "way",
+  "id": 1176013701,
+  "center": {
+    "lat": 33.1178369,
+    "lon": 6.0618032
+  },
+  "nodes": [
+    10927116810,
+    10927118663,
+    10927116528,
+    10927118042,
+    10927115363,
+    10927119423,
+    10927117545,
+    3225428998,
+    10927115077,
+    10927119607,
+    10927116982,
+    10927118224,
+    10927117971,
+    10927120630,
+    10927116810
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "amenity": "restaurant",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1176016687,
+  "center": {
+    "lat": 33.1003398,
+    "lon": 6.0518782
+  },
+  "nodes": [
+    10927141762,
+    13235233016,
+    10927141956,
+    10927142882,
+    10927141830,
+    10927142452,
+    10927141341,
+    10927142245,
+    10927142862,
+    10927142576,
+    10927141762
+  ],
+  "tags": {
+    "addr:country": "DZ",
+    "amenity": "cafe",
+    "building": "yes",
+    "name:fr": "cafétéria",
+    "source": "FB: Algerie Mapper Team : (Superadlen)"
+  }
+},
+{
+  "type": "way",
+  "id": 1357617187,
+  "center": {
+    "lat": 33.1180778,
+    "lon": 6.0511098
+  },
+  "nodes": [
+    12563953014,
+    12563953015,
+    12563953016,
+    12563953017,
+    12563953014
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1357617189,
+  "center": {
+    "lat": 33.1163253,
+    "lon": 6.0529978
+  },
+  "nodes": [
+    12563953048,
+    12563953049,
+    12563953050,
+    12563953051,
+    12563953048
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1357617190,
+  "center": {
+    "lat": 33.1163782,
+    "lon": 6.0531552
+  },
+  "nodes": [
+    12563953052,
+    12563953053,
+    12563953054,
+    12563953055,
+    12563953056,
+    12563953057,
+    12563953058,
+    12563953059,
+    12563953060,
+    12563953061,
+    12563953062,
+    12563953063,
+    12563953064,
+    12563953065,
+    12563953052
+  ],
+  "tags": {
+    "leisure": "sports_centre"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164640,
+  "center": {
+    "lat": 33.1092442,
+    "lon": 6.0816133
+  },
+  "nodes": [
+    12670722872,
+    12670722873,
+    12670722874,
+    12670722875,
+    12670722872
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164641,
+  "center": {
+    "lat": 33.1091943,
+    "lon": 6.0823132
+  },
+  "nodes": [
+    12670722876,
+    12670722877,
+    12670722878,
+    12670722879,
+    12670722876
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164646,
+  "center": {
+    "lat": 33.1113240,
+    "lon": 6.0797810
+  },
+  "nodes": [
+    12670722896,
+    12670722897,
+    12670722898,
+    12670722899,
+    12670722896
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164647,
+  "center": {
+    "lat": 33.1070702,
+    "lon": 6.0860648
+  },
+  "nodes": [
+    12670722900,
+    12670755701,
+    12670755702,
+    12670755703,
+    12670722900
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164648,
+  "center": {
+    "lat": 33.1071750,
+    "lon": 6.0832936
+  },
+  "nodes": [
+    12670755704,
+    12670755705,
+    12670755706,
+    12670755707,
+    12670755704
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164649,
+  "center": {
+    "lat": 33.0961608,
+    "lon": 6.0623596
+  },
+  "nodes": [
+    12670755708,
+    12670755709,
+    12670755710,
+    12670755711,
+    12670755708
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164650,
+  "center": {
+    "lat": 33.0923861,
+    "lon": 6.0596444
+  },
+  "nodes": [
+    12670755712,
+    12670755713,
+    12670755714,
+    12670755715,
+    12670755712
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164651,
+  "center": {
+    "lat": 33.0930343,
+    "lon": 6.0608235
+  },
+  "nodes": [
+    12670755716,
+    12670755717,
+    12670755718,
+    12670755719,
+    12670755716
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164652,
+  "center": {
+    "lat": 33.0869997,
+    "lon": 6.0585583
+  },
+  "nodes": [
+    12670755720,
+    12670755721,
+    12670755722,
+    12670755723,
+    12670755720
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164653,
+  "center": {
+    "lat": 33.0794173,
+    "lon": 6.0457382
+  },
+  "nodes": [
+    12670755724,
+    12670755725,
+    12670755726,
+    12670755727,
+    12670755724
+  ],
+  "tags": {
+    "leisure": "pitch"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164654,
+  "center": {
+    "lat": 33.0723415,
+    "lon": 6.0459091
+  },
+  "nodes": [
+    12670755728,
+    12670755729,
+    12670755730,
+    12670755731,
+    12670755728
+  ],
+  "tags": {
+    "leisure": "pitch",
+    "sport": "soccer"
+  }
+},
+{
+  "type": "way",
+  "id": 1368164655,
+  "center": {
+    "lat": 33.0723515,
+    "lon": 6.0458823
+  },
+  "nodes": [
+    6223585655,
+    6223585654,
+    6223585653,
+    6223585658,
+    6223585657,
+    6223585656,
+    6223585655
+  ],
+  "tags": {
+    "leisure": "stadium"
+  }
+},
+{
+  "type": "relation",
+  "id": 5711348,
+  "center": {
+    "lat": 33.1068551,
+    "lon": 6.0674164
+  },
+  "members": [
+    {
+      "type": "way",
+      "ref": 383811130,
+      "role": "inner"
+    },
+    {
+      "type": "way",
+      "ref": 383811131,
+      "role": "outer"
+    }
+  ],
+  "tags": {
+    "addr:city": "تقرت",
+    "addr:city:ar": "تقرت",
+    "addr:postcode": "30002",
+    "amenity": "place_of_worship",
+    "building": "mosque",
+    "denomination": "sunni",
+    "name": "المسجد العتيق لتقرت",
+    "name:ar": "المسجد العتيق لتقرت",
+    "name:fr": "Vieille mosquée de Touggourt",
+    "religion": "muslim",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 5717950,
+  "center": {
+    "lat": 33.1059795,
+    "lon": 6.0766596
+  },
+  "members": [
+    {
+      "type": "way",
+      "ref": 384337304,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 384337307,
+      "role": "inner"
+    }
+  ],
+  "tags": {
+    "addr:city": "Touggourt",
+    "addr:postcode": "30002",
+    "amenity": "marketplace",
+    "building": "retail",
+    "name": "Marché de la viande",
+    "shop": "butcher",
+    "type": "multipolygon"
+  }
+}
+
+  ]
+}
