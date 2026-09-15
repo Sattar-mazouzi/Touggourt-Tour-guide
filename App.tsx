@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Search, Map as MapIcon, Heart, Home, Compass, List, Sparkles, Landmark, Loader2, Bed, Utensils, History, Leaf, User as UserIcon, Layers, Image as ImageIcon, SortDesc, SortAsc, Maximize, X, Info, Store, Building2, Coffee, Car, Fuel, HelpCircle, GraduationCap, PlusSquare, Bus, Trees, Youtube } from 'lucide-react';
 import { db, analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
@@ -72,6 +72,7 @@ const AppContent: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [dynamicServices, setDynamicServices] = useState<Place[]>([]);
   const [isFetchingServices, setIsFetchingServices] = useState(false);
+  const hasFetchedOSM = useRef(false);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [cityBio, setCityBio] = useState<CityBioData | null>(null);
   const [cityBioDocIds, setCityBioDocIds] = useState<string[]>([]);
@@ -144,49 +145,77 @@ const AppContent: React.FC = () => {
   };
 
   const fetchOSMServices = useCallback(async () => {
-    if (places.length === 0 || dynamicServices.length > 0 || isFetchingServices) return;
+    if (places.length === 0 || dynamicServices.length > 0 || isFetchingServices || hasFetchedOSM.current) return;
     
+    hasFetchedOSM.current = true;
     setIsFetchingServices(true);
     try {
-      // 1. Calculate bounding box using ALL available places to ensure we cover the entire tourist area
-      let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
-      places.forEach(p => {
-        if (p.location.lat < minLat) minLat = p.location.lat;
-        if (p.location.lat > maxLat) maxLat = p.location.lat;
-        if (p.location.lng < minLng) minLng = p.location.lng;
-        if (p.location.lng > maxLng) maxLng = p.location.lng;
-      });
+      // Hardcode bounding box for Touggourt city and immediate surroundings to ensure fast, reliable local services fetch
+      const minLat = 33.05;
+      const maxLat = 33.18;
+      const minLng = 6.00;
+      const maxLng = 6.15;
 
-      // Expand buffer slightly for better coverage of transport hubs which might be on city outskirts
-      const buffer = 0.08; 
-      const bbox = `${minLat - buffer},${minLng - buffer},${maxLat + buffer},${maxLng + buffer}`;
+      const bbox = `${minLat},${minLng},${maxLat},${maxLng}`;
 
       // 2. Query OSM for amenities, shops, tourism, transport, and parks/squares
-      // Changed from 'node' to 'nwr' (node, way, relation) to capture area-based features like airports
-      const query = `[out:json][timeout:30];
+      // Using node and way explicitly is often faster than nwr
+      const query = `[out:json][timeout:25];
         (
-          nwr["amenity"~"restaurant|cafe|fast_food|bank|atm|pharmacy|hospital|post_office|marketplace|clinic|mosque|place_of_worship|parking|fuel|school|university|bus_station|taxi"](${bbox});
-          nwr["shop"](${bbox});
-          nwr["tourism"~"hotel|museum|hostel|guest_house|information|attraction"](${bbox});
-          nwr["railway"~"station"](${bbox});
-          nwr["aeroway"~"aerodrome"](${bbox});
-          nwr["leisure"~"park|garden"](${bbox});
-          nwr["place"~"square"](${bbox});
+          node["amenity"](${bbox});
+          way["amenity"](${bbox});
+          node["shop"](${bbox});
+          way["shop"](${bbox});
+          node["tourism"](${bbox});
+          way["tourism"](${bbox});
+          node["leisure"](${bbox});
+          way["leisure"](${bbox});
         );
         out center;`;
 
-      const response = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
-      const data = await response.json();
+      const endpoints = [
+        'https://overpass-api.de/api/interpreter',
+        'https://lz4.overpass-api.de/api/interpreter',
+        'https://z.overpass-api.de/api/interpreter',
+        'https://overpass.kumi.systems/api/interpreter'
+      ];
 
-      if (data.elements) {
+      let data = null;
+      
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(`${endpoint}?data=${encodeURIComponent(query)}`);
+          
+          if (!response.ok) continue;
+          
+          const text = await response.text();
+          // Check if the response is actually JSON and not an HTML error page
+          if (text.trim().startsWith('<')) {
+            console.warn(`Endpoint ${endpoint} returned HTML error.`);
+            continue;
+          }
+          
+          data = JSON.parse(text);
+          if (data && data.elements) {
+            break; // Successfully fetched data
+          }
+        } catch (e) {
+          console.warn(`Endpoint ${endpoint} failed:`, e);
+        }
+      }
+
+      if (!data || !data.elements) {
+        throw new Error("All Overpass endpoints failed or returned empty data.");
+      }
         const mapped: Place[] = data.elements.map((el: any) => {
-          const amenity = el.tags.amenity;
-          const shop = el.tags.shop;
-          const tourism = el.tags.tourism;
-          const railway = el.tags.railway;
-          const aeroway = el.tags.aeroway;
-          const leisure = el.tags.leisure;
-          const placeTag = el.tags.place;
+          const tags = el.tags || {};
+          const amenity = tags.amenity;
+          const shop = tags.shop;
+          const tourism = tags.tourism;
+          const railway = tags.railway;
+          const aeroway = tags.aeroway;
+          const leisure = tags.leisure;
+          const placeTag = tags.place;
           
           let sub: string = 'all';
           // Categorization logic
@@ -209,8 +238,8 @@ const AppContent: React.FC = () => {
           else if (amenity === 'fuel') sub = 'fuel';
 
           // Correctly map translated names based on subcategory when el.tags.name is missing
-          const nameObj = el.tags.name 
-            ? { en: el.tags.name, ar: el.tags.name, fr: el.tags.name }
+          const nameObj = tags.name 
+            ? { en: tags.name, ar: tags.name, fr: tags.name }
             : { 
                 en: translations[sub]?.en || 'Local Service',
                 ar: translations[sub]?.ar || 'خدمة محلية',
@@ -250,16 +279,16 @@ const AppContent: React.FC = () => {
             category: 'services',
             subCategory: sub,
             rating: 4.0 + (Math.random() * 0.8),
-            imageUrl: { cover: getDynamicServiceImage(el.tags) },
+            imageUrl: { cover: getDynamicServiceImage(tags) },
             location: { lat: lat, lng: lon },
             address: { 
-              en: el.tags['addr:street'] || 'Touggourt, Algeria', 
-              ar: el.tags['addr:street'] || 'توقرت. الجزائر', 
-              fr: el.tags['addr:street'] || 'Touggourt, Algérie' 
+              en: tags['addr:street'] || 'Touggourt, Algeria', 
+              ar: tags['addr:street'] || 'توقرت. الجزائر', 
+              fr: tags['addr:street'] || 'Touggourt, Algérie' 
             },
             featured: false
           };
-        }).filter((p: any) => p.location.lat && p.location.lng);
+        }).filter((p: any) => p.location.lat && p.location.lng && p.subCategory !== 'all');
         
         const unique = mapped.reduce((acc: Place[], current) => {
           const x = acc.find(item => item.name.en === current.name.en && Math.abs(item.location.lat - current.location.lat) < 0.001);
@@ -268,7 +297,6 @@ const AppContent: React.FC = () => {
         }, []);
 
         setDynamicServices(unique);
-      }
     } catch (error) {
       console.warn("OSM Services fetch failed", error);
     } finally {
@@ -432,7 +460,7 @@ const AppContent: React.FC = () => {
   const filteredPlaces = useMemo(() => {
     const queryStr = searchQuery.toLowerCase();
     
-    const sourceData = selectedCategory === 'services' ? dynamicServices : places;
+    const sourceData = selectedCategory === 'services' ? [...places, ...dynamicServices] : places;
     
     const filtered = sourceData.filter(p => {
       if (selectedCategory === 'services') {
