@@ -33,17 +33,18 @@ The application is built using modern web development practices, focusing on per
 - **Internationalization (i18n):** Custom built-in translation system supporting English, Arabic (RTL), and French seamlessly.
 - **Animations:** CSS-based animations (`animate-in`, `fade-in`, `zoom-in`) and smooth scroll behaviors utilizing `scrollIntoView` and CSS scroll snapping for immersive media viewing.
 
-### Backend & Storage (Firebase)
-The app relies entirely on Google's Firebase ecosystem for its backend infrastructure:
+### Backend & Storage (Firebase & Cloudinary)
+The app relies entirely on Google's Firebase ecosystem for its backend infrastructure and Cloudinary for media management:
 - **Firestore (NoSQL Database):** Stores all structured data including `places` (landmarks, hotels, parks), `gallery` items, `aboutCity` content, `appConfig`, and user reviews.
 - **Firebase Authentication:** Manages user sessions securely, enabling features like favoriting places and leaving reviews.
 - **Firebase Analytics:** Tracks visitor sessions and screen views to understand user engagement and improve the experience.
+- **Cloudinary:** Used for robust image storage, optimization, and delivery, ensuring high-resolution gallery and place images load quickly on all devices.
 
 ### APIs & Integrations
+- **OpenLayers & OpenStreetMap (OSM):** Provides the fully interactive, custom-styled geographic map, utilizing OSM tile servers to visualize the city's locations.
+- **OSRM (Open Source Routing Machine):** Calculates road-following routing geometries to draw accurate paths and itineraries between locations directly on the map.
 - **Overpass API (OpenStreetMap):** Dynamically fetches real-time "Services" data (hospitals, pharmacies, banks, transport hubs, parks) based on the city's geographical bounding box to augment the curated database with live local services.
-- **Google Maps API:** Deep-links to Google Maps for turn-by-turn directions.
 - **YouTube Embed API:** Natively embeds cultural videos directly into the detail and gallery views without leaving the app.
-- **Gemini API (`@google/genai`):** Configured for AI-powered guide features, offering intelligent assistance to tourists.
 
 ---
 
@@ -55,6 +56,5 @@ This repository contains everything you need to run your app locally.
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Run the app:
    `npm run dev`
